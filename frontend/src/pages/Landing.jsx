@@ -125,7 +125,22 @@ export default function Landing() {
                   disabled={loading}
                   data-testid="ticker-input"
                 />
-                <Banknote className="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-500" />
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                  {validating && (
+                    <div className="w-5 h-5 border-2 border-indigo-400/30 border-t-indigo-400 rounded-full animate-spin"></div>
+                  )}
+                  {!validating && isValid === true && ticker.length > 0 && (
+                    <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                  {!validating && isValid === false && (
+                    <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  )}
+                  <Banknote className="w-6 h-6 text-slate-500" />
+                </div>
               </div>
               
               {error && (
