@@ -9,8 +9,40 @@ const API = `${BACKEND_URL}/api`;
 export default function Landing() {
   const [ticker, setTicker] = useState("");
   const [loading, setLoading] = useState(false);
+  const [validating, setValidating] = useState(false);
   const [error, setError] = useState("");
+  const [isValid, setIsValid] = useState(null);
   const navigate = useNavigate();
+
+  // Debounced ticker validation
+  useEffect(() => {
+    const validateTicker = async () => {
+      if (!ticker || ticker.length < 2) {
+        setIsValid(null);
+        return;
+      }
+
+      setValidating(true);
+      try {
+        const response = await axios.get(`${API}/generate/validate-ticker/${ticker}`);
+        setIsValid(response.data.valid);
+        if (!response.data.valid) {
+          setError("Ticker not found on Screener.in");
+        } else {
+          setError("");
+        }
+      } catch (err) {
+        // If validation fails, allow proceeding
+        setIsValid(true);
+        setError("");
+      } finally {
+        setValidating(false);
+      }
+    };
+
+    const timeoutId = setTimeout(validateTicker, 800);
+    return () => clearTimeout(timeoutId);
+  }, [ticker]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,6 +50,11 @@ export default function Landing() {
     
     if (!ticker.trim()) {
       setError("Please enter a ticker");
+      return;
+    }
+
+    if (isValid === false) {
+      setError("Please enter a valid ticker");
       return;
     }
 
