@@ -107,27 +107,23 @@ class PipelineManager:
     async def _update_step(self, job_id: str, step_number: int, status: str, message: str = "", data: Dict = None):
         """Update a specific step's status"""
         step_update = {
-            "status": status,
-            "message": message,
+            f"steps.{step_number - 1}.status": status,
+            f"steps.{step_number - 1}.message": message,
+            "current_step": step_number,
+            "updated_at": datetime.now(timezone.utc).isoformat()
         }
         
         if status == "in_progress":
-            step_update["started_at"] = datetime.now(timezone.utc).isoformat()
+            step_update[f"steps.{step_number - 1}.started_at"] = datetime.now(timezone.utc).isoformat()
         elif status in ["completed", "error"]:
-            step_update["completed_at"] = datetime.now(timezone.utc).isoformat()
+            step_update[f"steps.{step_number - 1}.completed_at"] = datetime.now(timezone.utc).isoformat()
         
         if data:
-            step_update["data"] = data
+            step_update[f"steps.{step_number - 1}.data"] = data
         
         await self.db.model_jobs.update_one(
             {"id": job_id},
-            {
-                "$set": {
-                    f"steps.{step_number - 1}": step_update,
-                    "current_step": step_number,
-                    "updated_at": datetime.now(timezone.utc).isoformat()
-                }
-            }
+            {"$set": step_update}
         )
     
     async def _step1_company_identification(self, job_id: str, ticker: str) -> Dict[str, Any]:
