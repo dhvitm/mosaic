@@ -169,3 +169,59 @@ async def list_jobs(limit: int = 20):
     except Exception as e:
         logger.error(f"Error listing jobs: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.websocket("/ws/{job_id}")
+async def websocket_endpoint(websocket: WebSocket, job_id: str):
+    """
+    WebSocket endpoint for real-time job progress updates
+    """
+    await ws_manager.connect(websocket, job_id)
+    
+    try:
+        # Send initial job status
+        job = await db.model_jobs.find_one({"id": job_id}, {"_id": 0})
+        if job:
+            await websocket.send_json({
+                'type': 'connected',
+                'job_id': job_id,
+                'status': job.get('status'),
+                'current_step': job.get('current_step', 0)
+            })
+        
+        # Keep connection alive and listen for client messages
+        while True:
+            data = await websocket.receive_text()
+            # Echo back for keepalive
+            await websocket.send_json({'type': 'pong'})
+            
+    except WebSocketDisconnect:
+        ws_manager.disconnect(websocket, job_id)
+        logger.info(f"WebSocket disconnected for job {job_id}")
+    except Exception as e:
+        logger.error(f"WebSocket error for job {job_id}: {str(e)}")
+        ws_manager.disconnect(websocket, job_id)
+
+@router.get("/validate-ticker/{ticker}")
+async def validate_ticker(ticker: str):
+    """
+    Validate if a ticker exists on Screener.in
+    """
+    try:
+        scraper = ScraperService()
+        is_valid = await scraper.validate_ticker(ticker.upper())
+        await scraper.close()
+        
+        return {
+            "ticker": ticker.upper(),
+            "valid": is_valid,
+            "message": "Ticker found" if is_valid else "Ticker not found on Screener.in"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error validating ticker {ticker}: {str(e)}")
+        # Return as potentially valid if validation fails
+        return {
+            "ticker": ticker.upper(),
+            "valid": True,
+            "message": "Unable to validate - proceeding"
+        }
