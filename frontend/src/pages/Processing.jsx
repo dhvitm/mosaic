@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Loader2, CheckCircle, XCircle, AlertTriangle, Circle } from "lucide-react";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
+const WS_URL = BACKEND_URL.replace('https://', 'wss://').replace('http://', 'ws://');
 
 const STEP_ICONS = {
   pending: Circle,
@@ -27,32 +28,123 @@ export default function Processing() {
   const navigate = useNavigate();
   const [job, setJob] = useState(null);
   const [error, setError] = useState("");
+  const wsRef = useRef(null);
+  const reconnectTimeoutRef = useRef(null);
 
   useEffect(() => {
-    const pollProgress = async () => {
+    // Fetch initial job data
+    const fetchInitialData = async () => {
       try {
         const response = await axios.get(`${API}/generate/progress/${jobId}`);
         setJob(response.data);
-
-        if (response.data.status === "completed") {
-          setTimeout(() => {
-            navigate(`/results/${jobId}`);
-          }, 1500);
-        } else if (response.data.status === "failed") {
-          setError(response.data.error || "Job failed");
-        }
       } catch (err) {
         setError(err.response?.data?.detail || "Failed to fetch job progress");
       }
     };
 
-    // Initial fetch
-    pollProgress();
+    fetchInitialData();
 
-    // Poll every 2 seconds
-    const interval = setInterval(pollProgress, 2000);
+    // Connect to WebSocket for real-time updates
+    const connectWebSocket = () => {
+      const ws = new WebSocket(`${WS_URL}/api/generate/ws/${jobId}`);
+      
+      ws.onopen = () => {
+        console.log('WebSocket connected');
+      };
 
-    return () => clearInterval(interval);
+      ws.onmessage = (event) => {
+        const message = JSON.parse(event.data);
+        console.log('WebSocket message:', message);
+
+        switch (message.type) {
+          case 'connected':
+            console.log('WebSocket connection confirmed');
+            break;
+
+          case 'step_update':
+            setJob((prevJob) => {
+              if (!prevJob) return prevJob;
+              
+              const updatedSteps = [...prevJob.steps];
+              const stepIndex = message.step_number - 1;
+              
+              if (updatedSteps[stepIndex]) {
+                updatedSteps[stepIndex] = {
+                  ...updatedSteps[stepIndex],
+                  status: message.status,
+                  message: message.message
+                };
+              }
+              
+              return {
+                ...prevJob,
+                steps: updatedSteps,
+                current_step: message.step_number,
+                updated_at: new Date().toISOString()
+              };
+            });
+            break;
+
+          case 'job_status':
+            setJob((prevJob) => ({
+              ...prevJob,
+              status: message.status,
+              current_step: message.current_step
+            }));
+            break;
+
+          case 'job_complete':
+            setJob((prevJob) => ({
+              ...prevJob,
+              status: 'completed',
+              result: message.result
+            }));
+            
+            // Navigate to results after a short delay
+            setTimeout(() => {
+              navigate(`/results/${jobId}`);
+            }, 1500);
+            break;
+
+          case 'error':
+            setError(message.error);
+            setJob((prevJob) => ({
+              ...prevJob,
+              status: 'failed'
+            }));
+            break;
+
+          default:
+            break;
+        }
+      };
+
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+      };
+
+      ws.onclose = () => {
+        console.log('WebSocket closed, attempting to reconnect...');
+        // Attempt to reconnect after 3 seconds
+        reconnectTimeoutRef.current = setTimeout(() => {
+          connectWebSocket();
+        }, 3000);
+      };
+
+      wsRef.current = ws;
+    };
+
+    connectWebSocket();
+
+    // Cleanup on unmount
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.close();
+      }
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
+      }
+    };
   }, [jobId, navigate]);
 
   if (error) {
@@ -98,6 +190,10 @@ export default function Processing() {
               <p className="text-slate-400">
                 {job.result?.company_metadata?.full_name || "Processing..."}
               </p>
+              <div className="flex items-center gap-2 mt-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-xs text-slate-500">Live updates via WebSocket</span>
+              </div>
             </div>
             <div className="text-right">
               <div className="text-3xl font-bold font-mono text-indigo-400">
@@ -189,7 +285,7 @@ export default function Processing() {
       {job.status === 'processing' && (
         <div className="max-w-6xl mx-auto mt-6 text-center">
           <p className="text-slate-500 text-sm">
-            Please wait while we generate your financial model. This page will automatically update.
+            Real-time updates powered by WebSocket. No need to refresh!
           </p>
         </div>
       )}
