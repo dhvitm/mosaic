@@ -3,8 +3,12 @@ from typing import List
 import os
 from pathlib import Path
 import logging
+import sys
 
-from backend.models import SectorKnowledgeFile
+# Add backend to path
+sys.path.append(str(Path(__file__).parent.parent))
+
+from models import SectorKnowledgeFile
 from motor.motor_asyncio import AsyncIOMotorClient
 
 logger = logging.getLogger(__name__)
