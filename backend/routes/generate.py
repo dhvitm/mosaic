@@ -4,9 +4,13 @@ from datetime import datetime, timezone
 import os
 import logging
 from pathlib import Path
+import sys
 
-from backend.models import ModelJob, ModelJobCreate
-from backend.services.pipeline_manager import PipelineManager
+# Add backend to path for imports
+sys.path.append(str(Path(__file__).parent.parent))
+
+from models import ModelJob, ModelJobCreate
+from services.pipeline_manager import PipelineManager
 from motor.motor_asyncio import AsyncIOMotorClient
 
 logger = logging.getLogger(__name__)
