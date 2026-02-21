@@ -1,0 +1,162 @@
+{
+  "project_name": "Mosaic",
+  "app_type": "Financial SaaS Dashboard",
+  "design_philosophy": {
+    "identity": "The Performance Pro (Obsidian Citadel)",
+    "tone": "Competence, Precision, Trustworthy, Data-Dense",
+    "theme": "dark",
+    "principles": [
+      "No gradients for gradients' sake - meaningful data visualization only.",
+      "High contrast for readability (WCAG AA compliant).",
+      "Motion is functional (loading states, transitions), not decorative.",
+      "Data density is a feature, not a bug."
+    ]
+  },
+  "typography": {
+    "headings": {
+      "family": "Space Grotesk",
+      "weights": ["600", "700"],
+      "usage": "Page titles, Section headers, Key Metrics",
+      "letter_spacing": "-0.02em"
+    },
+    "body": {
+      "family": "Manrope",
+      "weights": ["400", "500"],
+      "usage": "Standard text, paragraphs, labels",
+      "line_height": "1.6"
+    },
+    "data": {
+      "family": "JetBrains Mono",
+      "weights": ["400", "500"],
+      "usage": "Financial figures, Tickers, Code, Dates"
+    },
+    "scale": {
+      "h1": "text-4xl md:text-5xl font-bold tracking-tight",
+      "h2": "text-3xl font-semibold tracking-tight",
+      "h3": "text-2xl font-medium",
+      "body": "text-base text-slate-300",
+      "small": "text-sm text-slate-400"
+    }
+  },
+  "colors": {
+    "base": {
+      "background": "#020617", 
+      "foreground": "#F8FAFC",
+      "card": "#0F172A",
+      "card_foreground": "#F1F5F9",
+      "border": "#1E293B"
+    },
+    "brand": {
+      "primary": "#6366F1",
+      "primary_foreground": "#FFFFFF",
+      "secondary": "#1E293B",
+      "accent": "#818CF8"
+    },
+    "semantic": {
+      "success": "#10B981", 
+      "warning": "#F59E0B", 
+      "destructive": "#F43F5E", 
+      "info": "#3B82F6"
+    },
+    "status": {
+      "buy": "#10B981",
+      "hold": "#F59E0B",
+      "sell": "#F43F5E"
+    }
+  },
+  "components": {
+    "cards": {
+      "style": "Sharp edges or minimal rounded (rounded-sm)",
+      "border": "1px solid rgba(255,255,255,0.08)",
+      "shadow": "none",
+      "hover": "border-slate-600 transition-colors duration-200"
+    },
+    "buttons": {
+      "primary": "bg-indigo-600 hover:bg-indigo-700 text-white rounded-md shadow-[0_0_10px_rgba(99,102,241,0.3)] font-medium px-6 py-2 transition-all",
+      "secondary": "bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-md px-4 py-2 transition-all"
+    },
+    "inputs": {
+      "style": "bg-slate-950 border-slate-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-md text-lg p-4 placeholder:text-slate-600",
+      "hero_input": "h-16 text-2xl bg-slate-900/50 backdrop-blur-md border-slate-700 focus:border-indigo-400 rounded-lg w-full max-w-2xl shadow-2xl"
+    },
+    "progress_bar": {
+      "container": "h-2 bg-slate-800 rounded-full overflow-hidden",
+      "fill": "h-full bg-indigo-500 transition-all duration-500 ease-out"
+    }
+  },
+  "layout_strategies": {
+    "landing_page": {
+      "structure": "Centered Hero with floating input. Subtle animated background grid.",
+      "alignment": "Center-aligned content, left-aligned features below fold."
+    },
+    "processing_page": {
+      "structure": "Vertical Split: Left side Timeline (The 8 Steps), Right side 'Console Log' or 'Detail View'.",
+      "animation": "Staggered reveal of steps. Active step pulses."
+    },
+    "results_page": {
+      "structure": "Dashboard Grid (Bento). Top Bar: Ticker & Rec. Main area: Tabs for Thesis, Valuation, etc.",
+      "grid": "grid grid-cols-1 md:grid-cols-3 gap-6"
+    }
+  },
+  "visual_enhancers": {
+    "glassmorphism": "backdrop-blur-xl bg-slate-950/70 border-b border-white/5",
+    "gradients": "Radial gradient at top-center: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15) 0%, transparent 50%)",
+    "borders": "1px solid rgba(255,255,255,0.08)"
+  },
+  "motion": {
+    "page_transition": "initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}",
+    "card_entrance": "staggerChildren: 0.1",
+    "hover_lift": "hover:-translate-y-1 transition-transform duration-200"
+  },
+  "image_urls": {
+    "hero_background": {
+      "url": "https://images.pexels.com/photos/16553906/pexels-photo-16553906.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "alt": "Modern financial skyscraper abstract background",
+      "usage": "Hero section background with heavy dark overlay (opacity 0.8-0.9)"
+    },
+    "admin_bg": {
+       "url": "https://images.pexels.com/photos/273682/pexels-photo-273682.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+       "alt": "Low angle skyscraper",
+       "usage": "Subtle background for admin or login pages"
+    }
+  },
+  "icons": {
+    "library": "lucide-react",
+    "style": "Stroke width 1.5px (Thin/Elegant)",
+    "mapping": {
+      "ticker": "Banknote",
+      "thesis": "ScrollText",
+      "valuation": "TrendingUp",
+      "assumptions": "SlidersHorizontal",
+      "model": "Grid3X3",
+      "download": "Download",
+      "admin": "ShieldCheck",
+      "processing": "Loader2"
+    }
+  },
+  "page_specific_instructions": {
+    "landing": [
+      "Use the 'hero_input' style for the main ticker box.",
+      "Include a 'Recent Searches' or 'Trending Tickers' pill list below the input.",
+      "Use the 'hero_background' image with a very dark overlay (bg-slate-950/90) to ensure text readability."
+    ],
+    "processing": [
+      "The 8-step pipeline is the Hero. Make it look like a system check.",
+      "Steps: 1. Initializing, 2. Fetching Data, 3. Analyzing 10-K, 4. Formatting Financials, 5. Calculating Ratios, 6. Drafting Thesis, 7. Building Model, 8. Finalizing.",
+      "Use a progress bar at the top fixed position.",
+      "Show a 'Time Remaining' estimate."
+    ],
+    "results": [
+      "Recommendation Box: MUST use the color codes (Green/Buy, Red/Sell, Amber/Hold). Large font.",
+      "Tabs: Use Shadcn Tabs but style them to look like segmented controls or minimal underlines.",
+      "Model Preview: Use a dense grid to mimic Excel. Monospace font for numbers is critical."
+    ]
+  },
+  "universal_guidelines": [
+    "Do not use generic 'Inter' for headings. Use 'Space Grotesk'.",
+    "Ensure all interactive elements have hover states (text color change or bg change).",
+    "Use 'sonner' for toast notifications.",
+    "Add 'data-testid' to all buttons and inputs.",
+    "For financial numbers, always align right."
+  ]
+}
