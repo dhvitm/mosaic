@@ -5,8 +5,12 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
+import sys
 
-from backend.routes import generate, admin
+# Add backend to path
+sys.path.append(str(Path(__file__).parent.parent))
+
+from routes import generate, admin
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
