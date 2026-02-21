@@ -439,7 +439,7 @@ Write in professional equity research style.
             raise
     
     async def _complete_job(self, job_id: str, excel_path: str, result: Dict[str, Any]):
-        """Mark job as completed"""
+        """Mark job as completed and broadcast via WebSocket"""
         await self.db.model_jobs.update_one(
             {"id": job_id},
             {"$set": {
@@ -449,9 +449,12 @@ Write in professional equity research style.
                 "updated_at": datetime.now(timezone.utc).isoformat()
             }}
         )
+        
+        # Broadcast completion via WebSocket
+        await ws_manager.send_completion(job_id, result)
     
     async def _fail_job(self, job_id: str, error: str):
-        """Mark job as failed"""
+        """Mark job as failed and broadcast via WebSocket"""
         await self.db.model_jobs.update_one(
             {"id": job_id},
             {"$set": {
@@ -460,3 +463,6 @@ Write in professional equity research style.
                 "updated_at": datetime.now(timezone.utc).isoformat()
             }}
         )
+        
+        # Broadcast error via WebSocket
+        await ws_manager.send_error(job_id, error)
