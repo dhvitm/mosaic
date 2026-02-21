@@ -106,7 +106,7 @@ class PipelineManager:
         )
     
     async def _update_step(self, job_id: str, step_number: int, status: str, message: str = "", data: Dict = None):
-        """Update a specific step's status"""
+        """Update a specific step's status and broadcast via WebSocket"""
         step_update = {
             f"steps.{step_number - 1}.status": status,
             f"steps.{step_number - 1}.message": message,
@@ -116,7 +116,7 @@ class PipelineManager:
         
         if status == "in_progress":
             step_update[f"steps.{step_number - 1}.started_at"] = datetime.now(timezone.utc).isoformat()
-        elif status in ["completed", "error"]:
+        elif status in ["completed", "error", "warning"]:
             step_update[f"steps.{step_number - 1}.completed_at"] = datetime.now(timezone.utc).isoformat()
         
         if data:
@@ -125,6 +125,15 @@ class PipelineManager:
         await self.db.model_jobs.update_one(
             {"id": job_id},
             {"$set": step_update}
+        )
+        
+        # Broadcast via WebSocket
+        await ws_manager.send_step_update(
+            job_id=job_id,
+            step_number=step_number,
+            status=status,
+            message=message,
+            data=data
         )
     
     async def _step1_company_identification(self, job_id: str, ticker: str) -> Dict[str, Any]:
