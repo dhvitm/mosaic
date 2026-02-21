@@ -13,6 +13,7 @@ from models import ModelJob, PipelineStep
 from services.claude_service import ClaudeService
 from services.scraper_service import ScraperService
 from services.excel_generator import ExcelGenerator
+from services.websocket_manager import ws_manager
 
 logger = logging.getLogger(__name__)
 
