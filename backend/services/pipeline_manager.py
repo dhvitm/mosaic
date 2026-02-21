@@ -4,11 +4,15 @@ import logging
 from typing import Dict, Any
 from datetime import datetime, timezone, timedelta
 from motor.motor_asyncio import AsyncIOMotorDatabase
+from pathlib import Path
+import sys
 
-from backend.models import ModelJob, PipelineStep
-from backend.services.claude_service import ClaudeService
-from backend.services.scraper_service import ScraperService
-from backend.services.excel_generator import ExcelGenerator
+sys.path.append(str(Path(__file__).parent.parent))
+
+from models import ModelJob, PipelineStep
+from services.claude_service import ClaudeService
+from services.scraper_service import ScraperService
+from services.excel_generator import ExcelGenerator
 
 logger = logging.getLogger(__name__)
 
