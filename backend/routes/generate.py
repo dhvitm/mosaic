@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, BackgroundTasks
+from fastapi import APIRouter, HTTPException, BackgroundTasks, WebSocket, WebSocketDisconnect
 from typing import List
 from datetime import datetime, timezone
 import os
@@ -11,6 +11,8 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from models import ModelJob, ModelJobCreate
 from services.pipeline_manager import PipelineManager
+from services.scraper_service import ScraperService
+from services.websocket_manager import ws_manager
 from motor.motor_asyncio import AsyncIOMotorClient
 
 logger = logging.getLogger(__name__)
