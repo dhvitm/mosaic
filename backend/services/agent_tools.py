@@ -739,6 +739,9 @@ class ToolExecutor:
                     peers = cache_result.get("data", {})
             
             # Build the model_data structure for Excel generator
+            logger.info(f"Building model_data with financials keys: {list(financials.keys())}")
+            logger.info(f"annual_pnl sample: {list(financials.get('annual_pnl', {}).keys())[:3]}")
+            
             model_data = {
                 "company_metadata": {
                     "ticker": ticker,
