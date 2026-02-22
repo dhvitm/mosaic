@@ -340,8 +340,10 @@ class ToolExecutor:
                 )
             elif tool_name == "flag_knowledge_gap":
                 result = self._flag_knowledge_gap(tool_input["sector"], tool_input["missing_topic"])
-            elif tool_name == "write_excel_model":
-                result = self._write_excel_model(tool_input["model_data"])
+            elif tool_name == "store_analysis_data":
+                result = self._store_analysis_data(tool_input["data_type"], tool_input["data"])
+            elif tool_name == "generate_excel_model":
+                result = await self._generate_excel_model(tool_input["ticker"], tool_input.get("confirm_ready", False))
             elif tool_name == "cache_read":
                 result = self._cache_read(tool_input["ticker"], tool_input["key"])
             elif tool_name == "cache_write":
