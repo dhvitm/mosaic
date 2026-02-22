@@ -83,31 +83,40 @@ async def get_knowledge_file(filename: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.put("/knowledge-files/{filename}")
-async def update_knowledge_file(filename: str, content: str):
+async def update_knowledge_file(filename: str, request: FileUpdateRequest):
     """
     Update a knowledge file
     """
     try:
         file_path = KNOWLEDGE_DIR / filename
         
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail="Knowledge file not found")
+        
         with open(file_path, 'w') as f:
-            f.write(content)
+            f.write(request.content)
         
         logger.info(f"Updated knowledge file: {filename}")
         return {"message": "Knowledge file updated successfully", "filename": filename}
         
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error updating knowledge file: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/knowledge-files")
-async def create_knowledge_file(filename: str, content: str):
+async def create_knowledge_file(request: FileCreateRequest):
     """
     Create a new knowledge file
     """
     try:
+        filename = request.filename
         if not filename.endswith('.md'):
             filename += '.md'
+        
+        # Sanitize filename
+        filename = "".join(c for c in filename if c.isalnum() or c in "._-").lower()
         
         file_path = KNOWLEDGE_DIR / filename
         
@@ -115,7 +124,7 @@ async def create_knowledge_file(filename: str, content: str):
             raise HTTPException(status_code=400, detail="Knowledge file already exists")
         
         with open(file_path, 'w') as f:
-            f.write(content)
+            f.write(request.content)
         
         logger.info(f"Created knowledge file: {filename}")
         return {"message": "Knowledge file created successfully", "filename": filename}
