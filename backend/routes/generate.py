@@ -269,6 +269,69 @@ async def list_cached_tickers():
         logger.error(f"Error listing cached tickers: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.get("/cache/{ticker}")
+async def get_ticker_cache(ticker: str):
+    """
+    Get detailed cache data for a specific ticker
+    """
+    try:
+        ticker = ticker.upper()
+        status = CacheService.get_cache_status(ticker)
+        
+        if not status['has_cache'] or not status['cached_steps']:
+            raise HTTPException(status_code=404, detail=f"No cache found for {ticker}")
+        
+        # Load actual data for each cached step
+        cache_data = {
+            "ticker": ticker,
+            "cached_steps": [],
+            "total_steps": len(status['cached_steps'])
+        }
+        
+        step_names = {
+            1: "Company Identification",
+            2: "Annual Financial Data",
+            3: "Operational Metrics",
+            4: "Management Commentary",
+            5: "Forecast Assumptions",
+            6: "Excel Model",
+            7: "Valuation",
+            8: "Investment Thesis"
+        }
+        
+        for step_info in status['cached_steps']:
+            step_num = step_info['step']
+            step_data = CacheService.load_step_data(ticker, step_num)
+            
+            cache_data['cached_steps'].append({
+                "step_number": step_num,
+                "step_name": step_names.get(step_num, f"Step {step_num}"),
+                "cached_at": step_info['cached_at'],
+                "size_kb": step_info['size_kb'],
+                "data": step_data
+            })
+        
+        return cache_data
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting cache for {ticker}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete("/cache/{ticker}")
+async def clear_ticker_cache(ticker: str):
+    """
+    Clear all cached data for a specific ticker
+    """
+    try:
+        ticker = ticker.upper()
+        CacheService.clear_ticker_cache(ticker)
+        return {"message": f"Cache cleared for {ticker}", "ticker": ticker}
+    except Exception as e:
+        logger.error(f"Error clearing cache for {ticker}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.post("/retry/{job_id}")
 async def retry_job(job_id: str, background_tasks: BackgroundTasks):
     """
