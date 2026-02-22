@@ -568,9 +568,9 @@ Return ONLY the JSON object, no other text."""
             await self._update_step(job_id, 6, "error", str(e))
             raise
     
-    async def _step7_valuation(self, job_id: str, company_metadata: Dict, assumptions: Dict) -> Dict[str, Any]:
-        """Step 7: Run valuation"""
-        await self._update_step(job_id, 7, "in_progress", "Running valuation...")
+    async def _step6_valuation(self, job_id: str, company_metadata: Dict, assumptions: Dict) -> Dict[str, Any]:
+        """Step 6: Run valuation"""
+        await self._update_step(job_id, 6, "in_progress", "Running valuation...")
         await ws_manager.send_activity(job_id, "llm_thinking", "Claude AI calculating intrinsic value...")
         
         ticker = company_metadata.get('ticker', 'UNKNOWN')
