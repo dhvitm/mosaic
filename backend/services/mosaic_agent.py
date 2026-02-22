@@ -372,12 +372,7 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
                             excel_path = result.get("file_path")
                         
                         # Sync collected data to tool executor for generate_excel_model
-                        if tool_name in ["get_screener_financials", "get_stock_price", "get_peer_comparison"]:
-                            self.tool_executor.store_collected_data(
-                                "financials" if tool_name == "get_screener_financials" else
-                                "stock_price" if tool_name == "get_stock_price" else "peers",
-                                result
-                            )
+                        # Note: Tools now auto-store data in _collected_data, no need to store again
                         
                         # Log tool call
                         tool_log = {
