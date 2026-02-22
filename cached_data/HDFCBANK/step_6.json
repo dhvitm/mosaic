@@ -1,0 +1,17 @@
+{
+  "ticker": "HDFCBANK",
+  "step_number": 6,
+  "data": {
+    "cost_of_equity": 13.0,
+    "terminal_growth": 4.0,
+    "fair_value": 1825,
+    "target_price": 1825,
+    "current_price": 1737.85,
+    "upside_percent": 5.0,
+    "recommendation": "HOLD",
+    "methodology": "RIV",
+    "rationale": "HDFC Bank trades near fair value with ROE of 16.5% delivering modest residual income above 13% cost of equity. Limited upside as premium valuation already reflects quality franchise and consistent performance."
+  },
+  "cached_at": "2026-02-22T10:20:03.974124+00:00",
+  "cache_version": "1.0"
+}
