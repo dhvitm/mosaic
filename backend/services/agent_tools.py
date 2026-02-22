@@ -308,11 +308,17 @@ class ToolExecutor:
         self.gaps_file = Path("/app/knowledge/knowledge_gaps.json")
         self._current_ticker = None
         self._current_job_id = None
+        self._collected_data = {}  # Shared storage for incremental data collection
     
     def set_context(self, ticker: str, job_id: str):
         """Set current context for tool execution"""
         self._current_ticker = ticker
         self._current_job_id = job_id
+        self._collected_data = {}  # Reset on new job
+    
+    def store_collected_data(self, key: str, data: Any):
+        """Store data collected by agent (called from mosaic_agent.py)"""
+        self._collected_data[key] = data
     
     async def execute(self, tool_name: str, tool_input: Dict[str, Any]) -> Dict[str, Any]:
         """Execute a tool and return results"""
