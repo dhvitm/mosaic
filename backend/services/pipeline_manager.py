@@ -63,10 +63,10 @@ class PipelineManager:
             # Step 6: Valuation (moved before Excel)
             valuation = await self._step6_valuation(job_id, company_metadata, assumptions)
             
-            # Step 7: Thesis Generation (moved before Excel)
+            # Step 7: Thesis Generation (moved before Excel) - now includes presentations data
             thesis = await self._step7_thesis_generation(
                 job_id, company_metadata, historical_financials,
-                assumptions, valuation
+                assumptions, valuation, management_commentary
             )
             
             # Step 8: Excel Model Generation (now last, with all data)
