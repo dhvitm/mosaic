@@ -1,138 +1,122 @@
-# Mosaic - Professional Financial Model Generator
+# Mosaic - Financial Model Generator for Indian Equities
 
-## Original Problem Statement
-Build a web app called "Mosaic" for investment professionals that takes an Indian stock ticker as input and generates:
-1. A professional-grade financial model in `.xlsx` format
-2. A detailed investment thesis
+## Product Overview
+Mosaic is a professional-grade financial model generator for Indian stock market analysis. It takes an NSE/BSE ticker as input and produces:
+1. A fully-linked Excel financial model (.xlsx) with historical data and 5-year projections
+2. A detailed AI-generated investment thesis
 
 ## Core Requirements
+- **Input:** Single NSE/BSE stock ticker
+- **Output:** 
+  - Excel model with P&L, Balance Sheet, ROE Tree, Valuation, and forecasts
+  - Investment thesis with recommendation (BUY/HOLD/SELL) and target price
 
-### Input
-- Single NSE/BSE stock ticker
+## Technical Architecture
 
-### Core Pipeline (8 Steps)
-1. **Company Identification** - Identify company, sector, and metadata
-2. **Annual Financial Data** - Scrape from Screener.in
-3. **Operational Metrics** - Extract quarterly KPIs from BSE presentations
-4. **Management Commentary** - Process concall transcripts
-5. **Assumptions Generation** - Use Claude AI to generate forecast assumptions
-6. **Excel Model Generation** - Create multi-sheet `.xlsx` file
-7. **Valuation** - Perform RIV, Peer Comps, DDM analysis
-8. **Thesis Generation** - Write structured investment thesis
+### Backend (FastAPI)
+- **Pipeline Manager:** 8-step async pipeline
+- **Scraper Service:** Playwright-based scraping from Screener.in
+- **Claude AI Integration:** For assumptions, valuation, and thesis generation
+- **Excel Generator:** openpyxl-based model with formulas
+- **Cache Service:** Local file caching for step results
+- **WebSocket Manager:** Real-time progress updates
 
-### Knowledge Base
-- Sector-specific logic in editable Markdown files at `/knowledge`
-- Ships with detailed `banks.md` file
+### Frontend (React)
+- **Landing Page:** Ticker input
+- **Processing Page:** Live activity log via WebSockets
+- **Results Page:** Thesis display with Excel download
+- **Jobs Page:** Dashboard for all jobs
+- **Cache Viewer:** View cached data per ticker
 
-### Frontend Features
-- Landing page with ticker input
-- Processing page with live pipeline status
-- Results page with thesis and Excel download
-- Jobs dashboard showing all running/past jobs
+### Database (MongoDB)
+- Jobs collection for job metadata
 
-### Admin
-- Password-protected `/admin` page for editing sector knowledge files
+## Pipeline Steps
+1. **Company Identification:** Scrape company metadata from Screener.in
+2. **Annual Financials:** Scrape P&L and Balance Sheet (12 years)
+3. **Quarterly Results:** Scrape quarterly data (12 quarters)
+4. **Management Commentary:** Scrape pros/cons, peers, investor presentations from Screener.in Documents
+5. **Assumptions Generation:** Claude AI generates forecast assumptions
+6. **Valuation:** RIV model, peer comparisons, target price
+7. **Thesis Generation:** Claude AI writes investment note
+8. **Excel Generation:** Build mechanically-linked model with formulas
 
-## Tech Stack
-- **Frontend**: React, Tailwind CSS, Shadcn UI
-- **Backend**: FastAPI (Python), Motor (async MongoDB)
-- **AI**: Claude Sonnet 4.5 via Emergent LLM Key
-- **Scraping**: Playwright
-- **Database**: MongoDB
+## What's Been Implemented (Feb 22, 2026)
 
-## What's Been Implemented
+### Completed Features
+- [x] Full 8-step pipeline with real web scraping
+- [x] Real-time activity log via WebSockets
+- [x] Abort job functionality
+- [x] Jobs dashboard with status tracking
+- [x] Cache viewer for debugging
+- [x] Results page with thesis display
+- [x] Excel download functionality
 
-### Completed (as of 2026-02-22)
-- [x] Full-stack application scaffolding (React + FastAPI)
-- [x] 8-step async pipeline in `pipeline_manager.py`
-- [x] WebSocket real-time progress updates
-- [x] File-based caching for step outputs (all 8 steps)
-- [x] Jobs dashboard (view all jobs, status, progress)
-- [x] Retry functionality for failed jobs
-- [x] Abort job functionality (backend + frontend)
-- [x] **Real-Time Activity Log** - Live display of API calls, LLM thinking, and data processing
-- [x] Claude AI integration for reasoning steps
-- [x] **Step 5, 7, 8 Performance Optimization** - Reduced from ~50s to ~10s per step
-- [x] **Step 6: Excel Model Generation** - Full multi-sheet workbook with:
-  - Cover sheet with recommendation summary
-  - Assumptions sheet with actual forecast data from Claude AI
-  - P&L and Balance Sheet templates
-  - Valuation sheet with RIV methodology data
-  - Investment Thesis sheet with full AI-generated analysis
-  - Key Metrics summary
-  - **Fixed: Excel generation now runs AFTER valuation & thesis steps**
-- [x] **Cache Viewer Page** (`/cache` and `/cache/:ticker`) - View all cached pipeline data per ticker
-- [x] **Download Excel button** on Results page - Working download endpoint
+### Latest Enhancements (This Session)
+- [x] **Excel with Mechanical Linking:** All calculations use formulas (e.g., PBT = Total Income - Total Expenses)
+- [x] **5-Year Projections:** FY26E-FY30E columns with growth formulas linked to Assumptions sheet
+- [x] **ROE Tree (DuPont Analysis):** New sheet decomposing ROE into NPM × Asset Turnover × Equity Multiplier
+- [x] **Cross-sheet References:** ROE Tree links to P&L and Balance Sheet for real mechanical linking
+- [x] **Screener.in Documents Scraping:** Replaced BSE scraping with Screener.in Documents section scraping
+- [x] **Investor Presentations Extraction:** Now scrapes 15+ PPT links with quarter information
 
-### In Progress
-- None
+### Excel Model Structure (10 Sheets)
+1. Cover - Company summary and recommendation
+2. Assumptions - Editable forecast drivers (yellow cells)
+3. P&L - Historical + 5-year projections with formulas
+4. Balance Sheet - Historical + 5-year projections
+5. ROE Tree - DuPont analysis with cross-sheet links
+6. Quarterly - Last 12 quarters of results
+7. Key Ratios - Historical financial ratios
+8. Valuation - RIV model with target price
+9. Peer Comparison - Sector peer metrics
+10. Thesis - Full investment note
 
-### Not Started / Placeholder
-- [ ] Admin page backend for knowledge file management
-- [ ] Excel formulas for mechanical linking (currently values only)
-- [ ] Forecast model projections (FY26E-FY30E) with formulas based on assumptions
-
-## Key Files
-
-### Backend
-- `backend/services/pipeline_manager.py` - Core pipeline orchestrator
-- `backend/services/claude_service.py` - Claude AI integration with activity broadcasting
-- `backend/services/websocket_manager.py` - WebSocket manager with activity_log support
-- `backend/services/cache_service.py` - File-based cache management
-- `backend/routes/generate.py` - API endpoints
-
-### Frontend
-- `frontend/src/pages/Landing.jsx` - Home page with ticker input
-- `frontend/src/pages/Processing.jsx` - Real-time pipeline status + Activity Log
-- `frontend/src/pages/Jobs.jsx` - Jobs dashboard with Abort button
-- `frontend/src/pages/Results.jsx` - Results display with Download Excel button
-- `frontend/src/pages/CacheViewer.jsx` - Cache viewer page for viewing all cached data
-- `frontend/src/components/JobsList.jsx` - Jobs list component
+### Excel Formula Examples
+- `Total Income = Revenue + Interest + Other Income`
+- `PBT = Total Income - Total Expenses`
+- `Net Profit = PBT - Tax`
+- `ROE = PAT / Average Equity`
+- `Asset Turnover = Revenue / Average Assets`
 
 ## API Endpoints
-- `POST /api/generate` - Create new job
-- `GET /api/generate/jobs` - List all jobs
+- `POST /api/generate/` - Create new job
+- `GET /api/generate/jobs/` - List all jobs
 - `GET /api/generate/progress/{job_id}` - Get job progress
-- `GET /api/generate/result/{job_id}` - Get completed job result
-- `GET /api/generate/download/{job_id}` - Download Excel model
+- `GET /api/generate/result/{job_id}` - Get job result
+- `GET /api/generate/download/{job_id}` - Download Excel file
 - `POST /api/generate/retry/{job_id}` - Retry failed job
 - `POST /api/generate/abort/{job_id}` - Abort running job
-- `GET /api/generate/cache/{ticker}` - Get detailed cache data for ticker
-- `DELETE /api/generate/cache/{ticker}` - Clear cache for ticker
-- `GET /api/generate/cached-tickers` - List all cached tickers
-- `WS /api/generate/ws/{job_id}` - WebSocket for real-time updates
+- `GET /api/generate/cache/{ticker}` - View cached data
+- `DELETE /api/generate/cache/{ticker}` - Clear cache
 
-## Database Schema
-```json
-{
-  "jobs": {
-    "id": "string",
-    "ticker": "string",
-    "status": "pending|processing|completed|failed",
-    "current_step": "int",
-    "steps": "array",
-    "error": "string",
-    "created_at": "datetime",
-    "updated_at": "datetime"
-  }
-}
-```
+## Remaining Tasks (Backlog)
 
-## Prioritized Backlog
+### P1 - High Priority
+- [ ] Parse and summarize concall transcripts with AI
+- [ ] Extract operational metrics from investor presentations
+- [ ] Add more sector-specific knowledge files (Cement, IT, Pharma)
 
-### P0 (Critical)
-- Step 6: Excel model generation with openpyxl
+### P2 - Medium Priority
+- [ ] Admin page for editing .md knowledge files
+- [ ] Export thesis to PDF
+- [ ] Historical model comparison
 
-### P1 (High)
-- Step 7 & 8: Complete valuation and thesis implementation
-- Improve scraping reliability
+### P3 - Low Priority
+- [ ] User authentication
+- [ ] Multi-ticker batch processing
+- [ ] Custom assumption overrides in UI
 
-### P2 (Medium)
-- Admin page backend for knowledge files
-- Download Excel button
-- Step 5 performance optimization
+## Tech Stack
+- **Frontend:** React, Tailwind CSS, Shadcn UI, socket.io-client
+- **Backend:** FastAPI, Motor (async MongoDB), Uvicorn
+- **AI:** Claude claude-sonnet-4-5 via Emergent LLM Key
+- **Scraping:** Playwright for dynamic content
+- **Excel:** openpyxl
 
-### P3 (Low/Future)
-- Additional sector knowledge files
-- User authentication
-- Export to PDF
+## Key Files
+- `backend/services/excel_generator.py` - Excel model generation with formulas
+- `backend/services/scraper_service.py` - Web scraping from Screener.in
+- `backend/services/pipeline_manager.py` - Pipeline orchestration
+- `backend/services/claude_service.py` - AI integration
+- `frontend/src/pages/Results.jsx` - Results display page
