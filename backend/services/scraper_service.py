@@ -904,20 +904,36 @@ class ScraperService:
             page = await self.context.new_page()
             
             try:
-                response = await page.goto(url, wait_until='domcontentloaded', timeout=15000)
+                response = await page.goto(url, wait_until='networkidle', timeout=20000)
                 
                 # Check response status
                 if response.status == 404:
                     await page.close()
                     return False
                 
-                # Check if company name header exists
-                try:
-                    await page.wait_for_selector('h1', timeout=5000)
+                # Wait a bit for JS to render
+                await asyncio.sleep(1)
+                
+                # Check if we got redirected to 404 or search page
+                current_url = page.url
+                if '404' in current_url or 'search' in current_url:
                     await page.close()
+                    return False
+                
+                # Check if company name header exists by looking at page content
+                content = await page.content()
+                
+                # Valid pages have company name in h1 and financial tables
+                has_company_header = '<h1' in content and '</h1>' in content
+                has_financial_data = 'Profit & Loss' in content or 'Balance Sheet' in content or 'Market Cap' in content
+                
+                await page.close()
+                
+                if has_company_header and has_financial_data:
+                    logger.info(f"Ticker {ticker} validated successfully")
                     return True
-                except:
-                    await page.close()
+                else:
+                    logger.warning(f"Ticker {ticker} page loaded but missing expected content")
                     return False
                     
             except PlaywrightTimeout:
