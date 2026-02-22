@@ -368,27 +368,47 @@ class ExcelGenerator:
                                         break
             
             # Fill calculated fields for historical years
-            elif display_name == 'Total Income' and annual_pnl:
-                rev_row = self.pnl_rows.get('revenue___interest_earned', row-3)
-                int_row = self.pnl_rows.get('interest_income', row-2)
-                oth_row = self.pnl_rows.get('other_income', row-1)
+            if display_name == 'Total Income':
+                # Sum of all income items
+                interest_earned_row = self.pnl_rows.get('interest_earned')
+                int_adv_row = self.pnl_rows.get('interest_on_advances')
+                inv_income_row = self.pnl_rows.get('income_on_investments')
+                other_inc_row = self.pnl_rows.get('other_income')
+                comm_row = self.pnl_rows.get('commission___brokerage')
+                profit_inv_row = self.pnl_rows.get('profit_on_investments')
                 
                 for col_idx, year in enumerate(hist_years, start=2):
                     col = get_column_letter(col_idx)
                     cell = ws.cell(row=row, column=col_idx)
-                    cell.value = f"={col}{rev_row}+{col}{int_row}+{col}{oth_row}"
+                    # Build formula from available rows
+                    formula_parts = []
+                    if interest_earned_row: formula_parts.append(f"{col}{interest_earned_row}")
+                    if other_inc_row: formula_parts.append(f"{col}{other_inc_row}")
+                    if comm_row: formula_parts.append(f"{col}{comm_row}")
+                    if profit_inv_row: formula_parts.append(f"{col}{profit_inv_row}")
+                    
+                    if formula_parts:
+                        cell.value = f"={'+'.join(formula_parts)}"
                     cell.number_format = '#,##0.00'
                     cell.border = THIN_BORDER
                     cell.font = Font(bold=True)
             
-            elif display_name == 'Total Expenses' and annual_pnl:
-                opex_row = self.pnl_rows.get('operating_expenses', row-2)
-                dep_row = self.pnl_rows.get('depreciation', row-1)
+            elif display_name == 'Total Expenses':
+                int_exp_row = self.pnl_rows.get('interest_expended')
+                opex_row = self.pnl_rows.get('operating_expenses')
+                emp_row = self.pnl_rows.get('employee_cost')
+                dep_row = self.pnl_rows.get('depreciation')
+                other_opex_row = self.pnl_rows.get('other_opex')
                 
                 for col_idx, year in enumerate(hist_years, start=2):
                     col = get_column_letter(col_idx)
                     cell = ws.cell(row=row, column=col_idx)
-                    cell.value = f"={col}{opex_row}+{col}{dep_row}"
+                    formula_parts = []
+                    if int_exp_row: formula_parts.append(f"{col}{int_exp_row}")
+                    if opex_row: formula_parts.append(f"{col}{opex_row}")
+                    
+                    if formula_parts:
+                        cell.value = f"={'+'.join(formula_parts)}"
                     cell.number_format = '#,##0.00'
                     cell.border = THIN_BORDER
                     cell.font = Font(bold=True)
@@ -400,62 +420,132 @@ class ExcelGenerator:
                 prev_col = get_column_letter(col_idx - 1)
                 curr_col = get_column_letter(col_idx)
                 
-                if display_name == 'Revenue / Interest Earned':
+                if display_name == 'Interest Earned':
                     growth_ref = self.assumption_refs.get('revenue_growth_rate', {}).get(fc_year)
                     if growth_ref:
                         cell.value = f"={prev_col}{row}*(1+{growth_ref}/100)"
                     else:
                         cell.value = f"={prev_col}{row}*1.12"
                         
-                elif display_name == 'Interest Income':
+                elif display_name == 'Interest on Advances':
                     cell.value = f"={prev_col}{row}*1.10"
+                    
+                elif display_name == 'Income on Investments':
+                    cell.value = f"={prev_col}{row}*1.08"
                     
                 elif display_name == 'Other Income':
                     cell.value = f"={prev_col}{row}*1.08"
+                
+                elif display_name == 'Commission & Brokerage':
+                    cell.value = f"={prev_col}{row}*1.10"
+                    
+                elif display_name == 'Profit on Investments':
+                    cell.value = f"={prev_col}{row}*1.05"
                     
                 elif display_name == 'Total Income':
-                    rev_row = self.pnl_rows.get('revenue___interest_earned')
-                    int_row = self.pnl_rows.get('interest_income')
-                    oth_row = self.pnl_rows.get('other_income')
-                    cell.value = f"={curr_col}{rev_row}+{curr_col}{int_row}+{curr_col}{oth_row}"
+                    interest_earned_row = self.pnl_rows.get('interest_earned')
+                    other_inc_row = self.pnl_rows.get('other_income')
+                    comm_row = self.pnl_rows.get('commission___brokerage')
+                    profit_inv_row = self.pnl_rows.get('profit_on_investments')
+                    
+                    formula_parts = []
+                    if interest_earned_row: formula_parts.append(f"{curr_col}{interest_earned_row}")
+                    if other_inc_row: formula_parts.append(f"{curr_col}{other_inc_row}")
+                    if comm_row: formula_parts.append(f"{curr_col}{comm_row}")
+                    if profit_inv_row: formula_parts.append(f"{curr_col}{profit_inv_row}")
+                    
+                    if formula_parts:
+                        cell.value = f"={'+'.join(formula_parts)}"
                     cell.font = Font(bold=True)
+                
+                elif display_name == 'Interest Expended':
+                    cell.value = f"={prev_col}{row}*1.10"
+                    
+                elif display_name == 'Interest on Deposits':
+                    cell.value = f"={prev_col}{row}*1.10"
                     
                 elif display_name == 'Operating Expenses':
                     cell.value = f"={prev_col}{row}*1.10"
                     
+                elif display_name == 'Employee Cost':
+                    cell.value = f"={prev_col}{row}*1.08"
+                    
                 elif display_name == 'Depreciation':
                     cell.value = f"={prev_col}{row}*1.05"
                     
+                elif display_name == 'Other OpEx':
+                    cell.value = f"={prev_col}{row}*1.08"
+                    
                 elif display_name == 'Total Expenses':
+                    int_exp_row = self.pnl_rows.get('interest_expended')
                     opex_row = self.pnl_rows.get('operating_expenses')
-                    dep_row = self.pnl_rows.get('depreciation')
-                    cell.value = f"={curr_col}{opex_row}+{curr_col}{dep_row}"
+                    
+                    formula_parts = []
+                    if int_exp_row: formula_parts.append(f"{curr_col}{int_exp_row}")
+                    if opex_row: formula_parts.append(f"{curr_col}{opex_row}")
+                    
+                    if formula_parts:
+                        cell.value = f"={'+'.join(formula_parts)}"
                     cell.font = Font(bold=True)
                     
-                elif display_name == 'Profit Before Tax':
+                elif display_name == 'Provisions & Contingencies':
+                    cell.value = f"={prev_col}{row}*1.05"
+                    
+                elif display_name == 'Provision for NPA':
+                    cell.value = f"={prev_col}{row}*0.95"  # Improve over time
+                    
+                elif display_name == 'Provision for Tax':
+                    pbt_row = self.pnl_rows.get('profit_before_tax')
+                    if pbt_row:
+                        cell.value = f"={curr_col}{pbt_row}*0.25"
+                    else:
+                        cell.value = f"={prev_col}{row}*1.10"
+                    
+                elif display_name == 'Operating Profit':
                     inc_row = self.pnl_rows.get('total_income')
                     exp_row = self.pnl_rows.get('total_expenses')
-                    cell.value = f"={curr_col}{inc_row}-{curr_col}{exp_row}"
+                    if inc_row and exp_row:
+                        cell.value = f"={curr_col}{inc_row}-{curr_col}{exp_row}"
+                    else:
+                        cell.value = f"={prev_col}{row}*1.15"
+                    
+                elif display_name == 'Profit Before Tax':
+                    op_profit_row = self.pnl_rows.get('operating_profit')
+                    prov_row = self.pnl_rows.get('provisions___contingencies')
+                    if op_profit_row and prov_row:
+                        cell.value = f"={curr_col}{op_profit_row}-{curr_col}{prov_row}"
+                    else:
+                        inc_row = self.pnl_rows.get('total_income')
+                        exp_row = self.pnl_rows.get('total_expenses')
+                        if inc_row and exp_row:
+                            cell.value = f"={curr_col}{inc_row}-{curr_col}{exp_row}"
                     cell.font = Font(bold=True)
                     
                 elif display_name == 'Tax':
                     pbt_row = self.pnl_rows.get('profit_before_tax')
                     tax_ref = self.assumption_refs.get('tax_rate', {}).get(fc_year)
-                    if tax_ref:
+                    if tax_ref and pbt_row:
                         cell.value = f"={curr_col}{pbt_row}*{tax_ref}/100"
-                    else:
+                    elif pbt_row:
                         cell.value = f"={curr_col}{pbt_row}*0.25"
+                    else:
+                        cell.value = f"={prev_col}{row}*1.10"
                         
                 elif display_name == 'Net Profit':
                     pbt_row = self.pnl_rows.get('profit_before_tax')
                     tax_row = self.pnl_rows.get('tax')
-                    cell.value = f"={curr_col}{pbt_row}-{curr_col}{tax_row}"
+                    if pbt_row and tax_row:
+                        cell.value = f"={curr_col}{pbt_row}-{curr_col}{tax_row}"
+                    else:
+                        cell.value = f"={prev_col}{row}*1.15"
                     cell.font = Font(bold=True)
                     
                 elif display_name == 'EPS (Rs.)':
                     pat_row = self.pnl_rows.get('net_profit')
-                    # EPS growth with PAT
-                    cell.value = f"={prev_col}{row}*({curr_col}{pat_row}/{prev_col}{pat_row})"
+                    if pat_row:
+                        cell.value = f"={prev_col}{row}*({curr_col}{pat_row}/{prev_col}{pat_row})"
+                    else:
+                        cell.value = f"={prev_col}{row}*1.10"
                     
                 elif display_name == 'Dividend Payout (%)':
                     cell.value = f"={prev_col}{row}"  # Keep constant
