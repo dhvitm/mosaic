@@ -160,6 +160,16 @@ export default function JobsList() {
                       Retry
                     </button>
                   )}
+                  {job.status === 'processing' && (
+                    <button
+                      onClick={(e) => handleAbort(e, job.id)}
+                      className="px-3 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors flex items-center gap-1"
+                      data-testid={`abort-${job.ticker}`}
+                    >
+                      <StopCircle className="w-3 h-3" />
+                      Abort
+                    </button>
+                  )}
                   <span className={`text-xs px-2 py-1 rounded-full ${statusColorClass} uppercase tracking-wide font-medium`}>
                     {job.status}
                   </span>
