@@ -304,19 +304,25 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
         max_loops = 30  # Reduced from 50
         final_response = None
         excel_path = None
+        needs_high_tokens = False  # Flag for when we need more output tokens
         
         try:
             while loop_count < max_loops:
                 loop_count += 1
                 
-                # Decide which model to use based on loop count
-                # Use fast model for data gathering, full model for final analysis
-                use_fast = loop_count < 20  # Switch to full model near the end
+                # Use high tokens after loop 6 (likely building Excel model soon)
+                # or if previous response was cut off (finish_reason=length)
+                use_high_tokens = needs_high_tokens or loop_count > 6
                 
                 # Call LLM with tools via LiteLLM
                 try:
-                    logger.info(f"Agent loop {loop_count}: calling LLM with {len(messages)} messages (fast={use_fast})")
-                    response = self._call_llm_with_tools(messages, MOSAIC_TOOLS_OPENAI_FORMAT, use_fast_model=use_fast)
+                    logger.info(f"Agent loop {loop_count}: calling LLM with {len(messages)} messages (high_tokens={use_high_tokens})")
+                    response = self._call_llm_with_tools(
+                        messages, 
+                        MOSAIC_TOOLS_OPENAI_FORMAT, 
+                        use_fast_model=True,  # Always use fast model, just vary tokens
+                        high_tokens=use_high_tokens
+                    )
                 except Exception as e:
                     logger.error(f"LLM API error: {str(e)}")
                     await ws_manager.send_activity(job_id, "error", f"LLM API error: {str(e)[:100]}")
@@ -328,6 +334,11 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
                 finish_reason = choice.finish_reason
                 
                 logger.info(f"Agent loop {loop_count}: finish_reason={finish_reason}")
+                
+                # If response was cut off, flag to use higher tokens next time
+                if finish_reason == "length":
+                    needs_high_tokens = True
+                    logger.warning("Response truncated (length), will use higher tokens next loop")
                 
                 # Check if we're done (no tool calls)
                 if finish_reason == "stop" or not assistant_message.tool_calls:
