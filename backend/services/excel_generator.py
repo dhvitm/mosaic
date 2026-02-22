@@ -250,7 +250,7 @@ class ExcelGenerator:
             ("", False, None),
             ("Profit Before Tax", True, None),
             ("Tax Expense", False, None),
-            ("PAT", True, "green"),
+            ("PAT", True, "00AA00"),  # Green color in hex
         ]
         
         row = 5
