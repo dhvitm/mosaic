@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 
 class MosaicAPITester:
-    def __init__(self, base_url="https://stock-analyzer-126.preview.emergentagent.com"):
+    def __init__(self, base_url="https://financial-thesis.preview.emergentagent.com"):
         self.base_url = base_url
         self.tests_run = 0
         self.tests_passed = 0
