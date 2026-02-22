@@ -314,7 +314,7 @@ class ExcelGenerator:
             # Fill calculated fields for historical years
             elif display_name == 'Total Income' and annual_pnl:
                 rev_row = self.pnl_rows.get('revenue___interest_earned', row-3)
-                int_row = self.pnl_rows.get('interest', row-2)
+                int_row = self.pnl_rows.get('interest_income', row-2)
                 oth_row = self.pnl_rows.get('other_income', row-1)
                 
                 for col_idx, year in enumerate(hist_years, start=2):
@@ -326,15 +326,13 @@ class ExcelGenerator:
                     cell.font = Font(bold=True)
             
             elif display_name == 'Total Expenses' and annual_pnl:
-                opex_row = self.pnl_rows.get('operating_expenses', row-4)
-                int_exp_row = self.pnl_rows.get('interest_expended', row-3)
-                dep_row = self.pnl_rows.get('depreciation', row-2)
-                prov_row = self.pnl_rows.get('provisions', row-1)
+                opex_row = self.pnl_rows.get('operating_expenses', row-2)
+                dep_row = self.pnl_rows.get('depreciation', row-1)
                 
                 for col_idx, year in enumerate(hist_years, start=2):
                     col = get_column_letter(col_idx)
                     cell = ws.cell(row=row, column=col_idx)
-                    cell.value = f"={col}{opex_row}+{col}{int_exp_row}+{col}{dep_row}+{col}{prov_row}"
+                    cell.value = f"={col}{opex_row}+{col}{dep_row}"
                     cell.number_format = '#,##0.00'
                     cell.border = THIN_BORDER
                     cell.font = Font(bold=True)
