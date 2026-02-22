@@ -449,9 +449,9 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
     async def _log_tool_calls_to_db(self, job_id: str, tool_calls: List[Dict]):
         """Log tool calls to MongoDB for debugging"""
         try:
-            if self.db:
+            if self.db is not None:
                 await self.db.model_jobs.update_one(
-                    {"job_id": job_id},
+                    {"id": job_id},
                     {"$set": {
                         "tool_calls": tool_calls,
                         "tool_calls_count": len(tool_calls)
