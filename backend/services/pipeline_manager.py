@@ -948,6 +948,7 @@ KEY DATA:
 {metrics_context}
 {guidance_context}
 {highlights_context}
+{concall_context}
 {strengths_text}
 {risks_text}
 
