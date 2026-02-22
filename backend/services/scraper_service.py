@@ -429,105 +429,238 @@ class ScraperService:
                 'error': str(e)
             }
     
-    async def scrape_bse_investor_presentation(self, ticker: str, bse_code: str = None, company_name: str = None) -> Dict[str, Any]:
+    async def scrape_investor_documents(self, ticker: str, bse_code: str = None, company_name: str = None) -> Dict[str, Any]:
         """
-        Scrape investor presentations from BSE India corporate filings
-        Uses BSE's announcement search to find quarterly investor presentations
+        Scrape investor presentations, concall transcripts, and annual reports from Screener.in Documents section
+        URL: https://www.screener.in/company/{TICKER}/consolidated/#documents
         """
         try:
             await self.initialize()
             
             data = {
-                'presentations': [],
-                'presentation_summaries': [],
-                'operational_metrics': {},
-                'guidance': [],
-                'segment_data': {},
-                'asset_quality': {},
+                'concalls': [],          # Concall transcripts with PPT links
+                'annual_reports': [],    # Annual report links
+                'announcements': [],     # Recent announcements
+                'credit_ratings': [],    # Credit rating updates
+                'presentations': [],     # PPT links extracted
+                'transcripts': [],       # Transcript links extracted
+                'ai_summaries': [],      # AI Summary links
                 'scraped_successfully': False
             }
             
             page = await self.context.new_page()
-            logger.info(f"Scraping BSE investor presentations for {ticker} (BSE: {bse_code})")
+            url = f"https://www.screener.in/company/{ticker}/consolidated/#documents"
+            logger.info(f"Scraping Screener.in Documents for {ticker}")
             
             try:
-                # First, try to find BSE code if not provided
-                if not bse_code:
-                    bse_code = await self._find_bse_code(ticker, company_name)
-                
-                if not bse_code:
-                    logger.warning(f"Could not find BSE code for {ticker}, falling back to Screener")
-                    await page.close()
-                    return await self._scrape_enhanced_screener_data(ticker)
-                
-                # BSE Corporate Announcements API endpoint
-                # Using their corporate filings page which lists all announcements
-                base_url = "https://www.bseindia.com/corporates/ann.html"
-                
-                await page.goto(base_url, wait_until='networkidle', timeout=45000)
+                await page.goto(url, wait_until='domcontentloaded', timeout=30000)
                 await asyncio.sleep(3)
                 
-                # Try to search for the company using BSE code
+                # Scroll to the documents section to ensure it's loaded
                 try:
-                    # BSE has a search input - try to use it
-                    search_input = await page.query_selector('input[type="text"]')
-                    if search_input:
-                        await search_input.fill(bse_code)
-                        await asyncio.sleep(1)
-                        
-                        # Look for search/submit button
-                        submit_btn = await page.query_selector('input[type="submit"], button[type="submit"]')
-                        if submit_btn:
-                            await submit_btn.click()
-                            await asyncio.sleep(3)
-                except Exception as e:
-                    logger.debug(f"Search interaction failed: {str(e)}")
+                    await page.evaluate("document.querySelector('#documents')?.scrollIntoView()")
+                    await asyncio.sleep(2)
+                except Exception:
+                    pass
                 
                 content = await page.content()
                 soup = BeautifulSoup(content, 'html.parser')
                 
-                # Look for investor presentation links in the page
-                presentations = []
+                # ===== SCRAPE CONCALLS SECTION =====
+                # Find the Concalls section which contains Transcript, AI Summary, PPT, REC for each quarter
+                concalls_section = soup.find('h2', string=re.compile(r'Concalls', re.I))
+                if not concalls_section:
+                    # Try alternative selectors
+                    concalls_section = soup.find(text=re.compile(r'Concalls', re.I))
                 
-                # Search for links containing keywords
-                all_links = soup.find_all('a', href=True)
-                for link in all_links:
-                    href = link.get('href', '').lower()
-                    text = link.text.strip().lower()
-                    
-                    # Keywords that indicate investor presentations
-                    ppt_keywords = ['investor', 'presentation', 'ppt', 'quarterly', 'results']
-                    
-                    if any(kw in text for kw in ppt_keywords) or any(kw in href for kw in ppt_keywords):
-                        full_url = href if href.startswith('http') else f"https://www.bseindia.com{href}"
-                        presentations.append({
-                            'title': link.text.strip()[:100],
-                            'url': full_url,
-                            'type': 'investor_presentation'
-                        })
+                if concalls_section:
+                    logger.info("Found Concalls section")
+                    # Navigate to parent container
+                    parent = concalls_section.find_parent(['div', 'section'])
+                    if parent:
+                        # Find all concall entries (each quarter has links)
+                        concall_items = parent.find_all('div', recursive=True)
+                        
+                        current_quarter = None
+                        for item in concall_items:
+                            text = item.text.strip()
+                            
+                            # Look for quarter labels like "Jan 2026", "Oct 2025"
+                            quarter_match = re.search(r'(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s*\d{4}', text)
+                            if quarter_match:
+                                current_quarter = quarter_match.group()
+                            
+                            # Find links within this item
+                            links = item.find_all('a', href=True)
+                            for link in links:
+                                href = link.get('href', '')
+                                link_text = link.text.strip().lower()
+                                
+                                if not href:
+                                    continue
+                                
+                                full_url = href if href.startswith('http') else f"https://www.screener.in{href}"
+                                
+                                if 'transcript' in link_text:
+                                    data['transcripts'].append({
+                                        'quarter': current_quarter,
+                                        'url': full_url,
+                                        'type': 'transcript'
+                                    })
+                                elif 'ppt' in link_text or 'presentation' in link_text:
+                                    data['presentations'].append({
+                                        'quarter': current_quarter,
+                                        'url': full_url,
+                                        'type': 'ppt'
+                                    })
+                                elif 'summary' in link_text or 'ai' in link_text:
+                                    data['ai_summaries'].append({
+                                        'quarter': current_quarter,
+                                        'url': full_url,
+                                        'type': 'ai_summary'
+                                    })
+                                elif 'rec' in link_text:
+                                    # Recording link
+                                    data['concalls'].append({
+                                        'quarter': current_quarter,
+                                        'url': full_url,
+                                        'type': 'recording'
+                                    })
                 
-                # Also try the specific company page on BSE
-                company_url = f"https://www.bseindia.com/stock-share-price/{ticker.lower()}/{bse_code}"
+                # ===== SCRAPE ANNUAL REPORTS =====
+                annual_section = soup.find('h2', string=re.compile(r'Annual\s*reports', re.I))
+                if not annual_section:
+                    annual_section = soup.find(text=re.compile(r'Annual\s*reports', re.I))
                 
-                try:
-                    await page.goto(company_url, wait_until='domcontentloaded', timeout=30000)
-                    await asyncio.sleep(2)
+                if annual_section:
+                    logger.info("Found Annual Reports section")
+                    parent = annual_section.find_parent(['div', 'section'])
+                    if parent:
+                        links = parent.find_all('a', href=True)
+                        for link in links:
+                            href = link.get('href', '')
+                            text = link.text.strip()
+                            
+                            if 'Financial Year' in text or re.search(r'\d{4}', text):
+                                full_url = href if href.startswith('http') else f"https://www.screener.in{href}"
+                                data['annual_reports'].append({
+                                    'year': text,
+                                    'url': full_url
+                                })
+                
+                # ===== SCRAPE ANNOUNCEMENTS =====
+                announce_section = soup.find('h2', string=re.compile(r'Announcements', re.I))
+                if announce_section:
+                    logger.info("Found Announcements section")
+                    parent = announce_section.find_parent(['div', 'section'])
+                    if parent:
+                        links = parent.find_all('a', href=True)
+                        for link in links[:5]:  # Just get recent 5
+                            href = link.get('href', '')
+                            text = link.text.strip()
+                            
+                            if text and len(text) > 10:
+                                full_url = href if href.startswith('http') else f"https://www.screener.in{href}"
+                                data['announcements'].append({
+                                    'title': text[:200],
+                                    'url': full_url
+                                })
+                
+                # ===== ALTERNATIVE: Find all links with relevant keywords =====
+                # If structured scraping didn't work, do a broader search
+                if not data['presentations'] and not data['transcripts']:
+                    logger.info("Structured scraping didn't find data, trying keyword search...")
+                    all_links = soup.find_all('a', href=True)
                     
-                    content = await page.content()
-                    soup = BeautifulSoup(content, 'html.parser')
-                    
-                    # Look for announcements or corporate filings section
-                    announcement_links = soup.find_all('a', href=True)
-                    
-                    for link in announcement_links:
+                    for link in all_links:
                         href = link.get('href', '')
                         text = link.text.strip().lower()
                         
-                        if 'pdf' in href.lower() or 'investor' in text or 'presentation' in text:
-                            full_url = href if href.startswith('http') else f"https://www.bseindia.com{href}"
-                            if full_url not in [p['url'] for p in presentations]:
-                                presentations.append({
-                                    'title': link.text.strip()[:100] or 'Investor Presentation',
+                        if not href:
+                            continue
+                        
+                        full_url = href if href.startswith('http') else f"https://www.screener.in{href}"
+                        
+                        # PPT/Presentation links
+                        if 'ppt' in text or 'presentation' in href.lower():
+                            data['presentations'].append({
+                                'quarter': None,
+                                'url': full_url,
+                                'type': 'ppt',
+                                'title': link.text.strip()
+                            })
+                        # Transcript links
+                        elif 'transcript' in text or 'transcript' in href.lower():
+                            data['transcripts'].append({
+                                'quarter': None,
+                                'url': full_url,
+                                'type': 'transcript',
+                                'title': link.text.strip()
+                            })
+                        # Annual reports
+                        elif ('annual' in text and 'report' in text) or 'financial year' in text:
+                            data['annual_reports'].append({
+                                'year': link.text.strip(),
+                                'url': full_url
+                            })
+                
+                await page.close()
+                
+                # Deduplicate
+                seen_urls = set()
+                for key in ['presentations', 'transcripts', 'ai_summaries', 'annual_reports']:
+                    unique_items = []
+                    for item in data.get(key, []):
+                        if item.get('url') not in seen_urls:
+                            seen_urls.add(item.get('url'))
+                            unique_items.append(item)
+                    data[key] = unique_items[:10]  # Limit to 10 per category
+                
+                data['scraped_successfully'] = bool(
+                    data['presentations'] or data['transcripts'] or 
+                    data['annual_reports'] or data['ai_summaries']
+                )
+                
+                logger.info(f"Screener Documents scraping complete: {len(data['presentations'])} PPTs, "
+                           f"{len(data['transcripts'])} transcripts, {len(data['annual_reports'])} annual reports")
+                
+                return data
+                
+            except Exception as e:
+                logger.error(f"Error scraping Screener documents for {ticker}: {str(e)}")
+                await page.close()
+                return data
+                
+        except Exception as e:
+            logger.error(f"Screener documents scraping error: {str(e)}")
+            return {
+                'concalls': [],
+                'annual_reports': [],
+                'announcements': [],
+                'presentations': [],
+                'transcripts': [],
+                'ai_summaries': [],
+                'scraped_successfully': False,
+                'error': str(e)
+            }
+    
+    # Keep old method as alias for backwards compatibility
+    async def scrape_bse_investor_presentation(self, ticker: str, bse_code: str = None, company_name: str = None) -> Dict[str, Any]:
+        """
+        DEPRECATED: Use scrape_investor_documents instead.
+        This now redirects to Screener.in Documents section scraping.
+        """
+        result = await self.scrape_investor_documents(ticker, bse_code, company_name)
+        
+        # Map new format to old format for backwards compatibility
+        return {
+            'presentations': result.get('presentations', []),
+            'presentation_summaries': result.get('ai_summaries', []),
+            'transcripts': result.get('transcripts', []),
+            'annual_reports': result.get('annual_reports', []),
+            'operational_metrics': {},
+            'guidance': [],
+            'scraped_successfully': result.get('scraped_successfully', False)
                                     'url': full_url,
                                     'type': 'corporate_filing'
                                 })
