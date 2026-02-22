@@ -1,0 +1,20 @@
+{
+  "ticker": "HDFCBANK",
+  "step_number": 1,
+  "data": {
+    "ticker": "HDFCBANK",
+    "full_name": "HDFC Bank Ltd",
+    "bse_code": "500180",
+    "nse_code": "HDFCBANK",
+    "sector": "Financial Services",
+    "industry": "Bank",
+    "knowledge_file": "banks.md",
+    "current_price": 1737.65,
+    "market_cap": 1322523.0,
+    "shares_outstanding": 761.15,
+    "fiscal_year_end": "March",
+    "face_value": 1.0
+  },
+  "cached_at": "2026-02-22T08:47:16.033544+00:00",
+  "cache_version": "1.0"
+}
