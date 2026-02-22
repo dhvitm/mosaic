@@ -163,17 +163,40 @@ MOSAIC_TOOLS = [
     
     # ============== MODEL OUTPUT ==============
     {
-        "name": "write_excel_model",
-        "description": "Generates the complete multi-sheet Excel financial model. Takes fully populated structured data and creates formula-linked workbook with Cover, Assumptions, P&L, Balance Sheet, ROE Tree, Quarterly, Key Ratios, Valuation, Peer Comparison, and Thesis sheets.",
+        "name": "store_analysis_data",
+        "description": "Stores a piece of analyzed data for the final Excel model. Call this multiple times to build up the model data incrementally. Keys: 'company_info', 'valuation', 'assumptions', 'thesis', 'management_commentary'. Each call stores one piece.",
         "input_schema": {
             "type": "object",
             "properties": {
-                "model_data": {
+                "data_type": {
+                    "type": "string",
+                    "enum": ["company_info", "valuation", "assumptions", "thesis", "management_commentary"],
+                    "description": "Type of data being stored"
+                },
+                "data": {
                     "type": "object",
-                    "description": "Complete model data including company_metadata, historical_financials, quarterly_results, assumptions, valuation, thesis, and peer_comparison"
+                    "description": "The data to store. For company_info: {sector, sub_sector, business_description}. For valuation: {methodology, fair_value, target_price, recommendation, upside_percent}. For assumptions: {growth_drivers: [{name, value, rationale}]}. For thesis: {summary, bull_case, bear_case, catalysts}. For management_commentary: {key_highlights, guidance, risks}."
                 }
             },
-            "required": ["model_data"]
+            "required": ["data_type", "data"]
+        }
+    },
+    {
+        "name": "generate_excel_model",
+        "description": "Generates the final Excel model using all collected data (financials, PDFs, analysis stored via store_analysis_data). Call this AFTER you have: 1) scraped financials, 2) read at least one PDF, 3) stored company_info, valuation, assumptions, thesis via store_analysis_data. The tool will use internally collected data.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "ticker": {
+                    "type": "string",
+                    "description": "Stock ticker for the model"
+                },
+                "confirm_ready": {
+                    "type": "boolean",
+                    "description": "Set to true to confirm you have gathered all necessary data"
+                }
+            },
+            "required": ["ticker", "confirm_ready"]
         }
     },
     {
