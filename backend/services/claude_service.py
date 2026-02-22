@@ -21,10 +21,16 @@ class ClaudeService:
         if not self.api_key:
             raise ValueError("EMERGENT_LLM_KEY not found in environment")
     
+    @retry(
+        stop=stop_after_attempt(5),
+        wait=wait_exponential(multiplier=2, min=4, max=30),
+        retry=retry_if_exception(is_retryable_error),
+        reraise=True
+    )
     async def call_claude(self, system_message: str, user_prompt: str, session_id: str = "default") -> str:
         """
         Call Claude API with system message and user prompt.
-        Uses prompt caching for sector knowledge files.
+        Retries on 502/503/504 errors with exponential backoff.
         """
         try:
             chat = LlmChat(
@@ -43,7 +49,13 @@ class ClaudeService:
             return response
             
         except Exception as e:
-            logger.error(f"Claude API call failed: {str(e)}")
+            error_msg = str(e)
+            logger.error(f"Claude API call failed: {error_msg}")
+            
+            # Check if it's a retryable error
+            if is_retryable_error(e):
+                logger.warning(f"Retryable error detected, will retry: {error_msg[:100]}")
+            
             raise
     
     def load_knowledge_file(self, filename: str) -> str:
