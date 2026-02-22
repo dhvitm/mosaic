@@ -680,11 +680,11 @@ Return ONLY the JSON."""
         
         try:
             # Check cache first
-            cached_data = CacheService.load_step_data(ticker, 8)
+            cached_data = CacheService.load_step_data(ticker, 7)
             if cached_data:
-                logger.info(f"Using cached step 8 data for {ticker}")
+                logger.info(f"Using cached step 7 data for {ticker}")
                 await ws_manager.send_activity(job_id, "info", "Found cached thesis")
-                await self._update_step(job_id, 8, "completed", "Investment thesis generated (from cache)")
+                await self._update_step(job_id, 7, "completed", "Investment thesis generated (from cache)")
                 return cached_data
             
             await ws_manager.send_activity(job_id, "data_processing", "Compiling key findings...")
