@@ -426,7 +426,7 @@ Return ONLY a JSON object with these exact keys:
             # ===== NEW: Process Annual Reports for detailed financials =====
             annual_reports = commentary_data.get('annual_reports', [])
             if annual_reports:
-                await ws_manager.send_activity(job_id, "data_processing", f"Parsing {min(len(annual_reports), 2)} annual reports for detailed financials...")
+                await ws_manager.send_activity(job_id, "data_processing", f"Parsing {min(len(annual_reports), 1)} annual report for detailed financials...")
                 
                 sector = company_metadata.get('sector', '').lower()
                 is_bank = 'bank' in sector or 'financ' in sector or 'nbfc' in sector
@@ -435,7 +435,7 @@ Return ONLY a JSON object with these exact keys:
                     annual_reports,
                     self.claude,
                     is_bank=is_bank,
-                    max_reports=2  # Latest 2 years
+                    max_reports=1  # Latest year only for speed
                 )
                 
                 commentary_data['annual_report_financials'] = annual_report_data
