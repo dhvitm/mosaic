@@ -389,7 +389,7 @@ Return ONLY a JSON object with these exact keys:
             # ===== NEW: Extract metrics from PDF presentations =====
             presentations = commentary_data.get('bse_presentations', [])
             if presentations:
-                await ws_manager.send_activity(job_id, "data_processing", f"Downloading and parsing {min(len(presentations), 3)} investor presentation PDFs...")
+                await ws_manager.send_activity(job_id, "data_processing", f"Downloading and parsing {min(len(presentations), 2)} investor presentation PDFs...")
                 
                 # Determine if it's a bank
                 sector = company_metadata.get('sector', '').lower()
@@ -400,7 +400,7 @@ Return ONLY a JSON object with these exact keys:
                     presentations, 
                     self.claude, 
                     is_bank=is_bank,
-                    max_pdfs=3  # Limit to 3 PDFs to save time
+                    max_pdfs=2  # Limit to 2 PDFs to save time
                 )
                 
                 commentary_data['pdf_extracted_metrics'] = pdf_metrics
