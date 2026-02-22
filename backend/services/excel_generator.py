@@ -578,7 +578,7 @@ class ExcelGenerator:
             ws.column_dimensions[get_column_letter(i)].width = 14
     
     def _create_balance_sheet_with_formulas(self, data: Dict[str, Any]):
-        """Create Balance Sheet with forecast projections - using actual Screener keys"""
+        """Create Balance Sheet with forecast projections - using actual Screener keys and detailed AR data"""
         ws = self.wb.create_sheet("Balance Sheet")
         
         ws['A1'] = "BALANCE SHEET"
@@ -589,6 +589,14 @@ class ExcelGenerator:
         
         historical = data.get('historical_financials', {})
         annual_bs = historical.get('annual_bs', {})
+        
+        # Check if we have detailed BS from annual reports
+        management_commentary = data.get('management_commentary', {})
+        detailed_bs = management_commentary.get('detailed_bs', {})
+        has_detailed = bool(detailed_bs)
+        
+        if has_detailed:
+            logger.info("Using DETAILED Balance Sheet from annual reports")
         
         hist_years = self._get_historical_years(data)
         all_years = hist_years + self.forecast_years
@@ -602,34 +610,39 @@ class ExcelGenerator:
                 cell.fill = FORECAST_FILL
         self._apply_header_style(ws, 4, 1, len(all_years) + 1)
         
-        # Balance Sheet items matching ACTUAL Screener.in keys for banks
-        # Screener keys: Equity Capital, Reserves, Deposits, Borrowing, Other Liabilities +, Total Liabilities,
-        #                Fixed Assets +, CWIP, Investments, Other Assets +, Total Assets
+        # Balance Sheet items with mappings:
+        # (display_name, [screener_keys], [detailed_ar_keys])
         bs_items = [
-            ('LIABILITIES', None),
-            ('Equity Capital', ['Equity Capital', 'Share Capital']),
-            ('Reserves', ['Reserves', 'Reserves and Surplus']),
-            ('Total Equity', None),  # Calculated
-            ('', None),  # Spacer
-            ('Deposits', ['Deposits']),
-            ('Borrowings', ['Borrowing', 'Borrowings']),
-            ('Other Liabilities', ['Other Liabilities +', 'Other Liabilities']),
-            ('Total Liabilities', ['Total Liabilities']),
-            ('', None),  # Spacer
-            ('ASSETS', None),
-            ('Fixed Assets', ['Fixed Assets +', 'Fixed Assets']),
-            ('CWIP', ['CWIP']),
-            ('Investments', ['Investments']),
-            ('Advances', ['Advances +', 'Loans and Advances']),
-            ('Other Assets', ['Other Assets +', 'Other Assets']),
-            ('Total Assets', ['Total Assets']),
+            ('LIABILITIES', None, None),
+            ('Equity Capital', ['Equity Capital', 'Share Capital'], ['share_capital']),
+            ('Reserves', ['Reserves', 'Reserves and Surplus'], ['reserves']),
+            ('Total Equity', None, ['total_equity']),  # Calculated
+            ('', None, None),  # Spacer
+            ('Deposits', ['Deposits'], ['deposits']),
+            ('CASA Deposits', [], ['casa_deposits']),
+            ('Borrowings', ['Borrowing', 'Borrowings'], ['borrowings']),
+            ('Other Liabilities', ['Other Liabilities +', 'Other Liabilities'], ['other_liabilities']),
+            ('Total Liabilities', ['Total Liabilities'], ['total_liabilities']),
+            ('', None, None),  # Spacer
+            ('ASSETS', None, None),
+            ('Cash & Bank Balances', ['Cash'], ['cash_and_bank']),
+            ('Fixed Assets', ['Fixed Assets +', 'Fixed Assets'], ['fixed_assets']),
+            ('CWIP', ['CWIP'], []),
+            ('Investments', ['Investments'], ['investments']),
+            ('Advances', ['Advances +', 'Loans and Advances'], ['advances']),
+            ('Other Assets', ['Other Assets +', 'Other Assets'], ['other_assets']),
+            ('Total Assets', ['Total Assets'], ['total_assets']),
         ]
         
         row = 5
         self.bs_rows = {}
         forecast_col_start = len(hist_years) + 2
         
-        for display_name, screener_keys in bs_items:
+        for item in bs_items:
+            display_name = item[0]
+            screener_keys = item[1] if len(item) > 1 else None
+            ar_keys = item[2] if len(item) > 2 else None
+            
             if not display_name:  # Spacer row
                 row += 1
                 continue
@@ -642,18 +655,18 @@ class ExcelGenerator:
                 ws.cell(row=row, column=1).font = Font(bold=True)
             
             # Store row reference
-            key = display_name.lower().replace(' ', '_')
+            key = display_name.lower().replace(' ', '_').replace('&', '_')
             self.bs_rows[key] = row
             
-            # Fill historical data
-            if screener_keys and annual_bs:
+            # Fill historical data from Screener first
+            if screener_keys is not None and annual_bs:
                 for col_idx, year in enumerate(hist_years, start=2):
                     year_data = annual_bs.get(year, {})
                     
                     value = None
-                    for key in screener_keys:
-                        if key in year_data:
-                            value = year_data[key]
+                    for skey in screener_keys:
+                        if skey in year_data:
+                            value = year_data[skey]
                             break
                     
                     cell = ws.cell(row=row, column=col_idx)
@@ -664,15 +677,32 @@ class ExcelGenerator:
                     cell.font = NUMBER_FONT
                     cell.alignment = Alignment(horizontal='right')
             
+            # Overlay with detailed AR data (prioritize for latest year)
+            if has_detailed and detailed_bs and ar_keys:
+                for ar_year, ar_data in detailed_bs.items():
+                    for col_idx, hist_year in enumerate(hist_years, start=2):
+                        if self._year_matches(ar_year, hist_year):
+                            for ar_key in ar_keys:
+                                if ar_key in ar_data and ar_data[ar_key] is not None:
+                                    cell = ws.cell(row=row, column=col_idx)
+                                    cell.value = ar_data[ar_key]
+                                    cell.number_format = '#,##0.00'
+                                    cell.border = THIN_BORDER
+                                    cell.font = NUMBER_FONT
+                                    cell.alignment = Alignment(horizontal='right')
+                                    break
+            
             # Fill calculated fields for historical years
-            elif display_name == 'Total Equity' and annual_bs:
+            if display_name == 'Total Equity':
                 eq_row = self.bs_rows.get('equity_capital')
                 res_row = self.bs_rows.get('reserves')
                 
                 for col_idx, year in enumerate(hist_years, start=2):
-                    col = get_column_letter(col_idx)
                     cell = ws.cell(row=row, column=col_idx)
-                    cell.value = f"={col}{eq_row}+{col}{res_row}"
+                    # Only calculate if no value from AR data
+                    if cell.value is None and eq_row and res_row:
+                        col = get_column_letter(col_idx)
+                        cell.value = f"={col}{eq_row}+{col}{res_row}"
                     cell.number_format = '#,##0.00'
                     cell.border = THIN_BORDER
                     cell.font = Font(bold=True)
