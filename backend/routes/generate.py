@@ -322,3 +322,48 @@ async def retry_job(job_id: str, background_tasks: BackgroundTasks):
     except Exception as e:
         logger.error(f"Error retrying job {job_id}: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/abort/{job_id}")
+async def abort_job(job_id: str):
+    """
+    Abort a running job by marking it as failed.
+    Note: This doesn't stop the background task, but prevents further steps.
+    """
+    try:
+        # Get the job
+        job = await db.model_jobs.find_one({"id": job_id}, {"_id": 0})
+        
+        if not job:
+            raise HTTPException(status_code=404, detail="Job not found")
+        
+        if job['status'] != 'processing':
+            raise HTTPException(status_code=400, detail=f"Job is not processing (status: {job['status']})")
+        
+        # Mark job as aborted/failed
+        await db.model_jobs.update_one(
+            {"id": job_id},
+            {"$set": {
+                "status": "failed",
+                "error": "Job aborted by user",
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }}
+        )
+        
+        # Broadcast abort via WebSocket
+        await ws_manager.send_error(job_id, "Job aborted by user")
+        
+        logger.info(f"Job {job_id} aborted by user")
+        
+        return {
+            "message": f"Job {job_id} aborted",
+            "job_id": job_id,
+            "ticker": job['ticker'],
+            "previous_status": "processing",
+            "new_status": "failed"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error aborting job {job_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
