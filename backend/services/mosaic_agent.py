@@ -287,10 +287,9 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
         
         # Agent loop
         loop_count = 0
-        max_loops = 30  # Reduced from 50
+        max_loops = 30
         final_response = None
         excel_path = None
-        needs_high_tokens = False  # Flag for when we need more output tokens
         
         try:
             while loop_count < max_loops:
