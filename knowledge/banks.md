@@ -477,3 +477,32 @@ than DCF because:
    to book is justified by excess returns (ROE above Ke)
 P/B is the most common market multiple used alongside RIV.
 P/E is secondary. DDM is used as a cross-check for high-dividend banks.
+
+## Key Metrics & Benchmarks
+- NIM Target Range: 3.0-4.5% for private banks, 2.5-3.5% for PSU banks
+- CASA Ratio Target: 40-50% for strong franchises
+- Credit Cost Normal: 0.5-1.0% of advances
+- ROE Target: 15-18% for best-in-class
+- Cost-to-Income: 40-50% for efficient banks
+- GNPA Threshold: <2% is excellent, 2-3% is good, >4% needs monitoring
+- PCR Minimum: 70%+ for adequate coverage
+
+## Risk Factors
+- Interest rate cycle risk (NIM compression in falling rate environment)
+- Asset quality deterioration in stressed segments (MFI, unsecured retail)
+- CASA erosion due to competition from fintechs and small finance banks
+- Regulatory changes (PSL norms, digital lending guidelines)
+- Concentration risk in specific geographies or segments
+- Management succession and governance issues
+- Technology disruption from digital-only players
+
+## Modeling Notes
+- Always use consolidated financials for banks with subsidiaries
+- Adjust for one-time items (treasury gains/losses, exceptional provisions)
+- Watch for merger accounting adjustments (e.g., HDFC-HDFC Bank)
+- CD ratio above 85% indicates potential liquidity stress
+- NDTL-based ratios more meaningful than deposit-based for regulatory analysis
+- Quarter-end window dressing common for CD and CASA ratios
+
+## Observed Data (Auto-updated by Mosaic)
+
