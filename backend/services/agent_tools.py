@@ -415,16 +415,23 @@ class ToolExecutor:
         """Get current stock price from Yahoo Finance"""
         try:
             result = await self.scraper.get_current_market_price(ticker)
-            return {
+            stock_data = {
                 "success": True,
                 "ticker": ticker,
                 "current_price": result.get("current_price"),
+                "market_cap": result.get("market_cap"),
                 "market_cap_cr": result.get("market_cap"),
                 "pe_ratio": result.get("pe_ratio"),
                 "book_value": result.get("book_value"),
                 "source": result.get("source", "yahoo_finance"),
                 "fetched_at": result.get("price_fetched_at")
             }
+            
+            # Auto-cache and store
+            self._cache_write(ticker, "stock_price", stock_data)
+            self._collected_data["stock_price"] = stock_data
+            
+            return stock_data
         except Exception as e:
             return {"success": False, "error": str(e)}
     
