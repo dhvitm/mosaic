@@ -738,6 +738,36 @@ Keep total length under 400 words. Professional tone, no marketing language."""
             await self._update_step(job_id, 7, "error", str(e))
             raise
     
+    async def _step8_excel_generation(self, job_id: str, ticker: str, company_metadata: Dict,
+                                     historical_financials: Dict, operational_data: Dict,
+                                     assumptions: Dict, valuation: Dict, thesis: Dict) -> str:
+        """Step 8: Generate Excel model with all collected data"""
+        await self._update_step(job_id, 8, "in_progress", "Building Excel model...")
+        await ws_manager.send_activity(job_id, "data_processing", "Creating multi-sheet financial model with all data...")
+        
+        try:
+            await ws_manager.send_activity(job_id, "info", "Compiling assumptions, valuation, and thesis into Excel...")
+            
+            # Build complete data package for Excel
+            data = {
+                'company_metadata': company_metadata,
+                'historical_financials': historical_financials,
+                'operational_data': operational_data,
+                'assumptions': assumptions,
+                'valuation': valuation,
+                'thesis': thesis
+            }
+            
+            await ws_manager.send_activity(job_id, "data_processing", "Generating Excel file with formulas and formatting...")
+            excel_path = self.excel_gen.generate_model(job_id, data)
+            
+            await self._update_step(job_id, 8, "completed", f"Excel model generated: {excel_path}")
+            return excel_path
+            
+        except Exception as e:
+            await self._update_step(job_id, 8, "error", str(e))
+            raise
+    
     async def _complete_job(self, job_id: str, excel_path: str, result: Dict[str, Any]):
         """Mark job as completed and broadcast via WebSocket"""
         await self.db.model_jobs.update_one(
