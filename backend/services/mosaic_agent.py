@@ -352,6 +352,15 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
                 
                 # Handle tool calls (OpenAI format)
                 if assistant_message.tool_calls:
+                    # Add delay before next LLM call to avoid rate limits
+                    if DELAY_BETWEEN_LLM_CALLS > 0:
+                        logger.info(f"Waiting {DELAY_BETWEEN_LLM_CALLS}s before next LLM call...")
+                        await ws_manager.send_activity(
+                            job_id, "info", 
+                            f"⏳ Pacing requests ({DELAY_BETWEEN_LLM_CALLS}s cooldown)..."
+                        )
+                        await asyncio.sleep(DELAY_BETWEEN_LLM_CALLS)
+                    
                     # Add assistant message with tool calls to history
                     messages.append({
                         "role": "assistant",
