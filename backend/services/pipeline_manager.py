@@ -540,34 +540,6 @@ Return ONLY the JSON object, no other text."""
                 "rationale": "Default assumptions for Indian company"
             }
     
-    async def _step6_excel_generation(self, job_id: str, company_metadata: Dict,
-                                     historical_financials: Dict, operational_data: Dict,
-                                     assumptions: Dict) -> str:
-        """Step 6: Generate Excel model"""
-        await self._update_step(job_id, 6, "in_progress", "Building Excel model...")
-        await ws_manager.send_activity(job_id, "data_processing", "Creating multi-sheet financial model in Excel format...")
-        
-        try:
-            await ws_manager.send_activity(job_id, "info", "Structuring P&L, Balance Sheet and Cash Flow sheets...")
-            data = {
-                'company_metadata': company_metadata,
-                'historical_financials': historical_financials,
-                'operational_data': operational_data,
-                'assumptions': assumptions,
-                'valuation': {},
-                'thesis': {}
-            }
-            
-            await ws_manager.send_activity(job_id, "data_processing", "Generating Excel file with formulas and formatting...")
-            excel_path = self.excel_gen.generate_model(job_id, data)
-            
-            await self._update_step(job_id, 6, "completed", f"Excel model generated: {excel_path}")
-            return excel_path
-            
-        except Exception as e:
-            await self._update_step(job_id, 6, "error", str(e))
-            raise
-    
     async def _step6_valuation(self, job_id: str, company_metadata: Dict, assumptions: Dict) -> Dict[str, Any]:
         """Step 6: Run valuation"""
         await self._update_step(job_id, 6, "in_progress", "Running valuation...")
