@@ -1,0 +1,12 @@
+{
+  "ticker": "TCS",
+  "key": "stock_price",
+  "data": {
+    "current_price": 2686.2,
+    "market_cap_cr": 971890.5962496,
+    "pe_ratio": 20.366972,
+    "book_value": 313.727,
+    "fetched_at": "2026-02-22"
+  },
+  "cached_at": "2026-02-22T14:11:02.516552+00:00"
+}
