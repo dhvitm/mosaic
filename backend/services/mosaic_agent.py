@@ -3,6 +3,12 @@ Mosaic Agent Service
 
 This module implements the agentic Claude loop that autonomously builds
 financial models using the tool-use API via LiteLLM and Emergent's LLM gateway.
+
+Optimizations:
+- Uses fast model (Haiku) for tool selection, full model for final analysis
+- Summarizes tool results to reduce context size
+- Truncates financial data to recent 5 years
+- Limits PDF text extraction
 """
 
 import json
@@ -28,6 +34,15 @@ logger = logging.getLogger(__name__)
 
 # Emergent LLM Gateway URL
 EMERGENT_PROXY_URL = "https://integrations.emergentagent.com/llm"
+
+# Model configuration - use fast model for tool calls, full model for final analysis
+FAST_MODEL = "claude-3-5-haiku-20241022"  # Fast model for tool selection
+FULL_MODEL = "claude-sonnet-4-5-20250929"  # Full model for complex reasoning
+
+# Context optimization settings
+MAX_TOOL_RESULT_LENGTH = 2000  # Max chars per tool result in context
+MAX_MESSAGES_BEFORE_SUMMARY = 15  # Summarize context after this many messages
+MAX_RECENT_YEARS = 5  # Only keep recent 5 years of financial data
 
 # System prompt for the Mosaic agent
 MOSAIC_SYSTEM_PROMPT = """You are Mosaic, an autonomous financial analyst specializing in Indian equities.
