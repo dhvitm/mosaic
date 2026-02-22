@@ -1,0 +1,902 @@
+{
+  "ticker": "FEDERALBNK",
+  "step_number": 4,
+  "data": {
+    "concall_highlights": [
+      "*\nThe pros and cons are machine generated.\n\n\n\n            Pros / cons are based on a checklist to highlight important points. Please exercise caution and do your own analysis."
+    ],
+    "pros": [
+      "Company has delivered good profit growth of 21.4% CAGR over last 5 years"
+    ],
+    "cons": [
+      "Company has low interest coverage ratio.",
+      "Contingent liabilities of Rs.2,17,515 Cr.",
+      "Company might be capitalizing the interest cost"
+    ],
+    "management_analysis": "",
+    "scraped_successfully": true,
+    "peer_comparison": [
+      {
+        "name": "S.No."
+      },
+      {
+        "name": "1."
+      },
+      {
+        "name": "2."
+      },
+      {
+        "name": "3."
+      },
+      {
+        "name": "4."
+      },
+      {
+        "name": "5."
+      },
+      {
+        "name": "6."
+      },
+      {
+        "name": "7."
+      }
+    ],
+    "shareholding": {
+      "Jun 2023": {
+        "FIIs +": 26.94,
+        "DIIs +": 43.66,
+        "Government +": 0.0,
+        "Public +": 29.41,
+        "No. of Shareholders": 736674.0
+      },
+      "Sep 2023": {
+        "FIIs +": 26.27,
+        "DIIs +": 42.11,
+        "Government +": 0.0,
+        "Public +": 31.61,
+        "No. of Shareholders": 809397.0
+      },
+      "Dec 2023": {
+        "FIIs +": 27.02,
+        "DIIs +": 45.74,
+        "Government +": 0.0,
+        "Public +": 27.25,
+        "No. of Shareholders": 782900.0
+      },
+      "Mar 2024": {
+        "FIIs +": 29.38,
+        "DIIs +": 44.39,
+        "Government +": 0.0,
+        "Public +": 26.23,
+        "No. of Shareholders": 796959.0
+      },
+      "Jun 2024": {
+        "FIIs +": 28.57,
+        "DIIs +": 45.16,
+        "Government +": 0.0,
+        "Public +": 26.28,
+        "No. of Shareholders": 870010.0
+      },
+      "Sep 2024": {
+        "FIIs +": 28.63,
+        "DIIs +": 44.97,
+        "Government +": 0.0,
+        "Public +": 26.4,
+        "No. of Shareholders": 855887.0
+      },
+      "Dec 2024": {
+        "FIIs +": 27.72,
+        "DIIs +": 46.95,
+        "Government +": 0.0,
+        "Public +": 25.32,
+        "No. of Shareholders": 851199.0
+      },
+      "Mar 2025": {
+        "FIIs +": 26.32,
+        "DIIs +": 48.9,
+        "Government +": 0.01,
+        "Public +": 24.77,
+        "No. of Shareholders": 851174.0
+      },
+      "Jun 2025": {
+        "FIIs +": 26.28,
+        "DIIs +": 49.07,
+        "Government +": 0.01,
+        "Public +": 24.66,
+        "No. of Shareholders": 847981.0
+      },
+      "Sep 2025": {
+        "FIIs +": 26.86,
+        "DIIs +": 48.17,
+        "Government +": 0.0,
+        "Public +": 24.96,
+        "No. of Shareholders": 851049.0
+      },
+      "Dec 2025": {
+        "FIIs +": 25.54,
+        "DIIs +": 49.71,
+        "Government +": 0.0,
+        "Public +": 24.74,
+        "No. of Shareholders": 848372.0
+      }
+    },
+    "operational_metrics": {
+      "cost_to_income": 53.92,
+      "nim": 3.18,
+      "casa": 44.4,
+      "gnpa": 1.72,
+      "nnpa": 0.42,
+      "car": 15.2,
+      "roe": 11.68,
+      "roa": 1.15,
+      "loan_growth": 9.0,
+      "deposit_growth": 15.0,
+      "provision_coverage": 75.14,
+      "slippage_ratio": 0.7,
+      "key_highlights": [
+        "Highest ever Net Interest Income of \u20b92,653 crores and Operating Profit of \u20b91,729 crores",
+        "CASA ratio improved to 44.4% with total CASA growing 6.6% QoQ",
+        "Asset quality hit decadal best with GNPA at 1.72% and NNPA at 0.42%",
+        "Fee income reached highest ever at \u20b9896 crores with accelerating momentum",
+        "Balance sheet grew to \u20b93.67 lakh crores with diversified advances growth across retail (3.2% QoQ), business banking (3.8% QoQ), and CIB (6.3% QoQ)"
+      ]
+    },
+    "bse_presentations": [
+      {
+        "quarter": "Jan 2026",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/d087c861-7c52-401a-bbdd-de3d5b215b43.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jan 2026"
+      },
+      {
+        "quarter": "Oct 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/40e48cfd-b004-498e-a1f3-17b785527503.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Oct 2025"
+      },
+      {
+        "quarter": "Aug 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/1da5096d-466a-4009-b9ac-b80a9ca79049.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Aug 2025"
+      },
+      {
+        "quarter": "Aug 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/4b5dd25c-6126-4f15-828d-fff4c9d037b6.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Aug 2025"
+      },
+      {
+        "quarter": "May 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/9e9bc0ed-bca4-44fa-a258-4062de126455.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation May 2025"
+      },
+      {
+        "quarter": "Feb 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/d6ac0924-dd36-4033-98d1-fa51d43edd12.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Feb 2025"
+      },
+      {
+        "quarter": "Feb 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/e5936a45-bdcb-434e-a591-5c0461b4dc4b.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Feb 2025"
+      },
+      {
+        "quarter": "Jan 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/066bdef1-27e5-4be6-8482-e756ce59ad4a.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jan 2025"
+      },
+      {
+        "quarter": "Nov 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/c5a70f74-ae51-4a99-87e9-8b1dd1b98e02.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Nov 2024"
+      },
+      {
+        "quarter": "Jul 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/a040b874-9205-416e-bebc-83a27c8e0e81.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jul 2024"
+      },
+      {
+        "quarter": "Jul 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/22732306-5671-43d9-b2f4-48cb330a8df2.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jul 2024"
+      },
+      {
+        "quarter": "May 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/e0ca848e-42ee-4605-b820-67c66eb8cb05.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation May 2024"
+      },
+      {
+        "quarter": "Jan 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/b3261804-48d7-4650-889d-f144ca43d2d1.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jan 2024"
+      },
+      {
+        "quarter": "Oct 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/edcf871e-23ee-4e0d-892f-04858f38deb7.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Oct 2023"
+      },
+      {
+        "quarter": "Jul 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/0e5f1cec-5eb6-420a-b291-c41e36b461cf.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jul 2023"
+      }
+    ],
+    "presentation_summaries": [],
+    "transcripts": [
+      {
+        "quarter": "Jan 2026",
+        "url": "https://www.federal.bank.in/documents/10180/1143925090/Earnings+Call+Transcript_Q3FY26.pdf/04d39ba4-e788-bab9-7493-2845eeb9dfe8?t=1769100612971",
+        "type": "transcript",
+        "title": "Transcript Jan 2026"
+      },
+      {
+        "quarter": "Oct 2025",
+        "url": "https://www.federalbank.co.in/documents/10180/1131213536/Earnings+Call+Transcript_Q2FY26.pdf/0679e819-edad-77c6-7d2a-4388a10fe747?t=1761370057469",
+        "type": "transcript",
+        "title": "Transcript Oct 2025"
+      },
+      {
+        "quarter": "Aug 2025",
+        "url": "https://www.federalbank.co.in/documents/10180/1128159406/Earnings+Call+Transcript_Q1FY26.pdf/89f9853a-4a1c-c372-92ba-0a0a16146d72?t=1754558852975",
+        "type": "transcript",
+        "title": "Transcript Aug 2025"
+      },
+      {
+        "quarter": "May 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/66dc39b3-5328-4abc-b8d7-155039f05960.pdf",
+        "type": "transcript",
+        "title": "Transcript May 2025"
+      },
+      {
+        "quarter": "Feb 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/67b902aa-4629-48e8-a920-21e4bee2f071.pdf",
+        "type": "transcript",
+        "title": "Transcript Feb 2025"
+      },
+      {
+        "quarter": "Nov 2024",
+        "url": "http://federalbank.co.in/documents/10180/1064692097/Analyst+Call+Transcript+Q2FY25.pdf/875c50416540-fe88-0615-ceae1a20b3fb?t=1730370469003",
+        "type": "transcript",
+        "title": "Transcript Nov 2024"
+      },
+      {
+        "quarter": "Jul 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/be4e406c-5a0a-4c27-9b38-7e0f1454d24e.pdf",
+        "type": "transcript",
+        "title": "Transcript Jul 2024"
+      },
+      {
+        "quarter": "May 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/4042bd79-9f53-4d6d-afee-181a435900f0.pdf",
+        "type": "transcript",
+        "title": "Transcript May 2024"
+      },
+      {
+        "quarter": "Jan 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/6442648e-c388-4dd7-8a50-29b7c0da6842.pdf",
+        "type": "transcript",
+        "title": "Transcript Jan 2024"
+      },
+      {
+        "quarter": "Oct 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/1e975885-31da-4ac6-9248-5a7fbde229c3.pdf",
+        "type": "transcript",
+        "title": "Transcript Oct 2023"
+      },
+      {
+        "quarter": "Oct 2023",
+        "url": "https://www.federalbank.co.in/documents/10180/590176370/Earnings+Call+Transcript+Q2+FY24.pdf/d3ed4af1-3f94-7a1d-37d0-cef5b9962e77?t=1697866938779",
+        "type": "transcript",
+        "title": "Transcript Oct 2023"
+      },
+      {
+        "quarter": "Jul 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/e54ba0b8-8a95-4e63-a0c9-1bea8e247371.pdf",
+        "type": "transcript",
+        "title": "Transcript Jul 2023"
+      },
+      {
+        "quarter": "May 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/adfba535-dafc-4693-902d-e272999fc2f4.pdf",
+        "type": "transcript",
+        "title": "Transcript May 2023"
+      },
+      {
+        "quarter": "May 2023",
+        "url": "https://www.federalbank.co.in/documents/10180/444519885/Earnings+Call+Q4FY23.pdf/9399439f-aacb-f825-bb48-700fc4eaf3a9?t=1683857398330",
+        "type": "transcript",
+        "title": "Transcript May 2023"
+      },
+      {
+        "quarter": "Jan 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/d04c7fb4-af5f-473d-bcc5-30e3a114e6e2.pdf",
+        "type": "transcript",
+        "title": "Transcript Jan 2023"
+      }
+    ],
+    "annual_reports": [
+      {
+        "year": "Financial Year 2025\n      \n        from bse",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/88960bed-cd92-4fca-8b92-df436c12c822.pdf"
+      },
+      {
+        "year": "Financial Year 2024\n      \n        from bse",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/888f430e-3ffc-4481-b5c7-f0128efe2c09.pdf"
+      },
+      {
+        "year": "Financial Year 2023\n      \n        from bse",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/84f877f6-9a6f-4715-b05b-5311ff39a475.pdf"
+      },
+      {
+        "year": "Financial Year 2022\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500469/73493500469.pdf"
+      },
+      {
+        "year": "Financial Year 2021\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500469/68581500469_29_06_21.pdf"
+      },
+      {
+        "year": "Financial Year 2020\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500469/5004690320.pdf"
+      },
+      {
+        "year": "Financial Year 2019\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500469/5004690319.pdf"
+      },
+      {
+        "year": "Financial Year 2018\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500469/5004690318.pdf"
+      },
+      {
+        "year": "Financial Year 2017\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500469/5004690317.pdf"
+      },
+      {
+        "year": "Financial Year 2016\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500469/5004690316.pdf"
+      },
+      {
+        "year": "Financial Year 2015\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500469/5004690315.pdf"
+      },
+      {
+        "year": "Financial Year 2014\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500469/5004690314.pdf"
+      },
+      {
+        "year": "Financial Year 2013\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500469/5004690313.pdf"
+      },
+      {
+        "year": "Financial Year 2012\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500469/5004690312.pdf"
+      },
+      {
+        "year": "Financial Year 2011\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500469/5004690311.pdf"
+      }
+    ],
+    "pdf_extracted_metrics": {
+      "extracted_from_pdfs": 3,
+      "quarters_processed": [
+        "Jan 2026",
+        "Oct 2025",
+        "Aug 2025"
+      ],
+      "metrics": {
+        "Jan 2026": {
+          "cost_to_income": 53.92,
+          "nim": 3.18,
+          "casa": 44.4,
+          "gnpa": 1.72,
+          "nnpa": 0.42,
+          "car": 15.2,
+          "roe": 11.68,
+          "roa": 1.15,
+          "loan_growth": 9.0,
+          "deposit_growth": 15.0,
+          "provision_coverage": 75.14,
+          "slippage_ratio": 0.7,
+          "key_highlights": [
+            "Highest ever Net Interest Income of \u20b92,653 crores and Operating Profit of \u20b91,729 crores",
+            "CASA ratio improved to 44.4% with total CASA growing 6.6% QoQ",
+            "Asset quality hit decadal best with GNPA at 1.72% and NNPA at 0.42%",
+            "Fee income reached highest ever at \u20b9896 crores with accelerating momentum",
+            "Balance sheet grew to \u20b93.67 lakh crores with diversified advances growth across retail (3.2% QoQ), business banking (3.8% QoQ), and CIB (6.3% QoQ)"
+          ]
+        },
+        "Oct 2025": {
+          "cost_to_income": 54.04,
+          "nim": 3.06,
+          "casa": 31.01,
+          "gnpa": 1.83,
+          "nnpa": 0.48,
+          "car": 15.71,
+          "roe": 11.01,
+          "roa": 1.09,
+          "loan_growth": 11.0,
+          "deposit_growth": 6.0,
+          "provision_coverage": 73.45,
+          "slippage_ratio": 0.94,
+          "key_highlights": [
+            "Highest ever para banking fee income of \u20b9886 Cr",
+            "Asset quality hits decadal best with GNPA at 1.83% and NNPA at 0.48%",
+            "CASA franchise scaling new peaks at 31.01%, up from 30.35% QoQ",
+            "Asset engine reshaped for better yield with shift toward higher yielding assets",
+            "Strong profitability metrics with ROE at 11.01% and ROA at 1.09%"
+          ]
+        },
+        "Aug 2025": {
+          "cost_to_income": 54.89,
+          "nim": 2.94,
+          "casa": null,
+          "gnpa": null,
+          "nnpa": null,
+          "car": 16.03,
+          "roe": 10.3,
+          "roa": 1.0,
+          "loan_growth": 9.0,
+          "deposit_growth": 9.2,
+          "provision_coverage": 74.41,
+          "slippage_ratio": 1.11,
+          "guidance": [],
+          "key_highlights": [
+            "Total business of \u20b95.29 lakh crore, 6th largest private bank",
+            "CASA grew by 12% YoY, Total deposits grew 9.2% YoY and 2.8% QoQ",
+            "Customer advances grew 9% YoY and 1% QoQ with diversified portfolio growth across retail, business banking, and commercial banking",
+            "Credit cost at 65 bps with RoRWA at 1.78%",
+            "Fee income at \u20b9786.49 Cr with highest ever other income of \u20b91,113 Cr"
+          ]
+        }
+      },
+      "guidance": [
+        "Full year FY26 credit cost guidance of 52-53 bps, improved from initial 55-60 bps guidance provided at beginning of year",
+        "NIM to face headwind in Q4 with 2/3 of December rate cut impact flowing through, though management will attempt to mitigate",
+        "Asset quality improvement trajectory expected to continue in Q4 with lower slippages and credit costs across segments including MFI",
+        "Distribution income typically shows seasonal pattern with Q2 stronger than Q3, though volume traction continues to remain good",
+        "Commercial banking and Business Banking growth momentum expected to sustain and improve in coming quarters",
+        "Full-year credit cost guidance maintained at 55 bps despite Q2 coming in at 50 bps and H1 average at 58 bps; endeavoring to come below but not revising guidance yet",
+        "NIM expected to continue improving from current 3.06% level driven by ongoing deposit repricing and CASA momentum, though specific target not provided due to rate cut uncertainties and multiple moving parts",
+        "Fee-to-assets ratio crossed 1% milestone for first time, with continued improvement expected from wealth management, trade and forex initiatives in coming quarters",
+        "CASA growth momentum expected to continue with average CASA ratio having improved 120 bps year-over-year and 100 bps quarter-over-quarter",
+        "ECL impact from draft RBI guidelines estimated to be less than 0.2% on capital based on earlier submissions, described as not substantial",
+        "Full year credit cost guidance maintained around 55 bps despite Q1 credit cost of 65 bps",
+        "NIM of 2.94% in Q1 expected to bottom out in Q2 (subject to no further rate cuts) and improve in H2 as cost of funds falls",
+        "Advance growth targeted at 1.2x nominal GDP with Q1 growth of 9.15% YoY and 3% QoQ",
+        "Cost-to-income ratio at 54.89% with continued focus on operating leverage through digital origination and process optimization",
+        "Capital adequacy strong at 16.03% with CET1 at 14.69%, ROA at 1% and ROE at 10.3% for Q1",
+        "Credit costs for FY25 came in at 38 bps, in line with earlier guidance of 35-40 bps for the year",
+        "Net profit crossed INR4,000 crore milestone for FY25 with Q4 profit at INR1,030 crore, up 14% Y-o-Y",
+        "Business crossed major milestone of INR5 lakh crore (INR5.18 lakh crore as of March 31), deposits at INR2.83 lakh crore, advances at INR2.38 lakh crore",
+        "OpEx to assets for FY25 was 1 bps lower than previous year despite Q4 one-offs, demonstrating operational efficiency improvements",
+        "LCR improved to 145% through degrowth of wholesale deposits from financial entities, while maintaining comfortable CD ratio of 82.79%"
+      ],
+      "key_highlights": [
+        "Highest ever Net Interest Income of \u20b92,653 crores and Operating Profit of \u20b91,729 crores",
+        "CASA ratio improved to 44.4% with total CASA growing 6.6% QoQ",
+        "Asset quality hit decadal best with GNPA at 1.72% and NNPA at 0.42%",
+        "Fee income reached highest ever at \u20b9896 crores with accelerating momentum",
+        "Balance sheet grew to \u20b93.67 lakh crores with diversified advances growth across retail (3.2% QoQ), business banking (3.8% QoQ), and CIB (6.3% QoQ)",
+        "Highest ever para banking fee income of \u20b9886 Cr",
+        "Asset quality hits decadal best with GNPA at 1.83% and NNPA at 0.48%",
+        "CASA franchise scaling new peaks at 31.01%, up from 30.35% QoQ",
+        "Asset engine reshaped for better yield with shift toward higher yielding assets",
+        "Strong profitability metrics with ROE at 11.01% and ROA at 1.09%",
+        "Total business of \u20b95.29 lakh crore, 6th largest private bank",
+        "CASA grew by 12% YoY, Total deposits grew 9.2% YoY and 2.8% QoQ",
+        "Customer advances grew 9% YoY and 1% QoQ with diversified portfolio growth across retail, business banking, and commercial banking",
+        "Credit cost at 65 bps with RoRWA at 1.78%",
+        "Fee income at \u20b9786.49 Cr with highest ever other income of \u20b91,113 Cr"
+      ],
+      "raw_text_sample": "--- Page 1 ---\nSecretarial Department\nSEC/LODR/379/2025-26 January 16, 2026\nThe Manager The Manager\nThe National Stock Exchange of India Limited Department of Corporate Services\nExchange Plaza, Bandra-Kurla Complex, BSE Limited, Phiroze Jeejeebhoy Towers,\nBandra (E), Mumbai \u2013 400 051. Floor 25, Dalal Street, Mumbai \u2013 400 001\nRe: Scrip Symbol: FEDERALBNK/ Scrip Code: 500469\nDear Madam/ Sir,\nSub: Investor Presentation\nPursuant to Regulation 30 of SEBI (Listing Obligations and Disclosure Requirements) Regulations, 2015,\nplease find enclosed herewith the Investor Presentation on the Unaudited Financial Results for the quarter\nended December 31, 2025.\nThe same is also being made available at https://www.federal.bank.in/financial-result\nKindly take the same on record.\nThanking you,\nYours faithfully,\nFor The Federal Bank Limited\nSamir P Rajdev\nCompany Secretary\nFederal Bank | 6th Floor, Federal Towers, Bank Junction, Aluva | Kerala | 683101\nPhone: 0484- 2622263| E-mail: secretarial@federalbank.co.in | Website: www.federal.bank.in\nCIN: L65191KL1931PLC000368\n\n[Table]\nThe Manager\nThe National Stock Exchange of India Limited\nExchange Plaza, Bandra-Kurla Complex,\nBandra (E), Mumbai \u2013 400 051. | The Manager\nDepartment of Corporate Services\nBSE Limited, Phiroze Jeejeebhoy Towers,\nFloor 25, Dalal Street, Mumbai \u2013 400 001\n\n--- Page 2 ---\nInvestor\nInformation\nQ3 FY 2026\n\n--- Page 3 ---\nDisclaimer\nIMPORTANT:ThispresentationhasbeenpreparedbyTheFederalBankLimited(the \u201cBank\u201d) solely forinformationpurposes,without regardto any specificobjectives, financial situationsorinformationalneeds of any particularperson. All\ninformation contained has been prepared solely by the Bank. No information contained herein has been independently verified by anyone else. This presentation may not be copied, distributed, redistributed or disseminated, directly or\nindirectly,inanymanner.Thispresentationdoesnotconstituteanofferorinvitation,directlyorindirectly,topurchaseorsubscribeforanysecuritiesoftheBankbyanypersoninanyjurisdiction.Nopartofitshouldformthebasisoforbe\nrelieduponinconnectionwithanyinvestmentdecisionoranycontractorcommitmenttopurchaseorsubscribeforanysecurities.Anypersonplacingrelianceontheinformationcontainedinthispresentationoranyothercommunicationby\ntheBankdoessoathisorherownriskandtheBankshallnotbeliableforanylossordamagecausedpursuanttoanyactoromissionbasedonorinrelianceupontheinformationcontainedherein.Norepresentationorwarranty,expressor\nimplied,ismadeasto,andnorelianceshouldbeplacedon,thefairness,accuracy,completenessorcorrectnessoftheinformationoropinionscontainedinthispresentation.Suchinformationandopinionsareinalleventsnotcurrentafter\nthe date of thispresentation. Further, past performance isnot necessarily indicative of future results. This presentation isnot acomplete description of the Bank. This presentation may contain statements that constitute forward-looking\nstatements. All forwardlooking statements are subjectto risks,uncertainties andassumptionsthat coul",
+      "latest_metrics": {
+        "cost_to_income": 53.92,
+        "nim": 3.18,
+        "casa": 44.4,
+        "gnpa": 1.72,
+        "nnpa": 0.42,
+        "car": 15.2,
+        "roe": 11.68,
+        "roa": 1.15,
+        "loan_growth": 9.0,
+        "deposit_growth": 15.0,
+        "provision_coverage": 75.14,
+        "slippage_ratio": 0.7,
+        "key_highlights": [
+          "Highest ever Net Interest Income of \u20b92,653 crores and Operating Profit of \u20b91,729 crores",
+          "CASA ratio improved to 44.4% with total CASA growing 6.6% QoQ",
+          "Asset quality hit decadal best with GNPA at 1.72% and NNPA at 0.42%",
+          "Fee income reached highest ever at \u20b9896 crores with accelerating momentum",
+          "Balance sheet grew to \u20b93.67 lakh crores with diversified advances growth across retail (3.2% QoQ), business banking (3.8% QoQ), and CIB (6.3% QoQ)"
+        ]
+      }
+    },
+    "pdf_metrics_extracted": true,
+    "management_guidance": [
+      "Full year FY26 credit cost guidance of 52-53 bps, improved from initial 55-60 bps guidance provided at beginning of year",
+      "NIM to face headwind in Q4 with 2/3 of December rate cut impact flowing through, though management will attempt to mitigate",
+      "Asset quality improvement trajectory expected to continue in Q4 with lower slippages and credit costs across segments including MFI",
+      "Distribution income typically shows seasonal pattern with Q2 stronger than Q3, though volume traction continues to remain good",
+      "Commercial banking and Business Banking growth momentum expected to sustain and improve in coming quarters",
+      "Full-year credit cost guidance maintained at 55 bps despite Q2 coming in at 50 bps and H1 average at 58 bps; endeavoring to come below but not revising guidance yet",
+      "NIM expected to continue improving from current 3.06% level driven by ongoing deposit repricing and CASA momentum, though specific target not provided due to rate cut uncertainties and multiple moving parts",
+      "Fee-to-assets ratio crossed 1% milestone for first time, with continued improvement expected from wealth management, trade and forex initiatives in coming quarters",
+      "CASA growth momentum expected to continue with average CASA ratio having improved 120 bps year-over-year and 100 bps quarter-over-quarter",
+      "ECL impact from draft RBI guidelines estimated to be less than 0.2% on capital based on earlier submissions, described as not substantial",
+      "Full year credit cost guidance maintained around 55 bps despite Q1 credit cost of 65 bps",
+      "NIM of 2.94% in Q1 expected to bottom out in Q2 (subject to no further rate cuts) and improve in H2 as cost of funds falls",
+      "Advance growth targeted at 1.2x nominal GDP with Q1 growth of 9.15% YoY and 3% QoQ",
+      "Cost-to-income ratio at 54.89% with continued focus on operating leverage through digital origination and process optimization",
+      "Capital adequacy strong at 16.03% with CET1 at 14.69%, ROA at 1% and ROE at 10.3% for Q1",
+      "Credit costs for FY25 came in at 38 bps, in line with earlier guidance of 35-40 bps for the year",
+      "Net profit crossed INR4,000 crore milestone for FY25 with Q4 profit at INR1,030 crore, up 14% Y-o-Y",
+      "Business crossed major milestone of INR5 lakh crore (INR5.18 lakh crore as of March 31), deposits at INR2.83 lakh crore, advances at INR2.38 lakh crore",
+      "OpEx to assets for FY25 was 1 bps lower than previous year despite Q4 one-offs, demonstrating operational efficiency improvements",
+      "LCR improved to 145% through degrowth of wholesale deposits from financial entities, while maintaining comfortable CD ratio of 82.79%"
+    ],
+    "key_highlights": [
+      "Highest ever Net Interest Income of \u20b92,653 crores and Operating Profit of \u20b91,729 crores",
+      "CASA ratio improved to 44.4% with total CASA growing 6.6% QoQ",
+      "Asset quality hit decadal best with GNPA at 1.72% and NNPA at 0.42%",
+      "Fee income reached highest ever at \u20b9896 crores with accelerating momentum",
+      "Balance sheet grew to \u20b93.67 lakh crores with diversified advances growth across retail (3.2% QoQ), business banking (3.8% QoQ), and CIB (6.3% QoQ)",
+      "Highest ever para banking fee income of \u20b9886 Cr",
+      "Asset quality hits decadal best with GNPA at 1.83% and NNPA at 0.48%",
+      "CASA franchise scaling new peaks at 31.01%, up from 30.35% QoQ",
+      "Asset engine reshaped for better yield with shift toward higher yielding assets",
+      "Strong profitability metrics with ROE at 11.01% and ROA at 1.09%",
+      "Total business of \u20b95.29 lakh crore, 6th largest private bank",
+      "CASA grew by 12% YoY, Total deposits grew 9.2% YoY and 2.8% QoQ",
+      "Customer advances grew 9% YoY and 1% QoQ with diversified portfolio growth across retail, business banking, and commercial banking",
+      "Credit cost at 65 bps with RoRWA at 1.78%",
+      "Fee income at \u20b9786.49 Cr with highest ever other income of \u20b91,113 Cr"
+    ],
+    "annual_report_financials": {
+      "reports_processed": 2,
+      "years": [
+        "FY 2024-25",
+        "FY2023-24"
+      ],
+      "detailed_pnl": {
+        "FY 2024-25": {
+          "interest_earned": null,
+          "interest_on_advances": null,
+          "income_on_investments": null,
+          "other_income": null,
+          "commission_brokerage": null,
+          "profit_on_investments": null,
+          "interest_expended": null,
+          "interest_on_deposits": null,
+          "operating_expenses": null,
+          "employee_cost": null,
+          "depreciation": null,
+          "other_opex": null,
+          "provisions_contingencies": null,
+          "provision_for_npa": null,
+          "provision_for_tax": null,
+          "operating_profit": null,
+          "pbt": null,
+          "tax": null,
+          "pat": null
+        },
+        "FY2023-24": {
+          "interest_earned": null,
+          "interest_on_advances": null,
+          "income_on_investments": null,
+          "other_income": null,
+          "commission_brokerage": null,
+          "profit_on_investments": null,
+          "interest_expended": null,
+          "interest_on_deposits": null,
+          "operating_expenses": null,
+          "employee_cost": null,
+          "depreciation": null,
+          "other_opex": null,
+          "provisions_contingencies": null,
+          "provision_for_npa": null,
+          "provision_for_tax": null,
+          "operating_profit": null,
+          "pbt": null,
+          "tax": null,
+          "pat": null
+        }
+      },
+      "detailed_bs": {
+        "FY 2024-25": {
+          "share_capital": null,
+          "reserves": null,
+          "total_equity": null,
+          "deposits": null,
+          "casa_deposits": null,
+          "borrowings": null,
+          "other_liabilities": null,
+          "total_liabilities": null,
+          "cash_and_bank": null,
+          "investments": null,
+          "advances": null,
+          "fixed_assets": null,
+          "other_assets": null,
+          "total_assets": null
+        },
+        "FY2023-24": {
+          "share_capital": null,
+          "reserves": null,
+          "total_equity": null,
+          "deposits": null,
+          "casa_deposits": null,
+          "borrowings": null,
+          "other_liabilities": null,
+          "total_liabilities": null,
+          "cash_and_bank": null,
+          "investments": null,
+          "advances": null,
+          "fixed_assets": null,
+          "other_assets": null,
+          "total_assets": null
+        }
+      },
+      "latest_year": "FY 2024-25"
+    },
+    "detailed_pnl": {
+      "FY 2024-25": {
+        "interest_earned": null,
+        "interest_on_advances": null,
+        "income_on_investments": null,
+        "other_income": null,
+        "commission_brokerage": null,
+        "profit_on_investments": null,
+        "interest_expended": null,
+        "interest_on_deposits": null,
+        "operating_expenses": null,
+        "employee_cost": null,
+        "depreciation": null,
+        "other_opex": null,
+        "provisions_contingencies": null,
+        "provision_for_npa": null,
+        "provision_for_tax": null,
+        "operating_profit": null,
+        "pbt": null,
+        "tax": null,
+        "pat": null
+      },
+      "FY2023-24": {
+        "interest_earned": null,
+        "interest_on_advances": null,
+        "income_on_investments": null,
+        "other_income": null,
+        "commission_brokerage": null,
+        "profit_on_investments": null,
+        "interest_expended": null,
+        "interest_on_deposits": null,
+        "operating_expenses": null,
+        "employee_cost": null,
+        "depreciation": null,
+        "other_opex": null,
+        "provisions_contingencies": null,
+        "provision_for_npa": null,
+        "provision_for_tax": null,
+        "operating_profit": null,
+        "pbt": null,
+        "tax": null,
+        "pat": null
+      }
+    },
+    "detailed_bs": {
+      "FY 2024-25": {
+        "share_capital": null,
+        "reserves": null,
+        "total_equity": null,
+        "deposits": null,
+        "casa_deposits": null,
+        "borrowings": null,
+        "other_liabilities": null,
+        "total_liabilities": null,
+        "cash_and_bank": null,
+        "investments": null,
+        "advances": null,
+        "fixed_assets": null,
+        "other_assets": null,
+        "total_assets": null
+      },
+      "FY2023-24": {
+        "share_capital": null,
+        "reserves": null,
+        "total_equity": null,
+        "deposits": null,
+        "casa_deposits": null,
+        "borrowings": null,
+        "other_liabilities": null,
+        "total_liabilities": null,
+        "cash_and_bank": null,
+        "investments": null,
+        "advances": null,
+        "fixed_assets": null,
+        "other_assets": null,
+        "total_assets": null
+      }
+    },
+    "transcript_insights": {
+      "transcripts_processed": 4,
+      "quarters": [
+        "Jan 2026",
+        "Oct 2025",
+        "Aug 2025",
+        "May 2025"
+      ],
+      "key_themes": [
+        "Brand refresh initiative with new 'Fortuna Wave' visual identity focused on Authenticity, Prosperity, and Togetherness (APT) to enhance recognition and differentiation",
+        "Strategic investment from Blackstone received board and shareholder approval, validating strategy and governance while strengthening capital base and providing access to global expertise",
+        "Structural shift in balance sheet mix toward mid-yield assets and improved liability franchise driving margin expansion and sustainable profitability",
+        "CASA growth momentum strongest in industry at 6.59% QoQ and 18.86% YoY, with CASA ratio improving to 32.07% (up 106 bps QoQ)",
+        "Focus on risk-adjusted profitability and consistency over headline growth, with disciplined balance sheet management across rate cycles",
+        "Structural transformation through four strategic levers: strengthening NIMs via CASA growth (especially current accounts), improving asset mix toward medium-yield products, building diversified fee income, and maintaining strong asset quality",
+        "NIM expansion exceeded guidance, improving from 2.94% to 3.06% driven by 19 bps lower deposit costs and strategic CASA ratio improvement of 120 bps year-over-year",
+        "Deliberate portfolio rebalancing away from low-yield assets (corporate and home loans representing ~50% of book) toward medium-yield segments like commercial banking, CV finance, LAP, and gold loans",
+        "MFI stress peaked in Q1 but continues to impact results, though easing month-over-month; rest of asset book remains stable with no other asset quality concerns",
+        "Fee income resilience demonstrated with 13% Q-o-Q growth despite muted treasury income, crossing 1% fee-to-assets milestone for first time",
+        "Federal 4.0 transformation strategy focused on three core objectives: improving CASA (especially current accounts), driving better yield on advances through asset mix reshaping, and increasing granularity and volume of fee income",
+        "Branch network optimization through 'Free The Branch' initiative with 70 regional business support centers operational and regional loan service centers being established in Q2",
+        "Technology modernization including corporate credit underwriting automation, FedOne unified interface for corporates, FedMobile app enhancements, and GenAI-powered chatbot in testing",
+        "Organizational restructuring across retail assets (separate heads for secured/unsecured), wealth management vertical established, and corporate banking B-FIG segment creation",
+        "Asset quality challenges primarily in MFI/Agri segments with gross slippages of Rs. 658.19 crore in Q1, though stress showing signs of peaking with declining trajectory in June-July",
+        "Strategic shift towards mid-yielding segments (mass affluent, MSME, LAP, gold loans) with 19% Y-o-Y growth achieved in medium-yield portfolio",
+        "Strong focus on liability franchise improvement with CA growing 27% Q-o-Q and 35% Y-o-Y, CASA ratio at 30.23%",
+        "Implementation of new operational frameworks including RaRoC-based pricing, transfer pricing methodology, and business-wise P&L system to drive accountability",
+        "Asset quality at decadal best with GNPA at 1.84% (down 11 bps Q-o-Q), NNPA at 0.44%, and provision coverage strengthened to 75.37%",
+        "Major organizational transformation initiatives including talent acquisition (9 of 14 N-2 positions filled), Operation Udaan for branch modernization, and brand refresh with Vidya Balan as ambassador"
+      ],
+      "management_outlook": [
+        "NIM expansion journey expected to continue for many quarters as CASA percentage grows and medium-yield assets grow faster than low-yielding segments, though next quarter will see 2/3 impact of recent rate cut",
+        "Credit cost guidance of 52-53 bps for full year FY26, improving from initial 55-60 bps guidance, with further improvement expected in Q4",
+        "MFI portfolio showing improving trajectory in slippages and credit costs quarter-over-quarter, but management remains cautious and will watch one more quarter before accelerating growth",
+        "Priorities remain unchanged: strengthening liability franchise, growing in chosen higher quality lending segments, and maintaining control on cost and asset quality",
+        "Too early to provide specific long-term targets for loan mix composition, but will continue journey of growing mid-yield book faster than high-yield book",
+        "Confident about continued NIM improvement beyond current 3.06% level through ongoing deposit repricing over next 6 months and sustained CASA momentum, though specific targets not provided due to multiple moving parts",
+        "Expect stronger growth momentum in LAP and BuB segments in coming quarters after reversing negative trends; committed to growing in chosen high-yield segments while maintaining profitability focus",
+        "Anticipate gradual easing of MFI stress but not yet in comfortable zone; credit costs expected to moderate but maintaining full-year 55 bps guidance with aspiration to come below",
+        "Wealth management, trade and forex revenue initiatives gaining momentum expected to further strengthen fee trajectory over next few quarters",
+        "Proactively took INR 46 crore management overlay on standard accounts with connected exposure stress as precautionary measure, demonstrating conservative approach",
+        "Expect NIMs to bottom out in Q2 (subject to no further rate cuts) and improve in H2 as cost of funds falls, with full year guidance of maintaining credit cost around 55 bps",
+        "Anticipate disbursement momentum to improve post-monsoon especially in retail and MSME, with growth targeted at 1.2x nominal GDP",
+        "MFI stress expected to linger at most one more quarter with peak slippages seen in May and declining trajectory in June-July",
+        "Strong opportunities identified in secured MSME, business banking, gold-backed lending, LAP and CVCE segments as medium-yielding focus areas",
+        "H2 expected to see stronger retail growth with restructuring complete and festive season momentum, combination of better macro, declining cost of funds, and unsecured lending recovery to support margin normalization",
+        "Confident in resuming gold loan growth following regulatory clarity after facing headwinds in Q4 due to regulatory issues",
+        "Plans to revive personal loan growth as credit environment stabilizes, while maintaining cautious approach to microfinance for at least 1-2 more quarters",
+        "Expects to achieve reasonable asset growth in FY26 driven by mid-yield segments, with current account acquisition running 50% higher than previous period",
+        "Positioned for self-sustaining franchise with strong capital position (CRAR 16.4%, CET1 15.04%) providing ample headroom for growth",
+        "Confident in maintaining NIM stability through proactive measures including T+90 reset for floating rate loans, fixed-rate car loans, and recent deposit rate adjustments"
+      ],
+      "analyst_concerns": [
+        "Margin outlook sustainability given strong 24 bps expansion over last two quarters and impact of rate cuts, with clarification sought on repricing timeline",
+        "Distribution fee income was not very strong this quarter, raising questions about momentum in fee-generating businesses",
+        "MFI credit costs currently at 10-11% level and sustainability of overall credit cost improvement once MFI normalizes relative to lower costs in other segments",
+        "Quantitative guidance on future loan mix composition across high/mid/low yielding segments over 3-5 year horizon",
+        "MSME asset quality concerns and potential impact from US tariffs on commercial banking portfolio",
+        "Loan growth at 1.5% Q-o-Q significantly below system, questioning ability to meet 1.2x nominal GDP growth target for the year given deliberate slowdown in low-yield segments",
+        "Sustainability of CASA ratio improvements when overall balance sheet growth accelerates, as current low growth environment is helping maintain elevated CASA ratios",
+        "Timing and necessity of capital raise given improving margins and potential for self-funding growth through internal accruals, especially with consolidation in capital-light businesses",
+        "MFI asset quality stress continuation despite peak being reached in Q1, with questions about timeline for normalization and impact on credit costs",
+        "Potential impact of new RBI guidelines on ECL provisioning and revised standardized approach for operational and credit risk on capital ratios",
+        "MFI stress bunching in Q1 for Federal Bank while other lenders recognized it earlier in Q3-Q4, with questions about accelerated provisioning impact and duration of elevated credit costs",
+        "Broader stress emerging in retail segments including unsecured, business banking, and CV segments with questions about new stress build-ups and sustainability of credit costs",
+        "NIM compression due to faster repricing on T+1 basis with 100 bps rate cuts, questions about magnitude and duration of further margin decline in Q2 before stabilization",
+        "Competitive intensity especially on pricing and ability to maintain risk-adjusted profitability in current environment",
+        "Geopolitical and tariff-related uncertainties affecting the external environment despite improving macro backdrop",
+        "Whether bank can return to high-teen loan growth in FY26 after consolidation in lower-yield segments like home loans and corporate banking",
+        "Stickiness of year-end CASA growth, particularly whether strong Q4 current account growth of 27% Q-o-Q will be retained",
+        "NIM pressure from expected repo rate cuts and high EBLR book exposure (over 50% linked to external benchmark), seeking clarity on margin floor for FY26",
+        "One-off costs in Q4 OpEx including branch expansion (39 of 85 branches opened in Q4), campaigns and card-related expenses leading to uptick in cost-to-income ratio",
+        "Sustainability of fee income growth which outpaced asset growth, and whether this can continue as revenue diversification strategy"
+      ],
+      "guidance_statements": [
+        "Full year FY26 credit cost guidance of 52-53 bps, improved from initial 55-60 bps guidance provided at beginning of year",
+        "NIM to face headwind in Q4 with 2/3 of December rate cut impact flowing through, though management will attempt to mitigate",
+        "Asset quality improvement trajectory expected to continue in Q4 with lower slippages and credit costs across segments including MFI",
+        "Distribution income typically shows seasonal pattern with Q2 stronger than Q3, though volume traction continues to remain good",
+        "Commercial banking and Business Banking growth momentum expected to sustain and improve in coming quarters",
+        "Full-year credit cost guidance maintained at 55 bps despite Q2 coming in at 50 bps and H1 average at 58 bps; endeavoring to come below but not revising guidance yet",
+        "NIM expected to continue improving from current 3.06% level driven by ongoing deposit repricing and CASA momentum, though specific target not provided due to rate cut uncertainties and multiple moving parts",
+        "Fee-to-assets ratio crossed 1% milestone for first time, with continued improvement expected from wealth management, trade and forex initiatives in coming quarters",
+        "CASA growth momentum expected to continue with average CASA ratio having improved 120 bps year-over-year and 100 bps quarter-over-quarter",
+        "ECL impact from draft RBI guidelines estimated to be less than 0.2% on capital based on earlier submissions, described as not substantial",
+        "Full year credit cost guidance maintained around 55 bps despite Q1 credit cost of 65 bps",
+        "NIM of 2.94% in Q1 expected to bottom out in Q2 (subject to no further rate cuts) and improve in H2 as cost of funds falls",
+        "Advance growth targeted at 1.2x nominal GDP with Q1 growth of 9.15% YoY and 3% QoQ",
+        "Cost-to-income ratio at 54.89% with continued focus on operating leverage through digital origination and process optimization",
+        "Capital adequacy strong at 16.03% with CET1 at 14.69%, ROA at 1% and ROE at 10.3% for Q1",
+        "Credit costs for FY25 came in at 38 bps, in line with earlier guidance of 35-40 bps for the year",
+        "Net profit crossed INR4,000 crore milestone for FY25 with Q4 profit at INR1,030 crore, up 14% Y-o-Y",
+        "Business crossed major milestone of INR5 lakh crore (INR5.18 lakh crore as of March 31), deposits at INR2.83 lakh crore, advances at INR2.38 lakh crore",
+        "OpEx to assets for FY25 was 1 bps lower than previous year despite Q4 one-offs, demonstrating operational efficiency improvements",
+        "LCR improved to 145% through degrowth of wholesale deposits from financial entities, while maintaining comfortable CD ratio of 82.79%"
+      ],
+      "raw_text_samples": {
+        "Jan 2026": "--- Page 1 ---\nFederal Bank Limited\nQ3 FY\u201926 Earnings Conference Call\nJanuary 16, 2026\nMANAGEMENT: MR. KVS MANIAN \u2013 MD & CEO\nMR. HARSH DUGAR \u2013 EXECUTIVE DIRECTOR\nMR. VENKATRAMAN VENKATESWARAN \u2013\nEXECUTIVE DIRECTOR & CFO\nMR. LAKSHMANAN V \u2013 GROUP PRESIDENT &\nHEAD, TREASURY\nMR. VIRAT DIWANJI \u2013 GROUP PRESIDENT &\nNATIONAL HEAD, CONSUMER BANKING\nMR. DAMODARAN \u2013 EVP & CHIEF RISK OFFICER\nMR. MAHESH R \u2013 EVP & COUNTRY HEAD, LOAN\nCOLLECTION & RECOVERY\nMR. RAVI RANJIT \u2013 SVP & HEAD, PLANNING\nMR. MANIKANDAN M \u2013 HEAD, FINANCIAL\nREPORTING\nMR. SOUVIK ROY \u2013 HEAD, INVESTOR RELATIONS\nPage 1 of 19\n\n--- Page 2 ---\nFederal Bank Limited\nJanuary 16, 2026\nModerator: Ladies and gentlemen, good day and welcome to the Q3 FY\u201926 Earnings Conference Call of the\nFederal Bank Limited.\nAs a reminder, all participant lines will be in the listen-only mode and there will be an\nopportunity for you to ask questions after the presentation concludes. Should you need assistance\nduring the conference call, please signal an operator by pressing \u2018*\u2019 and \u20180\u2019 on your touchtone\nphone.\nI now hand the conference over to Mr. Souvik Roy \u2013 Head (Investor Relations), The Federal\nBank Limited. Thank you and over to you, sir.\nSouvik Roy: Thank you so much. Good evening, everyone and a very Happy New Year to all of you. Thank\nyou for joining us today for our Q3 Earnings Call.\nBefore we begin, a quick housekeeping note. In the last interaction, we had mentioned that we\nwould try and avoid scheduling earnings calls on Saturdays and we are glad we could keep this\npromise this quarter. As always, the entire senior team is here on the call with us today. We will\nbegin with the opening remarks from our MD. Then Venkat sir, ED would take you through the\nquarter, the main numbers actually and after which we will open the floor for further questions.\nGiven the number of participants on the call and the time available, we request everyone to\nrestrict themselves to one question each so that we can accommodate as many participants as\npossible.\nSo, with that, I will hand it over to our MD, Manian sir, over to you.\nKVS Manian: Thanks, Souvik. Before Venkat walks you through the numbers in detail, I would like to make\na few introductory remarks about some of the important events during this quarter.\nFirst, for the Brand refresh, this was one of the 12 strategic themes that we had listed in February\nlast. As you are aware, we took on board Vidya Balan as Brand Ambassador and launched a\nmedia campaign Savings ki Vidya, we took the next steps forward in this quarter.\nFor decades, our customers discovered us by walking into the branch or by speaking to our\npeople, by experiencing our values in person. Today, the first interaction often happens on a six-\ninch screen. The first judgment is formed not in our offices, but in our pixels. We are evaluated\nnot just on rates or products, but on experience, simplicity, and the quite confidence with which\nwe project in those early moments. That was a rationale for our brand refresh ",
+        "Oct 2025": "--- Page 1 ---\nFederal Bank Limited\nQ2 FY'26 Earnings Conference Call\nOctober 18, 2025\nMANAGEMENT: MR. KVS MANIAN \u2013 MD & CEO\nMR. HARSH DUGAR \u2013 EXECUTIVE DIRECTOR\nMR. VENKATRAMAN VENKATESWARAN \u2013\nEXECUTIVE DIRECTOR & CFO\nMR. LAKSHMANAN V \u2013 GROUP PRESIDENT &\nHEAD (TREASURY)\nMR. VIRAT DIWANJI \u2013 GROUP PRESIDENT &\nNATIONAL HEAD (CONSUMER BANKING)\nMR. DAMODARAN \u2013 EVP & CHIEF RISK OFFICER\nMR. MAHESH R \u2013 EVP & HEAD (LOAN\nCOLLECTION & RECOVERY)\nMR. RAVI RANJIT \u2013 SVP & HEAD (PLANNING)\nMR. MANIKANDAN M \u2013 HEAD, FINANCIAL\nREPORTING\nMR. SOUVIK ROY \u2013 HEAD, INVESTOR RELATIONS\nPage 1 of 17\n\n--- Page 2 ---\nFederal Bank Limited\nOctober 18, 2025\nModerator: Ladies and gentlemen, good day, and welcome to the Federal Bank Limited Q2 FY '26 Earnings\nConference Call. As a reminder, all participant lines will be in the listen-only mode and there\nwill be an opportunity for you to ask questions after the presentation concludes. Should you need\nassistance during the conference call, please signal an operator by pressing star then zero on\nyour touch-tone phone. Please note that this conference is being recorded.\nI now hand the conference over to Mr. Souvik Roy, Head, Investor Relations, the Federal Bank\nLimited. Thank you, and over to you, Mr. Roy.\nSouvik Roy: Thank you so much, and good afternoon, everyone. Thank you so much for joining us on a\nSaturday. We truly appreciate you taking the time. Today is Dhanteras and with Diwali just\naround the corner, we wish all of you and your families health, prosperity and a wonderful festive\nseason ahead.\nWe remember the fact that today is a crowded results day for all of you. So, we actually thought\nto start a bit early and give you enough time for the other calls. Many of you had actually\nmentioned in the last call that weekend calls are tough. We do understand that. But unfortunately,\ngiven the results calendar this quarter and the number of moving parts, we couldn't shift it around\nthis time.\nWe did, however, wanted to get all the fireworks out of the way before Diwali. So hopefully,\nwill do it some other day, but not on Saturday. All our senior management members are on the\ncall with me, including our MD, our EDs and the business heads, and they'll be happy to take\nyour questions after the opening comments.\nWith that, let me hand it over to our MD, Mr. KVS Manian. Over to you sir.\nKVS Manian: Thanks, Souvik. Good afternoon, everyone. Thank you for joining us for our Q2 earnings call. I\nhave now spent over a year in this role. I can say with conviction that I feel confident both about\nwhere the bank stands today and about our collective ability to steer it steadily towards the goals\nwe have laid out.\nThe results this quarter reflect the structural improvements we have been working hard to embed\nin our income and balance sheet profile. Let me take a few minutes to walk you through the four\nlevers that continue to drive this structural change. The first lever, strengthening NIMs through\nCASA, especially current account.\nOur CASA growt",
+        "Aug 2025": "--- Page 1 ---\nFederal Bank Limited\nQ1 FY'26 Earnings Conference Call\nAugust 02, 2025\nMANAGEMENT: MR. KVS MANIAN \u2013 MD & CEO\nMR. HARSH DUGAR \u2013 EXECUTIVE DIRECTOR\nMR. VENKATRAMAN VENKATESWARAN \u2013\nEXECUTIVE DIRECTOR & CFO\nMR. LAKSHMANAN V \u2013 GROUP PRESIDENT &\nHEAD (TREASURY)\nMR. VIRAT DIWANJI \u2013 GROUP PRESIDENT &\nNATIONAL HEAD (CONSUMER BANKING)\nMR. DAMODARAN \u2013 EVP & CHIEF RISK OFFICER\nMR. MAHESH R \u2013 EVP & HEAD (LOAN\nCOLLECTION & RECOVERY)\nMR. RAVI RANJIT \u2013 SVP & HEAD (PLANNING)\nMR. MANIKANDAN M \u2013 HEAD, FINANCIAL\nREPORTING\nMR. SOUVIK ROY \u2013 HEAD, INVESTOR RELATIONS\nPage 1 of 19\n\n--- Page 2 ---\nFederal Bank Limited\nAugust 02, 2025\nModerator: Ladies and gentlemen, good day and welcome to Q1 FY '26 Earnings Conference Call of the\nFederal Bank Limited.\nAs a reminder, all participants\u2019 lines will be in the listen-only mode and there will be an\nopportunity for you to ask questions after the presentation concludes. Should you need assistance\nduring this conference call, please signal an operator by pressing \u2018*\u2019, then \u20180\u2019 on your touchtone\nphone. Please note that this conference is being recorded.\nI now hand the conference over to Mr. Souvik Roy - Head, Investor Relations, the Federal Bank\nLimited. Thank you and over to you, Mr. Roy.\nSouvik Roy: Thank you so much and good evening, everyone. Thank you for joining us, especially on a\nweekend. I have got quite a few messages over the past couple of days asking if Saturday is\ngoing to be the new normal for our Earnings Call. Well, I can assure you it is still undecided and\nwe promise you this wasn't by design.\nAs always, I am joined by our full Leadership Team led by our MD and CEO along with our\nExecutive Directors and Senior Business Heads.\nWe will start with some strategic updates from our MD followed by the CFO walking you\nthrough the financials and business performance for the quarter. After that, we will of course, as\nalways, open the floor for discussions and questions.\nWith that, over to you, sir.\nKVS Manian: Thank you, Souvik. Good evening, everyone. Thank you for joining us this Saturday evening.\nBefore we dive into the quarterly numbers, let me make some introductory remarks:\nWhile we will present to you a detailed review of our strategy implementation in January 2026,\nabout a year after we first announced it, I thought a quick and a short interim update on the same\nmay be useful. Earlier this February, when we introduced Federal 4.0, it was not just a\ncatchphrase but was a transformation blueprint to reshape the way we operate, compete and\ngrow. We are focused on execution as I hope you will realize as we move ahead in this update.\nIf I had to oversimplify our strategy, and I mean oversimplify, it really comes down to getting\nthree things right; improving our CASA, especially the current account piece, to address our cost\nof funds; driving better yield on advances, largely by reshaping the asset mix and increasing\ngranularity and volume of our fee income. In the quarter gone by, there is clear evidence ",
+        "May 2025": "--- Page 1 ---\nSecretarial Department\nSEC/LODR/43/2025-26 May 06, 2025\nNational Stock Exchange of India Limited BSE Limited\nListing Department, Department of Corporate Services- Listing,\nExchange Plaza, Phiroze Jeejeebhoy Towers,\nBandra-Kurla Complex, Dalal Street, Fort,\nBandra (E), Mumbai \u2013 400 001.\nMumbai \u2013 400 051.\nRef.: Scrip Symbol: FEDERALBNK/Scrip Code: 500469\nDear Madam/ Sir,\nSub: Transcript of the Earnings Call for Audited Financial Results for the quarter and year ended March 31,\n2025, and Business updates.\nWe wish to inform you that the transcript of the earnings call hosted by The Federal Bank Limited (\u201cthe Bank\u201d)\nfor the Audited Financial Results for the quarter and year ended March 31, 2025, has been made available on\nthe Bank\u2019s website at the following link, within the timeline prescribed under the SEBI (Listing Obligations and\nDisclosure Requirements) Regulations, 2015:\nhttps://www.federalbank.co.in/documents/10180/1124414626/Transcript_Q4FY25.pdf/6ee3be49-5f6f-b835-\n8770-3aebef4e342a?t=1746527368619\nWe are also enclosing the transcript of the earnings call with this intimation.\nThis is for your information and appropriate dissemination.\nThanking you,\nYours faithfully,\nFor The Federal Bank Limited\nSamir P Rajdev\nCompany Secretary\nEncl: As above\nThe Federal Bank Ltd.| Secretarial Dept | 6th Floor, Federal Towers, Bank Junction, Aluva| Phone: 04842622263\nEmail: secretarial@federalbank.co.in | CIN: L65191KL1931PLC000368| Website: www.federalbank.co.in\n\n[Table]\nNational Stock Exchange of India Limited\nListing Department,\nExchange Plaza,\nBandra-Kurla Complex,\nBandra (E),\nMumbai \u2013 400 051. | BSE Limited\nDepartment of Corporate Services- Listing,\nPhiroze Jeejeebhoy Towers,\nDalal Street, Fort,\nMumbai \u2013 400 001.\n\n--- Page 2 ---\nFederal Bank Limited\nQ4 FY'25 Earnings Conference Call\nApril 30, 2025\nMANAGEMENT: MR. KVS MANIAN \u2013 MD & CEO\nMS. SHALINI WARRIER \u2013 EXECUTIVE DIRECTOR\nMR. HARSH DUGAR \u2013 EXECUTIVE DIRECTOR\nMR. VENKATRAMAN VENKATESWARAN \u2013\nGROUP PRESIDENT & CFO\nMR. LAKSHMANAN V \u2013 GROUP PRESIDENT &\nHEAD (TREASURY)\nMR. SOUVIK ROY \u2013HEAD, INVESTOR RELATIONS\nPage 1 of 20\n\n--- Page 3 ---\nFederal Bank Limited\nApril 30, 2025\nModerator: Ladies and gentlemen, good day, and welcome to the Q4 FY '25 Earnings Conference Call of\nThe Federal Bank Limited. As a reminder, all participant lines will be in the listen-only mode\nand there will be an opportunity for you to ask questions after the presentation concludes. Should\nyou need assistance during the conference call, please signal an operator by pressing start and\nzero on your touchtone phone. Please note that this conference is being recorded.\nI now hand the conference over to Mr. Souvik Roy, Head Investor Relations, The Federal Bank\nLimited. Thank you, and over to you, sir.\nSouvik Roy: Thank you so much, and good evening, ladies and gentlemen. Thanks for joining us this evening.\nI hope you had the opportunity to review our results and go through the investor deck, which we\nhad already shared earlier."
+      }
+    },
+    "concall_themes": [
+      "Brand refresh initiative with new 'Fortuna Wave' visual identity focused on Authenticity, Prosperity, and Togetherness (APT) to enhance recognition and differentiation",
+      "Strategic investment from Blackstone received board and shareholder approval, validating strategy and governance while strengthening capital base and providing access to global expertise",
+      "Structural shift in balance sheet mix toward mid-yield assets and improved liability franchise driving margin expansion and sustainable profitability",
+      "CASA growth momentum strongest in industry at 6.59% QoQ and 18.86% YoY, with CASA ratio improving to 32.07% (up 106 bps QoQ)",
+      "Focus on risk-adjusted profitability and consistency over headline growth, with disciplined balance sheet management across rate cycles",
+      "Structural transformation through four strategic levers: strengthening NIMs via CASA growth (especially current accounts), improving asset mix toward medium-yield products, building diversified fee income, and maintaining strong asset quality",
+      "NIM expansion exceeded guidance, improving from 2.94% to 3.06% driven by 19 bps lower deposit costs and strategic CASA ratio improvement of 120 bps year-over-year",
+      "Deliberate portfolio rebalancing away from low-yield assets (corporate and home loans representing ~50% of book) toward medium-yield segments like commercial banking, CV finance, LAP, and gold loans",
+      "MFI stress peaked in Q1 but continues to impact results, though easing month-over-month; rest of asset book remains stable with no other asset quality concerns",
+      "Fee income resilience demonstrated with 13% Q-o-Q growth despite muted treasury income, crossing 1% fee-to-assets milestone for first time",
+      "Federal 4.0 transformation strategy focused on three core objectives: improving CASA (especially current accounts), driving better yield on advances through asset mix reshaping, and increasing granularity and volume of fee income",
+      "Branch network optimization through 'Free The Branch' initiative with 70 regional business support centers operational and regional loan service centers being established in Q2",
+      "Technology modernization including corporate credit underwriting automation, FedOne unified interface for corporates, FedMobile app enhancements, and GenAI-powered chatbot in testing",
+      "Organizational restructuring across retail assets (separate heads for secured/unsecured), wealth management vertical established, and corporate banking B-FIG segment creation",
+      "Asset quality challenges primarily in MFI/Agri segments with gross slippages of Rs. 658.19 crore in Q1, though stress showing signs of peaking with declining trajectory in June-July",
+      "Strategic shift towards mid-yielding segments (mass affluent, MSME, LAP, gold loans) with 19% Y-o-Y growth achieved in medium-yield portfolio",
+      "Strong focus on liability franchise improvement with CA growing 27% Q-o-Q and 35% Y-o-Y, CASA ratio at 30.23%",
+      "Implementation of new operational frameworks including RaRoC-based pricing, transfer pricing methodology, and business-wise P&L system to drive accountability",
+      "Asset quality at decadal best with GNPA at 1.84% (down 11 bps Q-o-Q), NNPA at 0.44%, and provision coverage strengthened to 75.37%",
+      "Major organizational transformation initiatives including talent acquisition (9 of 14 N-2 positions filled), Operation Udaan for branch modernization, and brand refresh with Vidya Balan as ambassador"
+    ],
+    "analyst_concerns": [
+      "Margin outlook sustainability given strong 24 bps expansion over last two quarters and impact of rate cuts, with clarification sought on repricing timeline",
+      "Distribution fee income was not very strong this quarter, raising questions about momentum in fee-generating businesses",
+      "MFI credit costs currently at 10-11% level and sustainability of overall credit cost improvement once MFI normalizes relative to lower costs in other segments",
+      "Quantitative guidance on future loan mix composition across high/mid/low yielding segments over 3-5 year horizon",
+      "MSME asset quality concerns and potential impact from US tariffs on commercial banking portfolio",
+      "Loan growth at 1.5% Q-o-Q significantly below system, questioning ability to meet 1.2x nominal GDP growth target for the year given deliberate slowdown in low-yield segments",
+      "Sustainability of CASA ratio improvements when overall balance sheet growth accelerates, as current low growth environment is helping maintain elevated CASA ratios",
+      "Timing and necessity of capital raise given improving margins and potential for self-funding growth through internal accruals, especially with consolidation in capital-light businesses",
+      "MFI asset quality stress continuation despite peak being reached in Q1, with questions about timeline for normalization and impact on credit costs",
+      "Potential impact of new RBI guidelines on ECL provisioning and revised standardized approach for operational and credit risk on capital ratios",
+      "MFI stress bunching in Q1 for Federal Bank while other lenders recognized it earlier in Q3-Q4, with questions about accelerated provisioning impact and duration of elevated credit costs",
+      "Broader stress emerging in retail segments including unsecured, business banking, and CV segments with questions about new stress build-ups and sustainability of credit costs",
+      "NIM compression due to faster repricing on T+1 basis with 100 bps rate cuts, questions about magnitude and duration of further margin decline in Q2 before stabilization",
+      "Competitive intensity especially on pricing and ability to maintain risk-adjusted profitability in current environment",
+      "Geopolitical and tariff-related uncertainties affecting the external environment despite improving macro backdrop",
+      "Whether bank can return to high-teen loan growth in FY26 after consolidation in lower-yield segments like home loans and corporate banking",
+      "Stickiness of year-end CASA growth, particularly whether strong Q4 current account growth of 27% Q-o-Q will be retained",
+      "NIM pressure from expected repo rate cuts and high EBLR book exposure (over 50% linked to external benchmark), seeking clarity on margin floor for FY26",
+      "One-off costs in Q4 OpEx including branch expansion (39 of 85 branches opened in Q4), campaigns and card-related expenses leading to uptick in cost-to-income ratio",
+      "Sustainability of fee income growth which outpaced asset growth, and whether this can continue as revenue diversification strategy"
+    ],
+    "management_outlook": [
+      "NIM expansion journey expected to continue for many quarters as CASA percentage grows and medium-yield assets grow faster than low-yielding segments, though next quarter will see 2/3 impact of recent rate cut",
+      "Credit cost guidance of 52-53 bps for full year FY26, improving from initial 55-60 bps guidance, with further improvement expected in Q4",
+      "MFI portfolio showing improving trajectory in slippages and credit costs quarter-over-quarter, but management remains cautious and will watch one more quarter before accelerating growth",
+      "Priorities remain unchanged: strengthening liability franchise, growing in chosen higher quality lending segments, and maintaining control on cost and asset quality",
+      "Too early to provide specific long-term targets for loan mix composition, but will continue journey of growing mid-yield book faster than high-yield book",
+      "Confident about continued NIM improvement beyond current 3.06% level through ongoing deposit repricing over next 6 months and sustained CASA momentum, though specific targets not provided due to multiple moving parts",
+      "Expect stronger growth momentum in LAP and BuB segments in coming quarters after reversing negative trends; committed to growing in chosen high-yield segments while maintaining profitability focus",
+      "Anticipate gradual easing of MFI stress but not yet in comfortable zone; credit costs expected to moderate but maintaining full-year 55 bps guidance with aspiration to come below",
+      "Wealth management, trade and forex revenue initiatives gaining momentum expected to further strengthen fee trajectory over next few quarters",
+      "Proactively took INR 46 crore management overlay on standard accounts with connected exposure stress as precautionary measure, demonstrating conservative approach",
+      "Expect NIMs to bottom out in Q2 (subject to no further rate cuts) and improve in H2 as cost of funds falls, with full year guidance of maintaining credit cost around 55 bps",
+      "Anticipate disbursement momentum to improve post-monsoon especially in retail and MSME, with growth targeted at 1.2x nominal GDP",
+      "MFI stress expected to linger at most one more quarter with peak slippages seen in May and declining trajectory in June-July",
+      "Strong opportunities identified in secured MSME, business banking, gold-backed lending, LAP and CVCE segments as medium-yielding focus areas",
+      "H2 expected to see stronger retail growth with restructuring complete and festive season momentum, combination of better macro, declining cost of funds, and unsecured lending recovery to support margin normalization",
+      "Confident in resuming gold loan growth following regulatory clarity after facing headwinds in Q4 due to regulatory issues",
+      "Plans to revive personal loan growth as credit environment stabilizes, while maintaining cautious approach to microfinance for at least 1-2 more quarters",
+      "Expects to achieve reasonable asset growth in FY26 driven by mid-yield segments, with current account acquisition running 50% higher than previous period",
+      "Positioned for self-sustaining franchise with strong capital position (CRAR 16.4%, CET1 15.04%) providing ample headroom for growth",
+      "Confident in maintaining NIM stability through proactive measures including T+90 reset for floating rate loans, fixed-rate car loans, and recent deposit rate adjustments"
+    ]
+  },
+  "cached_at": "2026-02-22T12:32:55.822517+00:00",
+  "cache_version": "1.0"
+}
