@@ -77,6 +77,20 @@ export default function Jobs() {
     }
   };
 
+  const handleAbort = async (e, jobId, ticker) => {
+    e.stopPropagation();
+    if (!window.confirm(`Are you sure you want to abort the job for ${ticker}?`)) {
+      return;
+    }
+    try {
+      await axios.post(`${API}/generate/abort/${jobId}`);
+      // Refresh job list
+      fetchData();
+    } catch (err) {
+      console.error("Abort failed:", err);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
