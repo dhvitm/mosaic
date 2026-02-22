@@ -83,7 +83,8 @@ Build a web app called "Mosaic" for investment professionals that takes an India
 - `frontend/src/pages/Landing.jsx` - Home page with ticker input
 - `frontend/src/pages/Processing.jsx` - Real-time pipeline status + Activity Log
 - `frontend/src/pages/Jobs.jsx` - Jobs dashboard with Abort button
-- `frontend/src/pages/Results.jsx` - Results display
+- `frontend/src/pages/Results.jsx` - Results display with Download Excel button
+- `frontend/src/pages/CacheViewer.jsx` - Cache viewer page for viewing all cached data
 - `frontend/src/components/JobsList.jsx` - Jobs list component
 
 ## API Endpoints
