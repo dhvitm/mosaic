@@ -1,5 +1,6 @@
-from fastapi import APIRouter, HTTPException, UploadFile, File
-from typing import List
+from fastapi import APIRouter, HTTPException, UploadFile, File, Body
+from typing import List, Optional
+from pydantic import BaseModel
 import os
 from pathlib import Path
 import logging
@@ -21,6 +22,15 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 KNOWLEDGE_DIR = Path("/app/knowledge")
+
+
+class FileUpdateRequest(BaseModel):
+    content: str
+
+
+class FileCreateRequest(BaseModel):
+    filename: str
+    content: str
 
 @router.get("/knowledge-files")
 async def list_knowledge_files():
