@@ -218,6 +218,23 @@ MOSAIC_TOOLS = [
     }
 ]
 
+
+def _convert_to_openai_format(anthropic_tool: Dict) -> Dict:
+    """Convert Anthropic tool format to OpenAI function calling format"""
+    return {
+        "type": "function",
+        "function": {
+            "name": anthropic_tool["name"],
+            "description": anthropic_tool["description"],
+            "parameters": anthropic_tool["input_schema"]
+        }
+    }
+
+
+# OpenAI-format tools for LiteLLM (which uses OpenAI's tool format)
+MOSAIC_TOOLS_OPENAI_FORMAT = [_convert_to_openai_format(tool) for tool in MOSAIC_TOOLS]
+
+
 # Human-readable labels for frontend display
 TOOL_LABELS = {
     "get_screener_financials": "📊 Pulling financial statements from Screener...",
