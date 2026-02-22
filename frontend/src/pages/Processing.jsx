@@ -32,16 +32,44 @@ export default function Processing() {
   const reconnectTimeoutRef = useRef(null);
 
   useEffect(() => {
-    // Fetch initial job data
+    let mounted = true;
+    
+    // Start with minimal job data
+    setJob({
+      id: jobId,
+      ticker: "",
+      status: "processing",
+      current_step: 0,
+      steps: [
+        {step_number: 1, name: "Company Identification", status: "pending", message: ""},
+        {step_number: 2, name: "Fetching Annual Financial Data", status: "pending", message: ""},
+        {step_number: 3, name: "Extracting Operational Metrics", status: "pending", message: ""},
+        {step_number: 4, name: "Processing Management Commentary", status: "pending", message: ""},
+        {step_number: 5, name: "Generating Forecast Assumptions", status: "pending", message: ""},
+        {step_number: 6, name: "Building Excel Model", status: "pending", message: ""},
+        {step_number: 7, name: "Running Valuation", status: "pending", message: ""},
+        {step_number: 8, name: "Writing Investment Thesis", status: "pending", message: ""}
+      ]
+    });
+    
+    // Fetch initial job data in background (non-blocking)
     const fetchInitialData = async () => {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 sec timeout
+        
         const response = await axios.get(`${API}/generate/progress/${jobId}`, {
-          timeout: 60000 // 60 second timeout
+          signal: controller.signal
         });
-        setJob(response.data);
+        
+        clearTimeout(timeoutId);
+        
+        if (mounted) {
+          setJob(response.data);
+        }
       } catch (err) {
-        console.error("Error fetching initial job data:", err);
-        setError(err.response?.data?.detail || err.message || "Failed to fetch job progress");
+        console.warn("Initial fetch failed, relying on WebSocket:", err.message);
+        // Don't set error - WebSocket will provide updates
       }
     };
 
