@@ -94,36 +94,143 @@ class MosaicAgent:
         if not self.api_key:
             raise ValueError("EMERGENT_LLM_KEY not found in environment")
         
-        # Model to use (Claude Sonnet 4.5 via Emergent gateway)
-        self.model = "claude-sonnet-4-5-20250929"
-        
         self.tool_executor = ToolExecutor(scraper_service, pdf_extractor, excel_generator)
         self.db = db
         self._current_job_id = None
         self._current_ticker = None
         self._tool_calls_log = []
+        self._collected_data = {}  # Store full data for Excel generation
     
-    def _call_llm_with_tools(self, messages: List[Dict], tools: List[Dict], max_retries: int = 3) -> Dict:
+    def _summarize_tool_result(self, tool_name: str, result: Dict) -> str:
+        """Summarize tool result to reduce context size"""
+        if not result.get("success", False):
+            return json.dumps({"success": False, "error": result.get("error", "Unknown error")})
+        
+        # Store full data for later use
+        if tool_name == "get_screener_financials":
+            self._collected_data["financials"] = result
+            # Return summary only
+            return json.dumps({
+                "success": True,
+                "ticker": result.get("ticker"),
+                "years_available": result.get("years_available", [])[-MAX_RECENT_YEARS:],
+                "quarters_available": result.get("quarters_available", [])[-8:],
+                "key_metrics_latest": self._extract_key_metrics(result),
+                "note": "Full data stored. Use for write_excel_model."
+            })
+        
+        elif tool_name == "get_stock_price":
+            return json.dumps(result)  # Already small
+        
+        elif tool_name == "download_and_parse_pdf":
+            self._collected_data.setdefault("pdfs", []).append(result)
+            # Truncate PDF text significantly
+            text = result.get("text", "")
+            return json.dumps({
+                "success": True,
+                "doc_type": result.get("doc_type"),
+                "text_length": len(text),
+                "text_preview": text[:MAX_TOOL_RESULT_LENGTH] + ("..." if len(text) > MAX_TOOL_RESULT_LENGTH else ""),
+                "key_sections": self._extract_pdf_key_sections(text)
+            })
+        
+        elif tool_name == "get_sector_knowledge":
+            # Keep knowledge responses but truncate if needed
+            content = result.get("content", "")
+            if len(content) > MAX_TOOL_RESULT_LENGTH:
+                return json.dumps({
+                    "success": True,
+                    "sector": result.get("sector"),
+                    "query": result.get("query"),
+                    "content": content[:MAX_TOOL_RESULT_LENGTH] + "...[truncated]"
+                })
+            return json.dumps(result)
+        
+        elif tool_name == "get_peer_comparison":
+            self._collected_data["peers"] = result
+            # Summarize peers
+            peers = result.get("peers", [])[:5]  # Top 5 only
+            return json.dumps({
+                "success": True,
+                "ticker": result.get("ticker"),
+                "sector": result.get("sector"),
+                "peer_count": len(result.get("peers", [])),
+                "top_peers": [p.get("name", p) if isinstance(p, dict) else p for p in peers]
+            })
+        
+        else:
+            # Default: truncate if too long
+            result_str = json.dumps(result, default=str)
+            if len(result_str) > MAX_TOOL_RESULT_LENGTH:
+                return result_str[:MAX_TOOL_RESULT_LENGTH] + '..."}'
+            return result_str
+    
+    def _extract_key_metrics(self, financials: Dict) -> Dict:
+        """Extract key metrics from financials for summary"""
+        metrics = {}
+        pnl = financials.get("annual_pnl", {})
+        ratios = financials.get("ratios", {})
+        
+        # Get latest year data
+        years = sorted(pnl.keys())[-MAX_RECENT_YEARS:] if pnl else []
+        if years:
+            latest = years[-1]
+            latest_pnl = pnl.get(latest, {})
+            metrics["latest_year"] = latest
+            metrics["revenue"] = latest_pnl.get("Sales", latest_pnl.get("Revenue", "N/A"))
+            metrics["net_profit"] = latest_pnl.get("Net Profit", "N/A")
+        
+        # Key ratios
+        if ratios:
+            ratio_years = sorted(ratios.keys())[-1:] if ratios else []
+            if ratio_years:
+                latest_ratios = ratios.get(ratio_years[0], {})
+                metrics["roe"] = latest_ratios.get("ROE", "N/A")
+                metrics["roce"] = latest_ratios.get("ROCE", "N/A")
+        
+        return metrics
+    
+    def _extract_pdf_key_sections(self, text: str) -> List[str]:
+        """Extract key section headers from PDF text"""
+        keywords = ["outlook", "guidance", "growth", "strategy", "risk", "highlight", "performance", "margin"]
+        lines = text.split('\n')
+        key_sections = []
+        for line in lines[:100]:  # Check first 100 lines
+            line_lower = line.lower().strip()
+            if any(kw in line_lower for kw in keywords) and len(line) < 100:
+                key_sections.append(line.strip())
+                if len(key_sections) >= 5:
+                    break
+        return key_sections
+    
+    def _call_llm_with_tools(self, messages: List[Dict], tools: List[Dict], use_fast_model: bool = True, max_retries: int = 3) -> Dict:
         """
         Call LiteLLM with tools support via Emergent's LLM gateway.
         
-        Includes retry logic for transient errors (502, 503, timeouts).
+        Args:
+            messages: Conversation messages
+            tools: Tool definitions
+            use_fast_model: Use Haiku for speed, Sonnet for quality
+            max_retries: Number of retry attempts
         
         Returns the raw response from litellm.completion()
         """
+        model = FAST_MODEL if use_fast_model else FULL_MODEL
+        max_tokens = 4096  # Reduced from 8096 for faster responses
+        
         last_error = None
         for attempt in range(max_retries):
             try:
                 response = litellm.completion(
-                    model=self.model,
+                    model=model,
                     messages=messages,
                     tools=tools,
                     tool_choice="auto",
                     api_key=self.api_key,
                     api_base=EMERGENT_PROXY_URL,
                     custom_llm_provider="openai",
-                    max_tokens=8096,
-                    timeout=120,  # 2 minute timeout
+                    max_tokens=max_tokens,
+                    timeout=90,  # Reduced timeout for faster fails
                 )
                 return response
             except Exception as e:
