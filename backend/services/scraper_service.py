@@ -64,7 +64,7 @@ class ScraperService:
             logger.info(f"Navigating to Screener.in for {ticker}")
             
             try:
-                response = await page.goto(url, wait_until='domcontentloaded', timeout=30000)
+                response = await page.goto(url, wait_until='networkidle', timeout=30000)
                 
                 # Check if page loaded successfully
                 if response.status == 404:
@@ -76,9 +76,8 @@ class ScraperService:
                         'scraped_successfully': False
                     }
                 
-                # Wait for content to load
-                await page.wait_for_selector('h1', timeout=10000)
-                await asyncio.sleep(2)  # Additional wait for dynamic content
+                # Wait for content to load (JS-rendered page)
+                await asyncio.sleep(2)
                 
                 content = await page.content()
                 soup = BeautifulSoup(content, 'html.parser')
