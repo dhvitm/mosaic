@@ -1,0 +1,67 @@
+{
+  "ticker": "HDFCBANK",
+  "step_number": 5,
+  "data": {
+    "forecast_years": [
+      "FY26E",
+      "FY27E",
+      "FY28E",
+      "FY29E",
+      "FY30E"
+    ],
+    "assumptions": {
+      "loan_growth_rate": [
+        0.14,
+        0.14,
+        0.13,
+        0.13,
+        0.12
+      ],
+      "nim": [
+        0.04,
+        0.039,
+        0.038,
+        0.038,
+        0.037
+      ],
+      "casa_ratio": [
+        0.44,
+        0.45,
+        0.45,
+        0.46,
+        0.46
+      ],
+      "credit_cost": [
+        0.008,
+        0.008,
+        0.009,
+        0.009,
+        0.009
+      ],
+      "cost_to_income": [
+        0.42,
+        0.41,
+        0.4,
+        0.39,
+        0.39
+      ],
+      "roa": [
+        0.019,
+        0.02,
+        0.02,
+        0.021,
+        0.021
+      ],
+      "roe": [
+        0.165,
+        0.17,
+        0.175,
+        0.175,
+        0.18
+      ]
+    },
+    "rationale": "HDFC Bank post-merger is expected to maintain sector-leading metrics. Loan growth of 12-14% reflects normalization after merger adjustments and India's GDP growth of 6-7%. NIM projected at 3.7-4.0% assuming stable funding costs and competitive pressure. CASA ratio expected to improve gradually to 46% from current levels as retail franchise strengthens. Credit cost remains benign at 0.8-0.9% reflecting superior underwriting and seasoned portfolio. Cost-to-income improves to 39-42% as merger synergies materialize and operating leverage kicks in. ROA of 1.9-2.1% and ROE of 16.5-18% position HDFC Bank among top performers globally, supported by strong capital position (CAR ~18-19%), franchise strength, and digital adoption driving efficiency gains."
+  },
+  "cached_at": "2026-02-22T09:49:44.249234+00:00",
+  "cache_version": "1.0"
+}
