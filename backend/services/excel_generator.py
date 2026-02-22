@@ -88,6 +88,17 @@ class ExcelGenerator:
             return years[-5:]  # Last 5 years
         return ['Mar 2021', 'Mar 2022', 'Mar 2023', 'Mar 2024', 'Mar 2025']
     
+    def _year_matches(self, ar_year: str, hist_year: str) -> bool:
+        """Check if AR year (e.g., 'FY2025', '2025', 'Mar 2025') matches hist year (e.g., 'Mar 2025')"""
+        import re
+        # Extract 4-digit year from both strings
+        ar_match = re.search(r'20\d{2}', str(ar_year))
+        hist_match = re.search(r'20\d{2}', str(hist_year))
+        
+        if ar_match and hist_match:
+            return ar_match.group() == hist_match.group()
+        return False
+    
     def _create_cover_sheet(self, company_name: str, ticker: str, data: Dict[str, Any]):
         """Create cover sheet with summary"""
         ws = self.wb.create_sheet("Cover", 0)
