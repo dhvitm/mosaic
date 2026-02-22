@@ -244,3 +244,81 @@ async def validate_ticker(ticker: str):
             "valid": True,
             "message": "Unable to validate - proceeding"
         }
+
+@router.get("/cache-status/{ticker}")
+async def get_cache_status(ticker: str):
+    """
+    Get cached data status for a ticker
+    """
+    try:
+        status = CacheService.get_cache_status(ticker.upper())
+        return status
+    except Exception as e:
+        logger.error(f"Error getting cache status for {ticker}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/cached-tickers")
+async def list_cached_tickers():
+    """
+    List all tickers with cached data
+    """
+    try:
+        tickers = CacheService.list_all_cached_tickers()
+        return {"tickers": tickers, "total": len(tickers)}
+    except Exception as e:
+        logger.error(f"Error listing cached tickers: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/retry/{job_id}")
+async def retry_job(job_id: str, background_tasks: BackgroundTasks):
+    """
+    Retry a failed job - will use cached data from previous successful steps
+    """
+    try:
+        # Get the original job
+        job = await db.model_jobs.find_one({"id": job_id}, {"_id": 0})
+        
+        if not job:
+            raise HTTPException(status_code=404, detail="Job not found")
+        
+        if job['status'] == 'processing':
+            raise HTTPException(status_code=400, detail="Job is still processing")
+        
+        ticker = job['ticker']
+        
+        # Create a new job for retry
+        new_job = ModelJob(
+            ticker=ticker,
+            status="pending",
+            steps=[]
+        )
+        
+        # Save to database
+        job_dict = new_job.model_dump()
+        job_dict['created_at'] = job_dict['created_at'].isoformat()
+        job_dict['updated_at'] = job_dict['updated_at'].isoformat()
+        
+        await db.model_jobs.insert_one(job_dict)
+        
+        # Start pipeline (will use cached data automatically)
+        pipeline = PipelineManager(db)
+        background_tasks.add_task(pipeline.run_pipeline, new_job.id, ticker)
+        
+        logger.info(f"Created retry job {new_job.id} for ticker {ticker}")
+        
+        # Return info about what will be cached
+        cache_status = CacheService.get_cache_status(ticker)
+        
+        return {
+            "message": f"Retry job created for {ticker}",
+            "new_job_id": new_job.id,
+            "original_job_id": job_id,
+            "cached_steps": cache_status.get('cached_steps', []),
+            "will_skip_steps": len(cache_status.get('cached_steps', []))
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error retrying job {job_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
