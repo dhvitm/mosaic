@@ -335,15 +335,18 @@ Return JSON with:
     async def _step4_management_commentary(self, job_id: str, ticker: str, company_metadata: Dict) -> Dict[str, Any]:
         """Step 4: Extract management guidance from concalls"""
         await self._update_step(job_id, 4, "in_progress", "Processing concall transcripts...")
+        await ws_manager.send_activity(job_id, "data_processing", "Analyzing management guidance from earnings calls...")
         
         try:
             # Check cache first
             cached_data = CacheService.load_step_data(ticker, 4)
             if cached_data:
                 logger.info(f"Using cached step 4 data for {ticker}")
+                await ws_manager.send_activity(job_id, "info", "Found cached management commentary")
                 await self._update_step(job_id, 4, "completed", "Management commentary processed (from cache)")
                 return cached_data
             
+            await ws_manager.send_activity(job_id, "info", "Structuring management guidance data...")
             commentary = {
                 "guidance": [],
                 "note": "Concall transcript extraction requires additional data sources"
