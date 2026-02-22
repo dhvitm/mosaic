@@ -203,14 +203,39 @@ export default function Processing() {
       <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
         <div className="max-w-md w-full glass-card p-8 rounded-lg text-center">
           <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-2">Error</h2>
-          <p className="text-slate-400 mb-6">{error}</p>
-          <button
-            onClick={() => navigate("/")}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg transition-colors"
-          >
-            Go Back
-          </button>
+          <h2 className="text-2xl font-bold text-white mb-2">Job Failed</h2>
+          <p className="text-slate-400 mb-2">{error}</p>
+          <p className="text-sm text-slate-500 mb-6">
+            Don't worry! Your progress has been saved and you can retry from where it failed.
+          </p>
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={handleRetry}
+              disabled={retrying}
+              className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-800 text-white px-6 py-2 rounded-lg transition-colors flex items-center gap-2"
+              data-testid="retry-button"
+            >
+              {retrying ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Retrying...
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Retry Job
+                </>
+              )}
+            </button>
+            <button
+              onClick={() => navigate("/")}
+              className="bg-slate-700 hover:bg-slate-600 text-white px-6 py-2 rounded-lg transition-colors"
+            >
+              Go Home
+            </button>
+          </div>
         </div>
       </div>
     );
