@@ -440,24 +440,42 @@ Market Cap: ₹{company_metadata.get('market_cap', 'N/A')} Cr
             
             await ws_manager.send_activity(job_id, "api_call", "Calling Claude API for assumptions generation...")
             
+            # Build example JSON based on sector type
+            if is_bank:
+                example_json = '''{
+    "forecast_years": ["FY26E", "FY27E", "FY28E", "FY29E", "FY30E"],
+    "assumptions": {
+        "loan_growth_rate": [0.15, 0.14, 0.13, 0.12, 0.11],
+        "nim": [0.038, 0.037, 0.036, 0.035, 0.035],
+        "casa_ratio": [0.45, 0.46, 0.47, 0.48, 0.48],
+        "credit_cost": [0.012, 0.011, 0.010, 0.010, 0.009],
+        "cost_to_income": [0.45, 0.44, 0.43, 0.42, 0.41],
+        "roa": [0.015, 0.016, 0.017, 0.017, 0.018],
+        "roe": [0.15, 0.155, 0.16, 0.165, 0.17]
+    },
+    "rationale": "Brief explanation of key assumptions"
+}'''
+            else:
+                example_json = '''{
+    "forecast_years": ["FY26E", "FY27E", "FY28E", "FY29E", "FY30E"],
+    "assumptions": {
+        "revenue_growth_rate": [0.12, 0.11, 0.10, 0.09, 0.08],
+        "ebitda_margin": [0.18, 0.19, 0.20, 0.20, 0.21],
+        "tax_rate": [0.25, 0.25, 0.25, 0.25, 0.25],
+        "capex_pct_revenue": [0.05, 0.05, 0.04, 0.04, 0.04],
+        "working_capital_days": [45, 44, 43, 42, 41],
+        "depreciation_rate": [0.10, 0.10, 0.10, 0.10, 0.10],
+        "roe": [0.15, 0.155, 0.16, 0.165, 0.17]
+    },
+    "rationale": "Brief explanation of key assumptions"
+}'''
+            
             user_prompt = f"""{data_context}
 
 Generate forecast assumptions for FY26E through FY30E (5 years).
 
-Return a JSON object with this exact structure:
-{{
-    "forecast_years": ["FY26E", "FY27E", "FY28E", "FY29E", "FY30E"],
-    "assumptions": {{
-        {"\"loan_growth_rate\": [0.15, 0.14, 0.13, 0.12, 0.11]," if is_bank else "\"revenue_growth_rate\": [0.12, 0.11, 0.10, 0.09, 0.08],"}
-        {"\"nim\": [0.038, 0.037, 0.036, 0.035, 0.035]," if is_bank else "\"ebitda_margin\": [0.18, 0.19, 0.20, 0.20, 0.21],"}
-        {"\"casa_ratio\": [0.45, 0.46, 0.47, 0.48, 0.48]," if is_bank else "\"tax_rate\": [0.25, 0.25, 0.25, 0.25, 0.25],"}
-        {"\"credit_cost\": [0.012, 0.011, 0.010, 0.010, 0.009]," if is_bank else "\"capex_pct_revenue\": [0.05, 0.05, 0.04, 0.04, 0.04],"}
-        {"\"cost_to_income\": [0.45, 0.44, 0.43, 0.42, 0.41]," if is_bank else "\"working_capital_days\": [45, 44, 43, 42, 41],"}
-        {"\"roa\": [0.015, 0.016, 0.017, 0.017, 0.018]," if is_bank else "\"depreciation_rate\": [0.10, 0.10, 0.10, 0.10, 0.10],"}
-        "roe": [0.15, 0.155, 0.16, 0.165, 0.17]
-    }},
-    "rationale": "Brief explanation of key assumptions"
-}}
+Return a JSON object with this structure:
+{example_json}
 
 Adjust the numbers based on the company's historical performance and sector outlook.
 Return ONLY the JSON object, no other text."""
