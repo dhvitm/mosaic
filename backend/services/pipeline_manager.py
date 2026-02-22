@@ -72,7 +72,7 @@ class PipelineManager:
             # Step 8: Excel Model Generation (now last, with all data)
             excel_path = await self._step8_excel_generation(
                 job_id, ticker, company_metadata, historical_financials,
-                operational_data, assumptions, valuation, thesis
+                operational_data, management_commentary, assumptions, valuation, thesis
             )
             
             # Mark job as completed
