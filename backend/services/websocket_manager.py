@@ -100,6 +100,19 @@ class ConnectionManager:
         }
         
         await self.broadcast_to_job(job_id, update)
+    
+    async def send_activity(self, job_id: str, activity_type: str, message: str, details: dict = None):
+        """Send real-time activity log updates (API calls, LLM thinking, etc.)"""
+        update = {
+            'type': 'activity_log',
+            'job_id': job_id,
+            'activity_type': activity_type,  # 'api_call', 'llm_thinking', 'data_processing', 'info'
+            'message': message,
+            'details': details or {},
+            'timestamp': datetime.now(timezone.utc).isoformat()
+        }
+        
+        await self.broadcast_to_job(job_id, update)
 
 # Global WebSocket manager instance
 ws_manager = ConnectionManager()
