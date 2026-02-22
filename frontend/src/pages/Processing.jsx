@@ -28,7 +28,12 @@ const ACTIVITY_ICONS = {
   llm_thinking: Cpu,
   data_processing: Database,
   info: Info,
-  error: XCircle
+  error: XCircle,
+  tool_call: Zap,
+  tool_result: CheckCircle,
+  agent_start: Cpu,
+  agent_complete: CheckCircle,
+  success: CheckCircle
 };
 
 const ACTIVITY_COLORS = {
@@ -36,7 +41,12 @@ const ACTIVITY_COLORS = {
   llm_thinking: "text-purple-400",
   data_processing: "text-blue-400",
   info: "text-slate-400",
-  error: "text-red-400"
+  error: "text-red-400",
+  tool_call: "text-indigo-400",
+  tool_result: "text-green-400",
+  agent_start: "text-purple-400",
+  agent_complete: "text-green-400",
+  success: "text-green-400"
 };
 
 export default function Processing() {
