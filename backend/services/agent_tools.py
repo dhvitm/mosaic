@@ -390,7 +390,7 @@ class ToolExecutor:
             ratios = truncate_dict(annual_data.get("ratios", {}), 5)
             quarterly = truncate_dict(quarterly_data.get("quarters", {}), 8)
             
-            return {
+            result = {
                 "success": True,
                 "ticker": ticker,
                 "annual_pnl": annual_pnl,
@@ -400,6 +400,14 @@ class ToolExecutor:
                 "years_available": list(annual_pnl.keys()),
                 "quarters_available": list(quarterly.keys())
             }
+            
+            # Auto-cache the result for Excel generation
+            self._cache_write(ticker, "screener_financials", result)
+            
+            # Also store in collected_data for immediate use
+            self._collected_data["financials"] = result
+            
+            return result
         except Exception as e:
             return {"success": False, "error": str(e)}
     
