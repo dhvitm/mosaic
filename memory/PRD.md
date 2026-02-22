@@ -67,11 +67,8 @@ Build a web app called "Mosaic" for investment professionals that takes an India
 - None
 
 ### Not Started / Placeholder
-- [ ] Step 6: Full Excel model generation (currently placeholder)
-- [ ] Step 7: Complete valuation implementation
-- [ ] Step 8: Complete thesis generation
 - [ ] Admin page backend for knowledge file management
-- [ ] Download Excel button on Results page
+- [ ] Historical financials population from scraped data (P&L values are templates)
 
 ## Key Files
 
