@@ -268,7 +268,8 @@ TOOL_LABELS = {
     "get_sector_knowledge": "🧠 Retrieving sector knowledge: '{query}'...",
     "update_sector_knowledge": "✍️ Updating knowledge base with new observation...",
     "flag_knowledge_gap": "⚠️ Knowledge gap flagged: {missing_topic}",
-    "write_excel_model": "📁 Building Excel model...",
+    "store_analysis_data": "💾 Storing {data_type} analysis...",
+    "generate_excel_model": "📁 Building Excel model...",
     "cache_read": "📂 Checking cache for {key}...",
     "cache_write": "💾 Caching {key}..."
 }
