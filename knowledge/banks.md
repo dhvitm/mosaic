@@ -505,6 +505,8 @@ P/E is secondary. DDM is used as a cross-check for high-dividend banks.
 - Quarter-end window dressing common for CD and CASA ratios
 
 ## Observed Data (Auto-updated by Mosaic)
+- SBIN FY26: PSU bank valuation: RIV fair P/B of 2.5x achievable with ROE of 15%, Ke of 12%, and terminal growth of 10%. Current SBI trades at 1.9x P/B suggesting upside potential as ROE improves (source: Valuation Analysis Feb 2026, added: 2026-02-22)
+- SBIN FY26: SBI FY25: Strong deposit and fee income growth, asset quality improving with GNPA trending below 2.5%, CASA ratio maintained above 40%, trading at P/B of 1.9x with book value of ₹641 (source: Annual Report FY2024-25, added: 2026-02-22)
 - HDFCBANK FY26: HDFC Bank post-merger (July 2023): NIM ~3.45%, CASA 43%, Credit Cost 0.45-0.55%, ROE 17-18%, GNPA 1.25%, Cost-to-Income 43-44%. Trading at 2.5x P/B, 20.4x P/E. Merger integration creating temporary NIM pressure but long-term franchise strength intact. (source: FY25 Annual Report and model assumptions, added: 2026-02-22)
 - HDFCBANK FY26: HDFC Bank post-merger: NIM 3.45%, CASA 43% improving to 45%, GNPA 1.25%, NNPA 0.35%, ROE 17-18%, Credit Cost 0.45-0.55%, C/I ratio 43-44%. Trading at P/B 2.48x vs historical 2.8-3.2x. Merger with HDFC Ltd completed July 2023. (source: FY25 Annual Report and cached assumptions as of Feb 2026, added: 2026-02-22)
 
