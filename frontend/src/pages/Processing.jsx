@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Loader2, CheckCircle, XCircle, AlertTriangle, Circle } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, AlertTriangle, Circle, Cpu, Database, Zap, Info, Terminal } from "lucide-react";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -21,6 +21,22 @@ const STEP_COLORS = {
   completed: "text-green-500",
   error: "text-red-500",
   warning: "text-yellow-500"
+};
+
+const ACTIVITY_ICONS = {
+  api_call: Zap,
+  llm_thinking: Cpu,
+  data_processing: Database,
+  info: Info,
+  error: XCircle
+};
+
+const ACTIVITY_COLORS = {
+  api_call: "text-amber-400",
+  llm_thinking: "text-purple-400",
+  data_processing: "text-blue-400",
+  info: "text-slate-400",
+  error: "text-red-400"
 };
 
 export default function Processing() {
