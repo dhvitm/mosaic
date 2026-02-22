@@ -16,5 +16,11 @@
     "missing_topic": "Unable to retrieve historical financials from Screener.in for SBIN - will use publicly available data and sector benchmarks for PSU banks to build assumptions",
     "flagged_by": "SBIN",
     "timestamp": "2026-02-22T14:30:07.774110+00:00"
+  },
+  {
+    "sector": "banks",
+    "missing_topic": "HDFCBANK detailed historical financials from Screener - scraper returned error. Need manual data or alternative source for 12-year P&L and balance sheet data",
+    "flagged_by": "HDFCBANK",
+    "timestamp": "2026-02-22T14:34:05.061324+00:00"
   }
 ]

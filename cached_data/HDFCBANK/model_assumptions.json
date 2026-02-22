@@ -1,0 +1,24 @@
+{
+  "ticker": "HDFCBANK",
+  "key": "model_assumptions",
+  "data": {
+    "note": "Built from public information given scraper limitations",
+    "current_date": "2026-02-22",
+    "merger_context": "HDFC-HDFC Bank merger completed July 2023",
+    "base_year": "Mar 2025",
+    "forecast_period": "FY26-FY30",
+    "key_assumptions": {
+      "advances_growth": "14-16% next 2 years, then 13-14% (strong retail franchise + merger synergies)",
+      "deposit_growth": "13-15% (aligned with advances, improved CASA)",
+      "nim": "3.45% base, improving to 3.55% by FY30 (gradual improvement as merger book matures)",
+      "casa_ratio": "43% improving to 45% (structural franchise strength)",
+      "credit_cost": "0.45-0.55% (best-in-class asset quality)",
+      "cost_income": "43-44% (operational efficiency post-merger integration)",
+      "roe": "17-18% (premium to sector)",
+      "tax_rate": "25.17%",
+      "gnpa": "1.25% stable (excellent quality)",
+      "nnpa": "0.35% stable"
+    }
+  },
+  "cached_at": "2026-02-22T14:36:24.690219+00:00"
+}
