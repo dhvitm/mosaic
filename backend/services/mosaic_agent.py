@@ -88,23 +88,43 @@ class MosaicAgent:
         self._current_ticker = None
         self._tool_calls_log = []
     
-    def _call_llm_with_tools(self, messages: List[Dict], tools: List[Dict]) -> Dict:
+    def _call_llm_with_tools(self, messages: List[Dict], tools: List[Dict], max_retries: int = 3) -> Dict:
         """
         Call LiteLLM with tools support via Emergent's LLM gateway.
         
+        Includes retry logic for transient errors (502, 503, timeouts).
+        
         Returns the raw response from litellm.completion()
         """
-        response = litellm.completion(
-            model=self.model,
-            messages=messages,
-            tools=tools,
-            tool_choice="auto",
-            api_key=self.api_key,
-            api_base=EMERGENT_PROXY_URL,
-            custom_llm_provider="openai",
-            max_tokens=8096,
-        )
-        return response
+        last_error = None
+        for attempt in range(max_retries):
+            try:
+                response = litellm.completion(
+                    model=self.model,
+                    messages=messages,
+                    tools=tools,
+                    tool_choice="auto",
+                    api_key=self.api_key,
+                    api_base=EMERGENT_PROXY_URL,
+                    custom_llm_provider="openai",
+                    max_tokens=8096,
+                    timeout=120,  # 2 minute timeout
+                )
+                return response
+            except Exception as e:
+                last_error = e
+                error_str = str(e).lower()
+                # Retry on transient errors
+                if any(x in error_str for x in ['502', '503', '504', 'timeout', 'connection', 'gateway']):
+                    wait_time = (attempt + 1) * 5  # 5s, 10s, 15s backoff
+                    logger.warning(f"LLM call attempt {attempt + 1} failed with transient error, retrying in {wait_time}s: {str(e)[:100]}")
+                    time.sleep(wait_time)
+                    continue
+                else:
+                    raise
+        
+        # All retries failed
+        raise last_error
     
     async def run_agent(self, ticker: str, job_id: str) -> Dict[str, Any]:
         """
