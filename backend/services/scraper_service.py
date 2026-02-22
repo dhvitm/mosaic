@@ -438,13 +438,14 @@ class ScraperService:
             await self.initialize()
             
             data = {
-                'concalls': [],          # Concall transcripts with PPT links
+                'concalls': [],          # Full concall entries with all links
                 'annual_reports': [],    # Annual report links
                 'announcements': [],     # Recent announcements
                 'credit_ratings': [],    # Credit rating updates
                 'presentations': [],     # PPT links extracted
                 'transcripts': [],       # Transcript links extracted
                 'ai_summaries': [],      # AI Summary links
+                'recordings': [],        # YouTube recording links
                 'scraped_successfully': False
             }
             
@@ -467,37 +468,199 @@ class ScraperService:
                 soup = BeautifulSoup(content, 'html.parser')
                 
                 # ===== SCRAPE CONCALLS SECTION =====
-                # Find the Concalls section which contains Transcript, AI Summary, PPT, REC for each quarter
-                concalls_section = soup.find('h2', string=re.compile(r'Concalls', re.I))
-                if not concalls_section:
-                    # Try alternative selectors
-                    concalls_section = soup.find(text=re.compile(r'Concalls', re.I))
+                # The structure is: each concall line has Month Year followed by Transcript, AI Summary, PPT, REC links
+                # Example: "Jan 2026 Transcript AI Summary PPT REC"
                 
-                if concalls_section:
-                    logger.info("Found Concalls section")
-                    # Navigate to parent container
-                    parent = concalls_section.find_parent(['div', 'section'])
-                    if parent:
-                        # Find all concall entries (each quarter has links)
-                        concall_items = parent.find_all('div', recursive=True)
+                # Find all list items or divs in documents section that contain concall data
+                documents_section = soup.find(id='documents')
+                if not documents_section:
+                    documents_section = soup.find('section', {'id': 'documents'})
+                
+                if not documents_section:
+                    # Try finding by header
+                    concalls_header = soup.find('h3', string=re.compile(r'Concalls', re.I))
+                    if concalls_header:
+                        documents_section = concalls_header.find_parent(['div', 'section'])
+                
+                if documents_section:
+                    # Find all links in the documents section
+                    all_links = documents_section.find_all('a', href=True)
+                    
+                    current_quarter = None
+                    
+                    for link in all_links:
+                        href = link.get('href', '')
+                        link_text = link.text.strip().lower()
+                        title_attr = link.get('title', '').lower()
                         
-                        current_quarter = None
-                        for item in concall_items:
-                            text = item.text.strip()
-                            
-                            # Look for quarter labels like "Jan 2026", "Oct 2025"
-                            quarter_match = re.search(r'(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s*\d{4}', text)
+                        if not href:
+                            continue
+                        
+                        # Get parent text to identify quarter
+                        parent_text = ''
+                        parent = link.find_parent(['li', 'div', 'span'])
+                        if parent:
+                            parent_text = parent.text[:50]
+                            # Extract quarter from parent text
+                            quarter_match = re.search(r'(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s*\d{4}', parent_text)
                             if quarter_match:
                                 current_quarter = quarter_match.group()
+                        
+                        full_url = href if href.startswith('http') else f"https://www.screener.in{href}"
+                        
+                        # Identify link type
+                        if 'transcript' in link_text or 'transcript' in title_attr or 'transcript' in href.lower():
+                            data['transcripts'].append({
+                                'quarter': current_quarter,
+                                'url': full_url,
+                                'type': 'transcript',
+                                'title': f'Transcript {current_quarter}' if current_quarter else link.text.strip()
+                            })
+                        elif 'ppt' in link_text or 'presentation' in href.lower() or '.ppt' in href.lower():
+                            data['presentations'].append({
+                                'quarter': current_quarter,
+                                'url': full_url,
+                                'type': 'ppt',
+                                'title': f'Investor Presentation {current_quarter}' if current_quarter else link.text.strip()
+                            })
+                        elif 'summary' in link_text or 'ai' in link_text:
+                            data['ai_summaries'].append({
+                                'quarter': current_quarter,
+                                'url': full_url,
+                                'type': 'ai_summary',
+                                'title': f'AI Summary {current_quarter}' if current_quarter else link.text.strip()
+                            })
+                        elif 'rec' in link_text or 'youtube' in href.lower() or 'youtu.be' in href.lower():
+                            data['recordings'].append({
+                                'quarter': current_quarter,
+                                'url': full_url,
+                                'type': 'recording',
+                                'title': f'Recording {current_quarter}' if current_quarter else link.text.strip()
+                            })
+                        elif 'annual' in link_text and 'report' in link_text:
+                            data['annual_reports'].append({
+                                'year': link.text.strip(),
+                                'url': full_url
+                            })
+                        elif 'financial year' in link_text.lower() or 'fy' in link_text.lower():
+                            data['annual_reports'].append({
+                                'year': link.text.strip(),
+                                'url': full_url
+                            })
+                
+                # ===== SCRAPE ANNUAL REPORTS (backup method) =====
+                annual_section = soup.find('h3', string=re.compile(r'Annual\s*reports', re.I))
+                if annual_section:
+                    logger.info("Found Annual Reports section")
+                    parent = annual_section.find_parent(['div', 'section'])
+                    if parent:
+                        links = parent.find_all('a', href=True)
+                        for link in links:
+                            href = link.get('href', '')
+                            text = link.text.strip()
                             
-                            # Find links within this item
-                            links = item.find_all('a', href=True)
-                            for link in links:
-                                href = link.get('href', '')
-                                link_text = link.text.strip().lower()
-                                
-                                if not href:
-                                    continue
+                            if 'Financial Year' in text or re.search(r'FY\s*\d{4}|20\d{2}', text):
+                                full_url = href if href.startswith('http') else f"https://www.screener.in{href}"
+                                if full_url not in [ar['url'] for ar in data['annual_reports']]:
+                                    data['annual_reports'].append({
+                                        'year': text,
+                                        'url': full_url
+                                    })
+                
+                # ===== ALTERNATIVE: Keyword-based search if structured approach failed =====
+                if not data['presentations'] and not data['transcripts']:
+                    logger.info("Structured scraping didn't find data, trying keyword search...")
+                    all_links = soup.find_all('a', href=True)
+                    
+                    for link in all_links:
+                        href = link.get('href', '')
+                        text = link.text.strip().lower()
+                        
+                        if not href:
+                            continue
+                        
+                        full_url = href if href.startswith('http') else f"https://www.screener.in{href}"
+                        
+                        # PPT/Presentation links
+                        if 'ppt' in text or 'presentation' in href.lower() or 'earnings' in href.lower():
+                            if full_url not in [p['url'] for p in data['presentations']]:
+                                data['presentations'].append({
+                                    'quarter': None,
+                                    'url': full_url,
+                                    'type': 'ppt',
+                                    'title': link.text.strip() or 'Investor Presentation'
+                                })
+                        # Transcript links
+                        elif 'transcript' in text or 'transcript' in href.lower():
+                            if full_url not in [t['url'] for t in data['transcripts']]:
+                                data['transcripts'].append({
+                                    'quarter': None,
+                                    'url': full_url,
+                                    'type': 'transcript',
+                                    'title': link.text.strip() or 'Concall Transcript'
+                                })
+                
+                await page.close()
+                
+                # Deduplicate by URL
+                seen_urls = set()
+                for key in ['presentations', 'transcripts', 'ai_summaries', 'recordings', 'annual_reports']:
+                    unique_items = []
+                    for item in data.get(key, []):
+                        url = item.get('url', '')
+                        if url and url not in seen_urls:
+                            seen_urls.add(url)
+                            unique_items.append(item)
+                    data[key] = unique_items[:15]  # Limit to 15 per category
+                
+                data['scraped_successfully'] = bool(
+                    data['presentations'] or data['transcripts'] or 
+                    data['annual_reports'] or data['ai_summaries']
+                )
+                
+                logger.info(f"Screener Documents scraping complete: {len(data['presentations'])} PPTs, "
+                           f"{len(data['transcripts'])} transcripts, {len(data['annual_reports'])} annual reports, "
+                           f"{len(data['recordings'])} recordings")
+                
+                # Build combined concalls list
+                quarters_seen = set()
+                for pres in data['presentations']:
+                    q = pres.get('quarter')
+                    if q and q not in quarters_seen:
+                        quarters_seen.add(q)
+                        # Find matching transcript, summary, recording for this quarter
+                        transcript = next((t for t in data['transcripts'] if t.get('quarter') == q), None)
+                        summary = next((s for s in data['ai_summaries'] if s.get('quarter') == q), None)
+                        recording = next((r for r in data['recordings'] if r.get('quarter') == q), None)
+                        
+                        data['concalls'].append({
+                            'quarter': q,
+                            'ppt_url': pres.get('url'),
+                            'transcript_url': transcript.get('url') if transcript else None,
+                            'ai_summary_url': summary.get('url') if summary else None,
+                            'recording_url': recording.get('url') if recording else None
+                        })
+                
+                return data
+                
+            except Exception as e:
+                logger.error(f"Error scraping Screener documents for {ticker}: {str(e)}")
+                await page.close()
+                return data
+                
+        except Exception as e:
+            logger.error(f"Screener documents scraping error: {str(e)}")
+            return {
+                'concalls': [],
+                'annual_reports': [],
+                'announcements': [],
+                'presentations': [],
+                'transcripts': [],
+                'ai_summaries': [],
+                'recordings': [],
+                'scraped_successfully': False,
+                'error': str(e)
+            }
                                 
                                 full_url = href if href.startswith('http') else f"https://www.screener.in{href}"
                                 
