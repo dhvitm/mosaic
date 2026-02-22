@@ -1,0 +1,517 @@
+{
+  "ticker": "HDFCBANK",
+  "step_number": 4,
+  "data": {
+    "concall_highlights": [
+      "*\nThe pros and cons are machine generated.\n\n\n\n            Pros / cons are based on a checklist to highlight important points. Please exercise caution and do your own analysis."
+    ],
+    "pros": [
+      "Company has delivered good profit growth of 21.0% CAGR over last 5 years",
+      "Company has been maintaining a healthy dividend payout of 23.3%",
+      "Company's median sales growth is 16.4% of last 10 years"
+    ],
+    "cons": [
+      "Stock is trading at 2.50 times its book value",
+      "Company has low interest coverage ratio.",
+      "Contingent liabilities of Rs.27,80,601 Cr.",
+      "Earnings include an other income of Rs.1,50,600 Cr."
+    ],
+    "management_analysis": "",
+    "scraped_successfully": true,
+    "peer_comparison": [
+      {
+        "name": "S.No."
+      },
+      {
+        "name": "1."
+      },
+      {
+        "name": "2."
+      },
+      {
+        "name": "3."
+      },
+      {
+        "name": "4."
+      },
+      {
+        "name": "5."
+      },
+      {
+        "name": "6."
+      },
+      {
+        "name": "7."
+      }
+    ],
+    "shareholding": {
+      "Jun 2023": {
+        "Promoters +": 25.59,
+        "FIIs +": 32.24,
+        "DIIs +": 28.09,
+        "Government +": 0.16,
+        "Public +": 13.91,
+        "No. of Shareholders": 2290092.0
+      },
+      "Sep 2023": {
+        "Promoters +": 25.52,
+        "FIIs +": 33.38,
+        "DIIs +": 26.75,
+        "Government +": 0.16,
+        "Public +": 14.19,
+        "No. of Shareholders": 2345672.0
+      },
+      "Dec 2023": {
+        "Promoters +": 0.0,
+        "FIIs +": 52.13,
+        "DIIs +": 30.39,
+        "Government +": 0.17,
+        "Public +": 17.3,
+        "No. of Shareholders": 3058659.0
+      },
+      "Mar 2024": {
+        "Promoters +": 0.0,
+        "FIIs +": 52.31,
+        "DIIs +": 30.54,
+        "Government +": 0.17,
+        "Public +": 16.98,
+        "No. of Shareholders": 3018247.0
+      },
+      "Jun 2024": {
+        "Promoters +": 0.0,
+        "FIIs +": 47.83,
+        "DIIs +": 33.33,
+        "Government +": 0.18,
+        "Public +": 18.64,
+        "No. of Shareholders": 4121815.0
+      },
+      "Sep 2024": {
+        "Promoters +": 0.0,
+        "FIIs +": 47.17,
+        "DIIs +": 35.2,
+        "Government +": 0.18,
+        "Public +": 17.44,
+        "No. of Shareholders": 3664325.0
+      },
+      "Dec 2024": {
+        "Promoters +": 0.0,
+        "FIIs +": 48.02,
+        "DIIs +": 35.05,
+        "Government +": 0.18,
+        "Public +": 16.75,
+        "No. of Shareholders": 3921910.0
+      },
+      "Mar 2025": {
+        "Promoters +": 0.0,
+        "FIIs +": 49.21,
+        "DIIs +": 34.37,
+        "Government +": 0.18,
+        "Public +": 16.23,
+        "No. of Shareholders": 3924442.0
+      },
+      "Jun 2025": {
+        "Promoters +": 0.0,
+        "FIIs +": 48.3,
+        "DIIs +": 35.68,
+        "Government +": 0.18,
+        "Public +": 15.84,
+        "No. of Shareholders": 3829146.0
+      },
+      "Sep 2025": {
+        "Promoters +": 0.0,
+        "FIIs +": 48.84,
+        "DIIs +": 35.77,
+        "Government +": 0.18,
+        "Public +": 15.19,
+        "No. of Shareholders": 3725911.0
+      },
+      "Dec 2025": {
+        "Promoters +": 0.0,
+        "FIIs +": 48.38,
+        "DIIs +": 36.07,
+        "Government +": 0.18,
+        "Public +": 15.33,
+        "No. of Shareholders": 3701272.0
+      }
+    },
+    "operational_metrics": {
+      "nim": 3.35,
+      "casa": 34.0,
+      "gnpa": 1.24,
+      "roe": 13.9,
+      "roa": 1.92,
+      "nnpa": 0.4,
+      "car": 19.9,
+      "cost_to_income": 39.2,
+      "loan_growth": 11.9,
+      "deposit_growth": 11.6,
+      "provision_coverage": 70.0,
+      "slippage_ratio": 1.24,
+      "key_highlights": [
+        "Deposits grew YoY by \u20b93.00 tn (12.2%) with average deposits at \u20b927,524 bn",
+        "Asset quality remains stable with GNPA at 1.24% and ex-agri GNPA at 0.97%",
+        "Strong capital position with CAR at 19.9% and CET1 at 17.4%",
+        "Retail segment comprises 53% of AUM with balanced portfolio mix across mortgage (30%) and retail assets (23%)",
+        "PAT for Q3 FY26 at \u20b9187 bn with EPS of \u20b912.1, showing YoY growth of 12%"
+      ]
+    },
+    "bse_presentations": [
+      {
+        "quarter": "Jan 2026",
+        "url": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/pdf/financial-results/2025-2026/quarter-3/Q3FY26-earnings-presentation.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jan 2026"
+      },
+      {
+        "quarter": "Oct 2025",
+        "url": "http://www.hdfcbank.com/content/bbp/repositories/723fb80a-2dde-42a3-9793-7ae1be57c87f/?path=/Footer/About%20Us/Investor%20Relation/Detail%20PAges/financial%20results/PDFs/2025/oct/Q2FY26-Earnings-Presentation.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Oct 2025"
+      },
+      {
+        "quarter": "Oct 2025",
+        "url": "https://www.hdfcbank.com/content/bbp/repositories/723fb80a-2dde-42a3-9793-7ae1be57c87f/?path=/Footer/About%20Us/Investor%20Relation/Detail%20PAges/financial%20results/PDFs/2025/oct/Q2FY26-Earnings-Presentation.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Oct 2025"
+      },
+      {
+        "quarter": "Jul 2025",
+        "url": "http://www.hdfcbank.com/content/bbp/repositories/723fb80a-2dde-42a3-9793-7ae1be57c87f/?path=/Footer/About%20Us/Investor%20Relation/Detail%20PAges/financial%20results/PDFs/2025/jul/Q1FY26-Earnings-Presentation.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jul 2025"
+      },
+      {
+        "quarter": "Apr 2025",
+        "url": "https://nsearchives.nseindia.com/corporate/HDFCBANK_19042025160318_SEpresentation19042025.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Apr 2025"
+      },
+      {
+        "quarter": "Jan 2025",
+        "url": "https://www.hdfcbank.com/content/bbp/repositories/723fb80a-2dde-42a3-9793-7ae1be57c87f/?path=/Footer/About%20Us/Investor%20Relation/Detail%20PAges/financial%20results/PDFs/2024/dec/22/Q3FY25-Earnings-Presentation.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jan 2025"
+      },
+      {
+        "quarter": "Oct 2024",
+        "url": "https://www.hdfcbank.com/content/bbp/repositories/723fb80a-2dde-42a3-9793-7ae1be57c87f/?path=/Footer/About%20Us/Investor%20Relation/Detail%20PAges/financial%20results/PDFs/2024/oct/Q2FY25-Earnings-Presentation.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Oct 2024"
+      },
+      {
+        "quarter": "Jul 2024",
+        "url": "https://www.hdfcbank.com/content/bbp/repositories/723fb80a-2dde-42a3-9793-7ae1be57c87f/?path=/Footer/About%20Us/About%20Investor%20Relations/pdf/2024/july/Q1FY25_Earnings_Presentation.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jul 2024"
+      },
+      {
+        "quarter": "Jul 2024",
+        "url": "https://www.hdfcbank.com/content/bbp/repositories/723fb80a-2dde-42a3-9793-7ae1be57c87f/?path=/Footer/About%20Us/About%20Investor%20Relations/pdf/2024/july/Q1FY25_Earnings_Presentation.pdfhttps://www.hdfcbank.com/content/bbp/repositories/723fb80a-2dde-42a3-9793-7ae1be57c87f/?path=/Footer/About%20Us/About%20Investor%20Relations/pdf/2024/july/Q1FY25_Earnings_Presentation.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jul 2024"
+      },
+      {
+        "quarter": "Apr 2024",
+        "url": "https://www.hdfcbank.com/content/bbp/repositories/723fb80a-2dde-42a3-9793-7ae1be57c87f/?path=/Footer/About%20Us/Investor%20Relation/Detail%20PAges/financial%20results/PDFs/2024/20April/Q4FY24-Earnings-Presentation.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Apr 2024"
+      },
+      {
+        "quarter": "Mar 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/12bab14e-f504-46e9-90cd-0881a76dd4a6.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Mar 2024"
+      },
+      {
+        "quarter": "Feb 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/163829d1-3b5f-41f7-bd9e-9f3509869245.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Feb 2024"
+      },
+      {
+        "quarter": "Jan 2024",
+        "url": "https://www.hdfcbank.com/content/bbp/repositories/723fb80a-2dde-42a3-9793-7ae1be57c87f/?path=/Footer/About%20Us/Investor%20Relation/Detail%20PAges/financial%20results/PDFs/2024/16/Q3FY24_Earnings_Presentation.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jan 2024"
+      },
+      {
+        "quarter": "Oct 2023",
+        "url": "https://www.hdfcbank.com/content/bbp/repositories/723fb80a-2dde-42a3-9793-7ae1be57c87f/?path=/Footer/About%20Us/Investor%20Relation/Detail%20PAges/Financial%20Information/PDF/HDFC-Bank-Day/1.%20HDFCB_Day_30Oct23_vF.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Oct 2023"
+      },
+      {
+        "quarter": "Oct 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/7931b031-359d-4da8-8425-b4f26c2d2547.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Oct 2023"
+      }
+    ],
+    "presentation_summaries": [],
+    "transcripts": [
+      {
+        "quarter": "Jan 2026",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/6e45f8a0-0fe6-40a3-8e5a-51c53713e6f0.pdf",
+        "type": "transcript",
+        "title": "Transcript Jan 2026"
+      },
+      {
+        "quarter": "Oct 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/145964f9-580c-4d3f-b239-759f7b6a7a28.pdf",
+        "type": "transcript",
+        "title": "Transcript Oct 2025"
+      },
+      {
+        "quarter": "Jul 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/d1268138-e288-4335-9764-7a944dfa3570.pdf",
+        "type": "transcript",
+        "title": "Transcript Jul 2025"
+      },
+      {
+        "quarter": "Apr 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/ff4ae1b4-cf07-4f6d-b097-3bd8139fb570.pdf",
+        "type": "transcript",
+        "title": "Transcript Apr 2025"
+      },
+      {
+        "quarter": "Jan 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/a7e4ad26-5c9e-4ffe-a610-28241b35c3b0.pdf",
+        "type": "transcript",
+        "title": "Transcript Jan 2025"
+      },
+      {
+        "quarter": "Oct 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/c7affe75-673f-4507-b421-a7d5bab9d3e6.pdf",
+        "type": "transcript",
+        "title": "Transcript Oct 2024"
+      },
+      {
+        "quarter": "Jul 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/94d03650-9410-4870-b9ba-d4c553d2740b.pdf",
+        "type": "transcript",
+        "title": "Transcript Jul 2024"
+      },
+      {
+        "quarter": "Apr 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/880ee466-e764-4e05-9ef3-3d9bb8e485f4.pdf",
+        "type": "transcript",
+        "title": "Transcript Apr 2024"
+      },
+      {
+        "quarter": "Feb 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/d34bd589-124e-40f2-80b5-82f360a98639.pdf",
+        "type": "transcript",
+        "title": "Transcript Feb 2024"
+      },
+      {
+        "quarter": "Jan 2024",
+        "url": "https://www.hdfcbank.com/content/bbp/repositories/723fb80a-2dde-42a3-9793-7ae1be57c87f/?path=/Footer/About%20Us/Investor%20Relation/Detail%20PAges/financial%20results/PDFs/2024/23/Earnings-Call-Transcript-Jan16-2024.pdf",
+        "type": "transcript",
+        "title": "Transcript Jan 2024"
+      },
+      {
+        "quarter": "Oct 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/d420b35c-488c-4ea9-84ca-6183de7e29f4.pdf",
+        "type": "transcript",
+        "title": "Transcript Oct 2023"
+      },
+      {
+        "quarter": "Oct 2023",
+        "url": "https://www.hdfcbank.com/content/bbp/repositories/723fb80a-2dde-42a3-9793-7ae1be57c87f/?path=/Footer/About%20Us/Investor%20Relation/Detail%20PAges/financial%20results/PDFs/2023/oct/HDFC-EarningsCall-Oct16-2023_CallTranscript.pdf",
+        "type": "transcript",
+        "title": "Transcript Oct 2023"
+      },
+      {
+        "quarter": "Jul 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/989cf3a5-9a81-458e-b0ec-7ea60cc482a7.pdf",
+        "type": "transcript",
+        "title": "Transcript Jul 2023"
+      },
+      {
+        "quarter": "Apr 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/57e720ab-83b3-4b34-bb81-0c364e88c938.pdf",
+        "type": "transcript",
+        "title": "Transcript Apr 2023"
+      },
+      {
+        "quarter": "Jan 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/42e79ecc-a641-4f9d-8fdc-a4dde6cefb16.pdf",
+        "type": "transcript",
+        "title": "Transcript Jan 2023"
+      }
+    ],
+    "annual_reports": [
+      {
+        "year": "Financial Year 2025\n      \n        from bse",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/411e22d2-0720-4cec-b659-9ccd639f0f1a.pdf"
+      },
+      {
+        "year": "Financial Year 2024\n      \n        from bse",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/2160dea5-d49e-4409-83a4-c2b111a3bd12.pdf"
+      },
+      {
+        "year": "Financial Year 2023\n      \n        from bse",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/0fb0e6bd-7110-44c3-a750-76933ddf105c.pdf"
+      },
+      {
+        "year": "Financial Year 2022\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500180/73256500180.pdf"
+      },
+      {
+        "year": "Financial Year 2021\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500180/68609500180.pdf"
+      },
+      {
+        "year": "Financial Year 2020\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500180/5001800320.pdf"
+      },
+      {
+        "year": "Financial Year 2019\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500180/5001800319.pdf"
+      },
+      {
+        "year": "Financial Year 2018\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500180/5001800318.pdf"
+      },
+      {
+        "year": "Financial Year 2017\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500180/5001800317.pdf"
+      },
+      {
+        "year": "Financial Year 2016\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500180/5001800316.pdf"
+      },
+      {
+        "year": "Financial Year 2015\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500180/5001800315.pdf"
+      },
+      {
+        "year": "Financial Year 2014\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500180/5001800314.pdf"
+      },
+      {
+        "year": "Financial Year 2013\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500180/5001800313.pdf"
+      },
+      {
+        "year": "Financial Year 2012\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/500180/5001800312.pdf"
+      },
+      {
+        "year": "Financial Year 2012\n      \n        from nse",
+        "url": "https://archives.nseindia.com/annual_reports/AR_HDFCBANK_2011_2012_20062012100212.zip"
+      }
+    ],
+    "pdf_extracted_metrics": {
+      "extracted_from_pdfs": 3,
+      "quarters_processed": [
+        "Jan 2026",
+        "Oct 2025",
+        "Oct 2025"
+      ],
+      "metrics": {
+        "Jan 2026": {
+          "nim": 3.35,
+          "casa": 34.0,
+          "gnpa": 1.24,
+          "roe": 13.9,
+          "roa": 1.92,
+          "nnpa": 0.4,
+          "car": 19.9,
+          "cost_to_income": 39.2,
+          "loan_growth": 11.9,
+          "deposit_growth": 11.6,
+          "provision_coverage": 70.0,
+          "slippage_ratio": 1.24,
+          "key_highlights": [
+            "Deposits grew YoY by \u20b93.00 tn (12.2%) with average deposits at \u20b927,524 bn",
+            "Asset quality remains stable with GNPA at 1.24% and ex-agri GNPA at 0.97%",
+            "Strong capital position with CAR at 19.9% and CET1 at 17.4%",
+            "Retail segment comprises 53% of AUM with balanced portfolio mix across mortgage (30%) and retail assets (23%)",
+            "PAT for Q3 FY26 at \u20b9187 bn with EPS of \u20b912.1, showing YoY growth of 12%"
+          ]
+        },
+        "Oct 2025": {
+          "nim": 3.27,
+          "casa": 34.0,
+          "gnpa": 1.24,
+          "roe": 14.4,
+          "roa": 1.93,
+          "nnpa": 0.4,
+          "car": 20.0,
+          "cost_to_income": 39.2,
+          "loan_growth": 8.9,
+          "deposit_growth": 12.1,
+          "provision_coverage": 70.0,
+          "slippage_ratio": 1.4,
+          "key_highlights": [
+            "Average deposits grew 15.1% YoY to \u20b927.1 trillion; EOP deposits up 12.1% YoY",
+            "Gross advances grew 9.9% YoY with quarterly growth of 4.4% QoQ",
+            "Asset quality remains stable with GNPA at 1.24% (ex-agri at 0.99%)",
+            "PAT for the quarter at \u20b9186 billion with EPS of \u20b912.1",
+            "Strong capital position with CET1 at 17.5% and total CAR at 20.0%"
+          ]
+        }
+      },
+      "guidance": [],
+      "key_highlights": [
+        "Deposits grew YoY by \u20b93.00 tn (12.2%) with average deposits at \u20b927,524 bn",
+        "Asset quality remains stable with GNPA at 1.24% and ex-agri GNPA at 0.97%",
+        "Strong capital position with CAR at 19.9% and CET1 at 17.4%",
+        "Retail segment comprises 53% of AUM with balanced portfolio mix across mortgage (30%) and retail assets (23%)",
+        "PAT for Q3 FY26 at \u20b9187 bn with EPS of \u20b912.1, showing YoY growth of 12%",
+        "Average deposits increased 15.1% YoY to \u20b927.1 trillion; CASA ratio at 34%",
+        "Gross advances grew 9.9% YoY to \u20b927.7 trillion with AUM growth of 8.9%",
+        "Asset quality remains stable with GNPA at 1.24% (ex-agri at 0.99%)",
+        "PAT for Q2FY26 at \u20b9186 billion with EPS of \u20b912.1",
+        "Strong capital position with CAR at 20.0% and CET1 at 17.5%",
+        "Average deposits grew 15.1% YoY to \u20b927.1 trillion; EOP deposits up 12.1% YoY",
+        "Gross advances grew 9.9% YoY with quarterly growth of 4.4% QoQ",
+        "PAT for the quarter at \u20b9186 billion with EPS of \u20b912.1",
+        "Strong capital position with CET1 at 17.5% and total CAR at 20.0%"
+      ],
+      "raw_text_sample": "--- Page 1 ---\nClassification -Confidential\nQ3FY26 Earnings\nPresentation\nJanuary 17, 2026\nClassification -Confidential\n\n[Table]\n | \n | \n\n--- Page 2 ---\nKey performance metrics for Q3 FY26\n\u27a2 Deposits; average YoY \u2191 \u20b9 3.00 tn (12.2%) ; EOP YoY \u2191 \u20b9 2.96 tn (11.6%)\n\u2713 Average deposits QoQ \u2191 \u20b9 0.42 tn (1.5%) ; EOP QoQ \u2191 \u20b9 0.58 tn (2.1%)\n\u2713 Average CASA QoQ \u2191 \u20b9 0.21 tn (2.4%) ; EOP QoQ \u2191 \u20b9 0.12 tn (1.3%)\n\u2713 Average time deposits QoQ \u2191 \u20b9 0.21 tn (1.1%) ; EOP QoQ \u2191 \u20b9 0.46 tn (2.5%)\n\u27a2 AUM; average YoY \u2191 \u20b9 2.36 tn (9.0%) ; EOP YoY \u2191 \u20b9 2.62 tn (9.8%)\n\u2713 Average AUM; QoQ \u2191 \u20b9 0.70 tn (2.5%) ; EOP QoQ \u2191 \u20b9 0.77 tn (2.7%)\n\u27a2 Gross Advances; average YoY \u2191 \u20b9 2.47 tn (9.8%) ; EOP YoY \u2191 \u20b9 3.02 tn (11.9%)\n\u2713 Average Gross Advances; QoQ \u2191 \u20b9 0.78 tn (2.9%) ; EOP QoQ \u2191 \u20b9 0.75 tn (2.7%)\n\u27a2 Asset quality continues to remain stable; GNPA ratio at 1.24%; ex-agri at 0.97%\n\u27a2 PAT for the quarter \u20b9 187 bn; RoA of 1.92%; RoE of 13.9%; Standalone EPS \u20b9 12.1 for the quarter\n2 HDFC Bank Presentation Q3 FY2026\n\n--- Page 3 ---\nSTANDALONE\nKey financial parameters for Q3 FY26\nAverage deposits at \u20b9 27,524 bn, Profit after tax of \u20b9 187 bn, EPS\n\u219112.2% YoY ; \u21911.5% QoQ for the quarter \u20b9 12.1\nAverage advances under\nGross NPA at 1.24%, ex-agri\nmanagement at \u20b9 28,641 bn,\n0.97%\n\u21919.0% YoY ; \u21912.5% QoQ\nNet interest margin ^ (NIM) of 3.35% Return on assets of 1.9%\n* Capital adequacy ratio at 19.9%\nCore cost-to-income ratio of 39.2%\nof which CET1 at 17.4%\n3 HDFC Bank Presentation Q3 FY2026 *excludes estimated impact of employee benefits under new labour code\nStandalone Indian GAAP figures (bn = Billion); \u20b9 =Rupees;^based on total assets\n\n--- Page 4 ---\nSTANDALONE\nIncome statement\n4 HDFC Bank Presentation Q3 FY2026\nP\nN\nN\nN\nO\nP\nP\nP\nP\n&\ne\no\ne\np\nr\nr\nr\nr\no\no\no\no\nL\nt\nn\nt\ne\nv\nv\nf\nf\n(\ni n\n- i n\nr e\nr a\ni s\ni s\ni t\ni t\n\u20b9 b\nt e r\nt e\nv e\nt i n\ni o n\ni o n\nb e\na f\nn\ne\nr e\nn\ng\ns\ns\nf\nt e\n)\ns t i n\ns t i\nu e\ne x p\n- E\no r e\nr t a\nn\nc\ne\nB\nt\nx\no\nc\nn\na\nm\no\nu\nx\nm\ns\nn\ne\ne\ne\ns\nd e r N L C\nQ 3\n3\n1\n4\n1\n2\n1\n3\n0\n1\n2\n7\n1\n6\nF\n1\n6\n4\n1\n1\n-\n8\n7\nY\n.\n.\n.\n.\n.\n5\n.\n.\n2\n5\n5\n0\n1\n5\n4\n5 Q 2\n3\n1\n4\n1\n2\n1\n3\n1\n4\n5\n7\n4\n8\nF\n5\n5\n3\n9\n9\n-\n4\n6\nY\n.\n.\n.\n.\n.\n0\n.\n.\n2\n5\n5\n0\n8\n2\n4\n6 Q 3\n3\n1\n4\n1\n2\n1\n2\n2\n3\n5\n7\n8\n4\n8\nF\n8\n6\n2\n8\n9\n.\n2\n6\nY\n0\n.\n.\n.\n.\n.\n4\n.\n.\n2\n2\n5\n7\n7\n6\n5\n6\n(\n(\n(\n(\n1\n(\nQ\n3\n7\n0\n0\n0\n0\n.\n.\n.\n.\nn\n8\n.\n.\no\n4\n7\n1\n1\nm\n. 9\n7\n1\nQ\n%\n%\n%\n%\n%\n%\n%\n)\n)\n)\n)\n) (\n1\n1\n1\n1\n6\n9\n5\nY\n.\n5\n.\n.\nn\n0\n1\n1\no\n4\n. 7\n0\n0\nm\n. 0\n. 0\n. 5\nY\n%\n%\n%\n%\n%\n%\n%\n)\nEB = employee benefits, NLC = newlabour code\nCertain figures reported above will not add-up due to rounding\n\n--- Page 5 ---\nSTANDALONE\nAbridged balance sheet\nBalance sheet (\u20b9 bn) Dec'24 Sep'25 Dec'25 QoQ YoY\nNet Advances 25,182 27,464 28,214 750 3,032\nInvestments 8,119 8,743 8,783 40 664\nGovernment & debt securities 7,913 8,533 8,576 43 663\nEquity & other securities 206 210 207 (3) 1\nCash & equivalent 2,202 1,652 1,752 100 (450)\nFixed & other assets 2,087 2,171 2,140 (31) 53\nTotal assets 37,590 40,030 40,889 859 3,299\nDeposits 25,638 28,018 28,601 583 2,963\nBorrowings 5,702 5,096 5,211 115 (491)\nEquity & reserves 4,831 5,224 5,424 20",
+      "latest_metrics": {
+        "nim": 3.35,
+        "casa": 34.0,
+        "gnpa": 1.24,
+        "roe": 13.9,
+        "roa": 1.92,
+        "nnpa": 0.4,
+        "car": 19.9,
+        "cost_to_income": 39.2,
+        "loan_growth": 11.9,
+        "deposit_growth": 11.6,
+        "provision_coverage": 70.0,
+        "slippage_ratio": 1.24,
+        "key_highlights": [
+          "Deposits grew YoY by \u20b93.00 tn (12.2%) with average deposits at \u20b927,524 bn",
+          "Asset quality remains stable with GNPA at 1.24% and ex-agri GNPA at 0.97%",
+          "Strong capital position with CAR at 19.9% and CET1 at 17.4%",
+          "Retail segment comprises 53% of AUM with balanced portfolio mix across mortgage (30%) and retail assets (23%)",
+          "PAT for Q3 FY26 at \u20b9187 bn with EPS of \u20b912.1, showing YoY growth of 12%"
+        ]
+      }
+    },
+    "pdf_metrics_extracted": true,
+    "management_guidance": [],
+    "key_highlights": [
+      "Deposits grew YoY by \u20b93.00 tn (12.2%) with average deposits at \u20b927,524 bn",
+      "Asset quality remains stable with GNPA at 1.24% and ex-agri GNPA at 0.97%",
+      "Strong capital position with CAR at 19.9% and CET1 at 17.4%",
+      "Retail segment comprises 53% of AUM with balanced portfolio mix across mortgage (30%) and retail assets (23%)",
+      "PAT for Q3 FY26 at \u20b9187 bn with EPS of \u20b912.1, showing YoY growth of 12%",
+      "Average deposits increased 15.1% YoY to \u20b927.1 trillion; CASA ratio at 34%",
+      "Gross advances grew 9.9% YoY to \u20b927.7 trillion with AUM growth of 8.9%",
+      "Asset quality remains stable with GNPA at 1.24% (ex-agri at 0.99%)",
+      "PAT for Q2FY26 at \u20b9186 billion with EPS of \u20b912.1",
+      "Strong capital position with CAR at 20.0% and CET1 at 17.5%",
+      "Average deposits grew 15.1% YoY to \u20b927.1 trillion; EOP deposits up 12.1% YoY",
+      "Gross advances grew 9.9% YoY with quarterly growth of 4.4% QoQ",
+      "PAT for the quarter at \u20b9186 billion with EPS of \u20b912.1",
+      "Strong capital position with CET1 at 17.5% and total CAR at 20.0%"
+    ]
+  },
+  "cached_at": "2026-02-22T12:01:12.997945+00:00",
+  "cache_version": "1.0"
+}
