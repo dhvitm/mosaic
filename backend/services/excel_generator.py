@@ -1167,7 +1167,7 @@ class ExcelGenerator:
         
         # Net Profit (linked to P&L)
         ws.cell(row=row, column=1).value = "Net Profit (Rs. Cr)"
-        pat_row = self.pnl_rows.get('pat')
+        pat_row = self.pnl_rows.get('net_profit') or self.pnl_rows.get('pat')
         for i, year in enumerate(self.forecast_years, start=2):
             col_letter = get_column_letter(last_hist_col + i - 1)  # Map to P&L columns
             if pat_row:
