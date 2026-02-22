@@ -169,6 +169,7 @@ export default function Processing() {
 
     // Cleanup on unmount
     return () => {
+      mounted = false;
       if (wsRef.current) {
         wsRef.current.close();
       }
