@@ -380,7 +380,7 @@ Return ONLY a JSON object with these exact keys:
                 sector = company_metadata.get('sector', '').lower()
                 is_bank = 'bank' in sector or 'financ' in sector or 'nbfc' in sector
                 
-                # Process PDFs and extract metrics
+                # Process PDFs and extract metrics from investor presentations
                 pdf_metrics = await self.pdf_extractor.process_presentations(
                     presentations, 
                     self.claude, 
@@ -408,6 +408,35 @@ Return ONLY a JSON object with these exact keys:
                 commentary_data['pdf_metrics_extracted'] = False
                 commentary_data['pdf_extracted_metrics'] = {}
             
+            # ===== NEW: Process Annual Reports for detailed financials =====
+            annual_reports = commentary_data.get('annual_reports', [])
+            if annual_reports:
+                await ws_manager.send_activity(job_id, "data_processing", f"Parsing {min(len(annual_reports), 2)} annual reports for detailed financials...")
+                
+                sector = company_metadata.get('sector', '').lower()
+                is_bank = 'bank' in sector or 'financ' in sector or 'nbfc' in sector
+                
+                annual_report_data = await self.pdf_extractor.process_annual_reports(
+                    annual_reports,
+                    self.claude,
+                    is_bank=is_bank,
+                    max_reports=2  # Latest 2 years
+                )
+                
+                commentary_data['annual_report_financials'] = annual_report_data
+                
+                # Store detailed P&L and BS for Excel generation
+                if annual_report_data.get('detailed_pnl'):
+                    commentary_data['detailed_pnl'] = annual_report_data['detailed_pnl']
+                if annual_report_data.get('detailed_bs'):
+                    commentary_data['detailed_bs'] = annual_report_data['detailed_bs']
+                
+                reports_processed = annual_report_data.get('reports_processed', 0)
+                await ws_manager.send_activity(
+                    job_id, "info",
+                    f"Extracted detailed financials from {reports_processed} annual reports"
+                )
+            
             if not commentary_data.get('scraped_successfully') and not enhanced_data.get('scraped_successfully'):
                 await ws_manager.send_activity(job_id, "error", "Commentary scraping failed")
                 logger.warning(f"Commentary scraping failed for {ticker}")
@@ -418,9 +447,10 @@ Return ONLY a JSON object with these exact keys:
                 peers_count = len(commentary_data.get('peer_comparison', []))
                 pres_count = len(commentary_data.get('bse_presentations', []))
                 pdf_count = commentary_data.get('pdf_extracted_metrics', {}).get('extracted_from_pdfs', 0)
+                ar_count = commentary_data.get('annual_report_financials', {}).get('reports_processed', 0)
                 await ws_manager.send_activity(
                     job_id, "info", 
-                    f"Scraped {pros_count} pros, {cons_count} cons, {peers_count} peers, {pres_count} presentations, {pdf_count} PDFs parsed"
+                    f"Scraped {pros_count} pros, {cons_count} cons, {pres_count} PPTs parsed, {ar_count} annual reports parsed"
                 )
             
             # Cache the result
@@ -431,7 +461,8 @@ Return ONLY a JSON object with these exact keys:
             peers = len(commentary_data.get('peer_comparison', []))
             pres = len(commentary_data.get('bse_presentations', []))
             pdfs = commentary_data.get('pdf_extracted_metrics', {}).get('extracted_from_pdfs', 0)
-            await self._update_step(job_id, 4, "completed", f"Scraped {pros} pros, {cons} cons, {peers} peers, {pres} presentations, {pdfs} PDFs parsed")
+            ar_count = commentary_data.get('annual_report_financials', {}).get('reports_processed', 0)
+            await self._update_step(job_id, 4, "completed", f"{pros} pros, {cons} cons, {pdfs} PPTs, {ar_count} annual reports")
             return commentary_data
             
         except Exception as e:
