@@ -874,12 +874,14 @@ class ExcelGenerator:
                     
                     # Link to P&L and Balance Sheet
                     if key == 'pat':
-                        pat_row = self.pnl_rows.get('pat')
+                        # Try multiple possible row keys
+                        pat_row = self.pnl_rows.get('net_profit') or self.pnl_rows.get('pat')
                         if pat_row:
                             cell.value = f"='P&L'!{curr_col}{pat_row}"
                             
                     elif key in ['revenue', 'revenue2']:
-                        rev_row = self.pnl_rows.get('revenue')
+                        # Try multiple possible row keys for revenue
+                        rev_row = self.pnl_rows.get('interest_earned') or self.pnl_rows.get('revenue') or self.pnl_rows.get('total_income')
                         if rev_row:
                             cell.value = f"='P&L'!{curr_col}{rev_row}"
                             
