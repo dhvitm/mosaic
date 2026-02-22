@@ -379,16 +379,27 @@ class ToolExecutor:
             quarterly_data = await self.scraper.scrape_quarterly_results(ticker)
             
             # Truncate to recent 5 years only
-            def truncate_dict(d: Dict, max_items: int = 5) -> Dict:
+            def truncate_dict(d, max_items: int = 5):
                 if not d:
-                    return d
-                keys = sorted(d.keys())[-max_items:]
-                return {k: d[k] for k in keys}
+                    return d if isinstance(d, dict) else {}
+                if isinstance(d, list):
+                    return d[-max_items:]  # Take last N items from list
+                if isinstance(d, dict):
+                    keys = sorted(d.keys())[-max_items:]
+                    return {k: d[k] for k in keys}
+                return d
             
             annual_pnl = truncate_dict(annual_data.get("annual_pnl", {}), 5)
             annual_bs = truncate_dict(annual_data.get("annual_bs", {}), 5)
             ratios = truncate_dict(annual_data.get("ratios", {}), 5)
-            quarterly = truncate_dict(quarterly_data.get("quarters", {}), 8)
+            
+            # Quarterly data might be a list or dict
+            quarterly_raw = quarterly_data.get("quarters", {})
+            if isinstance(quarterly_raw, list):
+                # Convert list to dict format or just take the list
+                quarterly = quarterly_raw[-8:]  # Last 8 quarters
+            else:
+                quarterly = truncate_dict(quarterly_raw, 8)
             
             result = {
                 "success": True,
@@ -397,11 +408,11 @@ class ToolExecutor:
                 "annual_bs": annual_bs,
                 "ratios": ratios,
                 "quarterly": quarterly,
-                "years_available": list(annual_pnl.keys()),
-                "quarters_available": list(quarterly.keys())
+                "years_available": list(annual_pnl.keys()) if isinstance(annual_pnl, dict) else [],
+                "quarters_available": list(quarterly.keys()) if isinstance(quarterly, dict) else quarterly
             }
             
-            logger.info(f"Scraped financials for {ticker}: pnl_years={list(annual_pnl.keys())}")
+            logger.info(f"Scraped financials for {ticker}: pnl_years={list(annual_pnl.keys()) if isinstance(annual_pnl, dict) else 'N/A'}")
             
             # Auto-cache the result for Excel generation
             self._cache_write(ticker, "screener_financials", result)
@@ -412,6 +423,7 @@ class ToolExecutor:
             
             return result
         except Exception as e:
+            logger.error(f"Failed to get screener financials: {str(e)}")
             return {"success": False, "error": str(e)}
     
     async def _get_stock_price(self, ticker: str) -> Dict[str, Any]:
