@@ -193,6 +193,13 @@ export default function Landing() {
           </p>
         </div>
       </div>
+
+      {/* Recent Jobs Section */}
+      <div className="relative z-10 px-4 pb-16">
+        <div className="max-w-4xl mx-auto">
+          <JobsList />
+        </div>
+      </div>
     </div>
   );
 }
