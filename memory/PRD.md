@@ -54,7 +54,7 @@ Build a web app called "Mosaic" for investment professionals that takes an India
 - [x] Claude AI integration for reasoning steps
 
 ### In Progress
-- [ ] Step 5 performance optimization (currently ~50s for Claude API calls)
+- None
 
 ### Not Started / Placeholder
 - [ ] Step 6: Full Excel model generation (currently placeholder)
