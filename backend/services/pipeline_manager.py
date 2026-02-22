@@ -98,9 +98,9 @@ class PipelineManager:
             {"step_number": 3, "name": "Extracting Operational Metrics", "status": "pending", "message": ""},
             {"step_number": 4, "name": "Processing Management Commentary", "status": "pending", "message": ""},
             {"step_number": 5, "name": "Generating Forecast Assumptions", "status": "pending", "message": ""},
-            {"step_number": 6, "name": "Building Excel Model", "status": "pending", "message": ""},
-            {"step_number": 7, "name": "Running Valuation", "status": "pending", "message": ""},
-            {"step_number": 8, "name": "Writing Investment Thesis", "status": "pending", "message": ""},
+            {"step_number": 6, "name": "Running Valuation", "status": "pending", "message": ""},
+            {"step_number": 7, "name": "Writing Investment Thesis", "status": "pending", "message": ""},
+            {"step_number": 8, "name": "Building Excel Model", "status": "pending", "message": ""},
         ]
         
         await self.db.model_jobs.update_one(
