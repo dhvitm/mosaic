@@ -1,0 +1,67 @@
+{
+  "ticker": "HDFCBANK",
+  "step_number": 5,
+  "data": {
+    "forecast_years": [
+      "FY26E",
+      "FY27E",
+      "FY28E",
+      "FY29E",
+      "FY30E"
+    ],
+    "assumptions": {
+      "loan_growth_rate": [
+        0.14,
+        0.14,
+        0.13,
+        0.13,
+        0.12
+      ],
+      "nim": [
+        0.04,
+        0.039,
+        0.038,
+        0.038,
+        0.037
+      ],
+      "casa_ratio": [
+        0.44,
+        0.45,
+        0.46,
+        0.47,
+        0.47
+      ],
+      "credit_cost": [
+        0.01,
+        0.009,
+        0.009,
+        0.008,
+        0.008
+      ],
+      "cost_to_income": [
+        0.42,
+        0.41,
+        0.4,
+        0.39,
+        0.39
+      ],
+      "roa": [
+        0.018,
+        0.019,
+        0.02,
+        0.02,
+        0.021
+      ],
+      "roe": [
+        0.165,
+        0.17,
+        0.175,
+        0.18,
+        0.185
+      ]
+    },
+    "rationale": "HDFC Bank post-merger integration phase with normalizing growth from elevated base. Loan growth of 14% in FY26-27 moderating to 12% by FY30E as base expands. NIM compression from 4.0% to 3.7% due to competitive pressures and deposit costs. CASA ratio improving gradually from 44% to 47% as retail franchise strengthens. Credit costs benign at 0.8-1.0% reflecting superior underwriting. Operating leverage driving cost-to-income from 42% to 39%. ROA expanding to 2.1% and ROE to 18.5% by FY30E as merger synergies materialize and efficiency improves. Conservative capital adequacy maintained above 17%."
+  },
+  "cached_at": "2026-02-22T10:08:36.817585+00:00",
+  "cache_version": "1.0"
+}

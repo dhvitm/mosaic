@@ -1,0 +1,11 @@
+{
+  "ticker": "HDFCBANK",
+  "step_number": 2,
+  "data": {
+    "annual_pnl": {},
+    "annual_bs": {},
+    "quarterly_results": []
+  },
+  "cached_at": "2026-02-22T10:08:28.651632+00:00",
+  "cache_version": "1.0"
+}

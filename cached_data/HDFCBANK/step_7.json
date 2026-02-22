@@ -1,0 +1,13 @@
+{
+  "ticker": "HDFCBANK",
+  "step_number": 7,
+  "data": {
+    "full_text": "# HDFC Bank Ltd (HDFCBANK) - Investment Note\n\n## RECOMMENDATION SUMMARY\n\nWe maintain a **HOLD** rating on HDFC Bank with a target price of \u20b91,920, implying modest upside of 3.7% from current levels. The limited risk-reward at current valuations warrants a neutral stance despite the bank's strong franchise quality.\n\n## INVESTMENT CASE\n\n\u2022 **Market-leading franchise**: HDFC Bank remains India's premier private sector bank with best-in-class retail deposit franchise, superior asset quality metrics, and consistent execution track record across business cycles\n\n\u2022 **Post-merger integration progressing**: The merged entity with erstwhile HDFC Ltd is navigating the integration challenges, though near-term margin pressure and regulatory ratio normalization are weighing on performance metrics\n\n\u2022 **Structural deposit growth opportunity**: Well-positioned to capture India's financialization trend with strong branch network (8,000+), digital capabilities, and brand equity driving low-cost CASA deposit growth\n\n\u2022 **Earnings visibility improving**: Asset quality remains resilient with GNPA <1.4%, and credit costs are stable. Management guidance suggests margin stabilization by H2 FY25 as high-cost wholesale funding rolls off\n\n## KEY RISKS\n\n\u2022 **Valuation premium compression risk**: Trading at premium valuations relative to private sector peers; any execution missteps or slower-than-expected margin recovery could trigger multiple de-rating\n\n\u2022 **Macroeconomic sensitivity**: Slowing economic growth or rising credit costs in merged HDFC Ltd's wholesale book could impact asset quality and profitability trajectory\n\n\u2022 **Regulatory overhang**: Continued RBI scrutiny on digital platforms and potential restrictions on business growth remain concerns, though recent approvals suggest easing\n\n## VALUATION\n\nOur \u20b91,920 target price reflects 2.8x FY26E P/BV, applying a modest premium to the bank's historical mean given integration headwinds. We employ a Gordon Growth Model with 15% ROE and 14% CoE assumptions. Current valuations offer limited margin of safety. We would turn more constructive on 10%+ correction or earlier-than-expected margin inflection. Recommend accumulation only for long-term investors seeking quality exposure to India's banking sector growth.\n\n---\n\n*Rating: HOLD | Target: \u20b91,920 | Market Cap: \u20b914.1 lakh crore*",
+    "summary": "HOLD with target price of \u20b91920",
+    "recommendation": "HOLD",
+    "target_price": 1920,
+    "upside": 3.68
+  },
+  "cached_at": "2026-02-22T10:08:56.264862+00:00",
+  "cache_version": "1.0"
+}

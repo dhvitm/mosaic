@@ -1,0 +1,10 @@
+{
+  "ticker": "HDFCBANK",
+  "step_number": 3,
+  "data": {
+    "quarterly_data": [],
+    "note": "Operational metrics extraction requires BSE filing access"
+  },
+  "cached_at": "2026-02-22T10:08:28.654167+00:00",
+  "cache_version": "1.0"
+}
