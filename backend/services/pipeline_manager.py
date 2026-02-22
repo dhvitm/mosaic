@@ -442,9 +442,13 @@ Return JSON with assumptions for each parameter for each forecast year.
     async def _step7_valuation(self, job_id: str, company_metadata: Dict, assumptions: Dict) -> Dict[str, Any]:
         """Step 7: Run valuation"""
         await self._update_step(job_id, 7, "in_progress", "Running valuation...")
+        await ws_manager.send_activity(job_id, "llm_thinking", "Claude AI calculating intrinsic value using RIV methodology...")
         
         try:
+            await ws_manager.send_activity(job_id, "data_processing", "Loading valuation parameters from knowledge base...")
             knowledge_file = self.claude.load_knowledge_file(company_metadata.get('knowledge_file', 'generic.md'))
+            
+            await ws_manager.send_activity(job_id, "llm_thinking", "Determining cost of equity and terminal growth rate...")
             
             system_message = f"{knowledge_file}\n\nYou are a quantitative analyst performing valuation."
             
