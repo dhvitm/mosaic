@@ -67,9 +67,9 @@ class PipelineManager:
         """Run the agentic Claude loop to build the financial model"""
         logger.info(f"Running AGENTIC pipeline for {ticker}")
         
-        # Update job status
+        # Update job status (using 'id' field to match routes/generate.py)
         await self.db.model_jobs.update_one(
-            {"job_id": job_id},
+            {"id": job_id},
             {"$set": {
                 "status": "processing",
                 "current_step": 1,
