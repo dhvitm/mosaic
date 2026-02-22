@@ -434,6 +434,136 @@ Return ONLY valid JSON with numerical values in Rs. Crores."""
         all_financials['reports_processed'] = processed
         return all_financials
     
+    async def process_concall_transcripts(self, transcripts: List[Dict], claude_service, 
+                                         max_transcripts: int = 4) -> Dict[str, Any]:
+        """
+        Process concall transcripts to extract management commentary and Q&A insights.
+        Limits to last 4 quarters as requested by user.
+        """
+        all_commentary = {
+            'transcripts_processed': 0,
+            'quarters': [],
+            'key_themes': [],
+            'management_outlook': [],
+            'analyst_concerns': [],
+            'guidance_statements': [],
+            'raw_text_samples': {}
+        }
+        
+        processed = 0
+        
+        for transcript in transcripts[:max_transcripts]:
+            url = transcript.get('url', '')
+            quarter = transcript.get('quarter', 'Unknown')
+            
+            if not url:
+                continue
+            
+            try:
+                logger.info(f"Processing transcript for {quarter}...")
+                
+                # Download PDF
+                quarter_clean = re.sub(r'[^\w]', '_', quarter)[:20]
+                filepath = self.download_pdf(url, f"transcript_{quarter_clean}.pdf")
+                if not filepath:
+                    continue
+                
+                # Extract text - transcripts can be long
+                text = self.extract_text_from_pdf(filepath, max_pages=30)
+                if not text or len(text) < 2000:
+                    logger.warning(f"Transcript text too short: {len(text)} chars")
+                    continue
+                
+                # Store sample
+                all_commentary['raw_text_samples'][quarter] = text[:3000]
+                
+                # Use AI to extract key insights
+                insights = await self._extract_transcript_insights(text, claude_service)
+                
+                if insights:
+                    all_commentary['quarters'].append(quarter)
+                    
+                    # Aggregate themes
+                    for theme in insights.get('key_themes', []):
+                        if theme not in all_commentary['key_themes']:
+                            all_commentary['key_themes'].append(theme)
+                    
+                    # Aggregate outlook
+                    for outlook in insights.get('management_outlook', []):
+                        if outlook not in all_commentary['management_outlook']:
+                            all_commentary['management_outlook'].append(outlook)
+                    
+                    # Aggregate concerns
+                    for concern in insights.get('analyst_concerns', []):
+                        if concern not in all_commentary['analyst_concerns']:
+                            all_commentary['analyst_concerns'].append(concern)
+                    
+                    # Aggregate guidance
+                    for guidance in insights.get('guidance_statements', []):
+                        if guidance not in all_commentary['guidance_statements']:
+                            all_commentary['guidance_statements'].append(guidance)
+                    
+                    processed += 1
+                    logger.info(f"Processed transcript for {quarter}: {len(insights.get('key_themes', []))} themes")
+                
+                # Clean up
+                try:
+                    os.remove(filepath)
+                except:
+                    pass
+                    
+            except Exception as e:
+                logger.error(f"Error processing transcript for {quarter}: {str(e)}")
+                continue
+        
+        all_commentary['transcripts_processed'] = processed
+        return all_commentary
+    
+    async def _extract_transcript_insights(self, text: str, claude_service) -> Dict[str, Any]:
+        """Use Claude AI to extract key insights from concall transcript"""
+        try:
+            # Limit text to avoid token limits
+            truncated_text = text[:20000] if len(text) > 20000 else text
+            
+            system_prompt = """You are a financial analyst extracting key insights from an earnings conference call transcript.
+Focus on:
+1. Key themes discussed by management
+2. Management's outlook and forward guidance
+3. Analyst questions and concerns
+4. Specific guidance or targets mentioned
+
+Return ONLY a JSON object with this structure:
+{
+  "key_themes": ["theme 1", "theme 2", ...],
+  "management_outlook": ["outlook statement 1", "outlook statement 2", ...],
+  "analyst_concerns": ["concern 1", "concern 2", ...],
+  "guidance_statements": ["guidance 1", "guidance 2", ...]
+}
+
+Keep each item concise (1-2 sentences). Limit to top 5 items per category."""
+
+            user_prompt = f"""Extract key insights from this earnings call transcript:
+
+{truncated_text}
+
+Return ONLY valid JSON, no explanation."""
+
+            response = await claude_service.call_claude(system_prompt, user_prompt, "transcript_extraction")
+            
+            # Parse JSON from response
+            import json
+            
+            json_match = re.search(r'\{[\s\S]*\}', response)
+            if json_match:
+                insights = json.loads(json_match.group())
+                return insights
+            
+            return {}
+            
+        except Exception as e:
+            logger.error(f"Transcript extraction failed: {str(e)}")
+            return {}
+    
     async def process_presentations(self, presentations: List[Dict], claude_service, 
                                    is_bank: bool = True, max_pdfs: int = 3) -> Dict[str, Any]:
         """Process multiple presentations and aggregate metrics"""
