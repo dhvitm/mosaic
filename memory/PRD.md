@@ -38,7 +38,7 @@ Mosaic is a professional-grade financial model generator for Indian stock market
 4. **Management Commentary:** Scrape pros/cons, peers, investor presentations from Screener.in Documents
 5. **Assumptions Generation:** Claude AI generates forecast assumptions
 6. **Valuation:** RIV model, peer comparisons, target price
-7. **Thesis Generation:** Claude AI writes investment note
+7. **Thesis Generation:** Claude AI writes investment note (uses presentations data)
 8. **Excel Generation:** Build mechanically-linked model with formulas
 
 ## What's Been Implemented (Feb 22, 2026)
@@ -57,27 +57,39 @@ Mosaic is a professional-grade financial model generator for Indian stock market
 - [x] **5-Year Projections:** FY26E-FY30E columns with growth formulas linked to Assumptions sheet
 - [x] **ROE Tree (DuPont Analysis):** New sheet decomposing ROE into NPM × Asset Turnover × Equity Multiplier
 - [x] **Cross-sheet References:** ROE Tree links to P&L and Balance Sheet for real mechanical linking
-- [x] **Screener.in Documents Scraping:** Replaced BSE scraping with Screener.in Documents section scraping
-- [x] **Investor Presentations Extraction:** Now scrapes 15+ PPT links with quarter information
+- [x] **Screener.in Documents Scraping:** Scrapes PPT links, transcripts, annual reports from Documents section
+- [x] **Investor Presentations Used in Thesis:** Thesis generation now incorporates presentation quarters and Screener pros/cons
+- [x] **Formula-Driven Valuation:** Complete RIV model with:
+  - Net Profit linked to P&L projections (`='P&L'!G19`)
+  - Equity linked to Balance Sheet (`='Balance Sheet'!G8`)
+  - Residual Income calculation from projected PAT
+  - Terminal Value formula using growth assumptions
+  - Fair Value per Share = Total Equity Value / Shares
 
 ### Excel Model Structure (10 Sheets)
-1. Cover - Company summary and recommendation
-2. Assumptions - Editable forecast drivers (yellow cells)
-3. P&L - Historical + 5-year projections with formulas
-4. Balance Sheet - Historical + 5-year projections
-5. ROE Tree - DuPont analysis with cross-sheet links
-6. Quarterly - Last 12 quarters of results
-7. Key Ratios - Historical financial ratios
-8. Valuation - RIV model with target price
-9. Peer Comparison - Sector peer metrics
-10. Thesis - Full investment note
+1. **Cover** - Company summary and recommendation
+2. **Assumptions** - Editable forecast drivers (yellow cells)
+3. **P&L** - Historical + 5-year projections with formulas
+4. **Balance Sheet** - Historical + 5-year projections
+5. **ROE Tree** - DuPont analysis with cross-sheet links
+6. **Quarterly** - Last 12 quarters of results
+7. **Key Ratios** - Historical financial ratios
+8. **Valuation** - RIV model linked to projections
+9. **Peer Comparison** - Sector peer metrics
+10. **Thesis** - Full investment note
 
 ### Excel Formula Examples
 - `Total Income = Revenue + Interest + Other Income`
 - `PBT = Total Income - Total Expenses`
 - `Net Profit = PBT - Tax`
-- `ROE = PAT / Average Equity`
-- `Asset Turnover = Revenue / Average Assets`
+- `ROE = PAT / Average Equity` (in ROE Tree)
+- `Residual Income = Net Profit - Required Return` (in Valuation)
+- `Fair Value = (Book Value + Sum of PV of RI + Terminal Value) / Shares`
+
+### Data Sources Used
+- **Screener.in:** Company info, P&L, Balance Sheet, Quarterly, Ratios, Pros/Cons, Peers
+- **Screener.in Documents:** Investor Presentations (15+ PPTs), Transcripts, Annual Reports
+- **Claude AI:** Assumptions generation, Valuation reasoning, Thesis writing
 
 ## API Endpoints
 - `POST /api/generate/` - Create new job
@@ -93,8 +105,8 @@ Mosaic is a professional-grade financial model generator for Indian stock market
 ## Remaining Tasks (Backlog)
 
 ### P1 - High Priority
-- [ ] Parse and summarize concall transcripts with AI
-- [ ] Extract operational metrics from investor presentations
+- [ ] Parse and extract key metrics from PPT PDFs (currently only collecting links)
+- [ ] Summarize concall transcripts using AI
 - [ ] Add more sector-specific knowledge files (Cement, IT, Pharma)
 
 ### P2 - Medium Priority
