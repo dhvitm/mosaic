@@ -424,8 +424,8 @@ class ToolExecutor:
     async def _download_and_parse_pdf(self, url: str, doc_type: str) -> Dict[str, Any]:
         """Download and parse PDF document"""
         try:
-            # Determine max pages based on doc type
-            max_pages = 50 if doc_type == "annual_report" else 100
+            # Reduced max pages for faster processing
+            max_pages = 30 if doc_type == "annual_report" else 50
             
             # Download PDF
             filename = f"{doc_type}_{hash(url) % 100000}.pdf"
@@ -437,7 +437,7 @@ class ToolExecutor:
             # Extract text
             text = self.pdf_extractor.extract_text_from_pdf(filepath, max_pages=max_pages)
             
-            if not text or len(text) < 1000:
+            if not text or len(text) < 500:
                 return {"success": False, "error": "PDF text extraction yielded insufficient content"}
             
             # Clean up downloaded file
@@ -446,13 +446,15 @@ class ToolExecutor:
             except:
                 pass
             
+            # Limit text to 20k chars (reduced from 50k)
+            max_text_length = 20000
             return {
                 "success": True,
                 "doc_type": doc_type,
                 "url": url,
                 "text_length": len(text),
-                "text": text[:50000],  # Limit to 50k chars for Claude context
-                "truncated": len(text) > 50000
+                "text": text[:max_text_length],
+                "truncated": len(text) > max_text_length
             }
         except Exception as e:
             return {"success": False, "error": str(e)}
