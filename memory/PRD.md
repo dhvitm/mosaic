@@ -52,10 +52,16 @@ Build a web app called "Mosaic" for investment professionals that takes an India
 - [x] Abort job functionality (backend + frontend)
 - [x] **Real-Time Activity Log** - Live display of API calls, LLM thinking, and data processing
 - [x] Claude AI integration for reasoning steps
-- [x] **Step 5, 7, 8 Performance Optimization** - Reduced from ~50s to ~10s per step by:
-  - Using focused system messages instead of full 15KB knowledge file
-  - Providing example JSON structures for better response parsing
-  - Adding caching for valuation and thesis steps
+- [x] **Step 5, 7, 8 Performance Optimization** - Reduced from ~50s to ~10s per step
+- [x] **Step 6: Excel Model Generation** - Full multi-sheet workbook with:
+  - Cover sheet with recommendation summary
+  - Assumptions sheet with forecast data
+  - P&L and Balance Sheet templates
+  - Valuation sheet with RIV methodology
+  - Investment Thesis sheet
+  - Key Metrics summary
+- [x] **Cache Viewer Page** (`/cache` and `/cache/:ticker`) - View all cached pipeline data per ticker
+- [x] **Download Excel button** on Results page - Working download endpoint
 
 ### In Progress
 - None
