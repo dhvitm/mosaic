@@ -16,6 +16,7 @@ from services.scraper_service import ScraperService
 from services.excel_generator import ExcelGenerator
 from services.websocket_manager import ws_manager
 from services.cache_service import CacheService
+from services.pdf_extractor import pdf_extractor
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,7 @@ class PipelineManager:
         self.claude = ClaudeService()
         self.scraper = ScraperService()
         self.excel_gen = ExcelGenerator()
+        self.pdf_extractor = pdf_extractor
     
     async def run_pipeline(self, job_id: str, ticker: str):
         """
