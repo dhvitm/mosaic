@@ -1227,30 +1227,6 @@ class ExcelGenerator:
         ws.column_dimensions['D'].width = 15
         ws.column_dimensions['E'].width = 15
         ws.column_dimensions['F'].width = 15
-            
-            if label in ["Fair Value per Share", "Target Price", "Upside/Downside"]:
-                ws.cell(row=row, column=1).font = Font(bold=True)
-                ws.cell(row=row, column=2).font = Font(bold=True)
-            row += 1
-        
-        # Recommendation
-        row += 2
-        ws.cell(row=row, column=1).value = "RECOMMENDATION"
-        ws.cell(row=row, column=1).font = SECTION_FONT
-        row += 1
-        rec = valuation.get('recommendation', 'HOLD')
-        ws.cell(row=row, column=1).value = rec
-        rec_color = "00AA00" if rec == "BUY" else "CC0000" if rec == "SELL" else "FF9900"
-        ws.cell(row=row, column=1).font = Font(size=20, bold=True, color=rec_color)
-        
-        row += 2
-        ws.cell(row=row, column=1).value = valuation.get('rationale', '')
-        ws.cell(row=row, column=1).alignment = Alignment(wrap_text=True)
-        ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=3)
-        
-        ws.column_dimensions['A'].width = 25
-        ws.column_dimensions['B'].width = 18
-        ws.column_dimensions['C'].width = 30
     
     def _create_peer_comparison_sheet(self, data: Dict[str, Any]):
         """Create Peer Comparison sheet"""
