@@ -294,7 +294,7 @@ class ExcelGenerator:
             ws.column_dimensions[get_column_letter(i)].width = 14
     
     def _create_balance_sheet(self, data: Dict[str, Any]):
-        """Create Balance Sheet"""
+        """Create Balance Sheet with scraped data"""
         ws = self.wb.create_sheet("Balance Sheet")
         
         ws['A1'] = "BALANCE SHEET"
@@ -303,44 +303,165 @@ class ExcelGenerator:
         ws['A2'] = "(₹ Crores)"
         ws['A2'].font = Font(size=10, italic=True, color="666666")
         
+        # Get actual B/S data from scraping
+        historical = data.get('historical_financials', {})
+        annual_bs = historical.get('annual_bs', {})
+        
+        # Get years from scraped data
+        if annual_bs:
+            years = sorted([y for y in annual_bs.keys() if y != 'TTM'], key=lambda x: x)[-10:]
+        else:
+            years = self.years
+        
         # Headers
         ws['A4'] = "Line Item"
-        for i, year in enumerate(self.years, start=2):
+        for i, year in enumerate(years, start=2):
             ws.cell(row=4, column=i).value = year
-        self._apply_header_style(ws, 4, len(self.years) + 1)
-        
-        # Balance sheet items
-        bs_items = [
-            ("ASSETS", True),
-            ("Cash & Bank Balances", False),
-            ("Investments", False),
-            ("Advances (Net)", False),
-            ("Fixed Assets", False),
-            ("Other Assets", False),
-            ("Total Assets", True),
-            ("", False),
-            ("LIABILITIES", True),
-            ("Capital", False),
-            ("Reserves & Surplus", False),
-            ("Deposits", False),
-            ("Borrowings", False),
-            ("Other Liabilities", False),
-            ("Total Liabilities", True),
-            ("", False),
-            ("Balance Check", True),
-        ]
+        self._apply_header_style(ws, 4, len(years) + 1)
         
         row = 5
-        for item, is_bold in bs_items:
-            cell = ws.cell(row=row, column=1)
-            cell.value = item
-            cell.border = THIN_BORDER
-            if is_bold:
-                cell.font = Font(bold=True)
-            row += 1
+        
+        if annual_bs and years:
+            first_year_data = annual_bs.get(years[0], {})
+            line_items = list(first_year_data.keys())
+            
+            for item in line_items:
+                ws.cell(row=row, column=1).value = item
+                ws.cell(row=row, column=1).border = THIN_BORDER
+                
+                is_key = 'Total' in item or 'Equity' in item
+                if is_key:
+                    ws.cell(row=row, column=1).font = Font(bold=True)
+                
+                for col_idx, year in enumerate(years, start=2):
+                    year_data = annual_bs.get(year, {})
+                    value = year_data.get(item)
+                    
+                    cell = ws.cell(row=row, column=col_idx)
+                    if value is not None:
+                        cell.value = value
+                        cell.number_format = '#,##0.00'
+                    cell.border = THIN_BORDER
+                    cell.font = NUMBER_FONT
+                    cell.alignment = Alignment(horizontal='right')
+                
+                row += 1
+        else:
+            ws.cell(row=row, column=1).value = "No Balance Sheet data available"
         
         ws.column_dimensions['A'].width = 25
-        for i in range(2, len(self.years) + 2):
+        for i in range(2, len(years) + 2):
+            ws.column_dimensions[get_column_letter(i)].width = 14
+    
+    def _create_quarterly_sheet(self, data: Dict[str, Any]):
+        """Create Quarterly Results sheet with scraped data"""
+        ws = self.wb.create_sheet("Quarterly Results")
+        
+        ws['A1'] = "QUARTERLY RESULTS"
+        ws['A1'].font = TITLE_FONT
+        
+        ws['A2'] = "(₹ Crores)"
+        ws['A2'].font = Font(size=10, italic=True, color="666666")
+        
+        # Get quarterly data
+        operational = data.get('operational_data', {})
+        quarterly = operational.get('quarterly_results', {})
+        
+        if quarterly:
+            quarters = sorted(quarterly.keys(), key=lambda x: x)[-12:]
+        else:
+            quarters = []
+        
+        # Headers
+        ws['A4'] = "Line Item"
+        for i, q in enumerate(quarters, start=2):
+            ws.cell(row=4, column=i).value = q
+        if quarters:
+            self._apply_header_style(ws, 4, len(quarters) + 1)
+        
+        row = 5
+        
+        if quarterly and quarters:
+            first_q_data = quarterly.get(quarters[0], {})
+            line_items = list(first_q_data.keys())
+            
+            for item in line_items:
+                ws.cell(row=row, column=1).value = item
+                ws.cell(row=row, column=1).border = THIN_BORDER
+                
+                for col_idx, q in enumerate(quarters, start=2):
+                    q_data = quarterly.get(q, {})
+                    value = q_data.get(item)
+                    
+                    cell = ws.cell(row=row, column=col_idx)
+                    if value is not None:
+                        cell.value = value
+                        cell.number_format = '#,##0.00'
+                    cell.border = THIN_BORDER
+                    cell.font = NUMBER_FONT
+                    cell.alignment = Alignment(horizontal='right')
+                
+                row += 1
+        else:
+            ws.cell(row=row, column=1).value = "No quarterly data available"
+        
+        ws.column_dimensions['A'].width = 25
+        for i in range(2, len(quarters) + 2):
+            ws.column_dimensions[get_column_letter(i)].width = 12
+    
+    def _create_ratios_sheet(self, data: Dict[str, Any]):
+        """Create Key Ratios sheet with scraped data"""
+        ws = self.wb.create_sheet("Key Ratios")
+        
+        ws['A1'] = "KEY RATIOS"
+        ws['A1'].font = TITLE_FONT
+        
+        # Get ratios data
+        historical = data.get('historical_financials', {})
+        ratios = historical.get('ratios', {})
+        
+        if ratios:
+            years = sorted([y for y in ratios.keys() if y != 'TTM'], key=lambda x: x)[-10:]
+        else:
+            years = []
+        
+        # Headers
+        ws['A3'] = "Ratio"
+        for i, year in enumerate(years, start=2):
+            ws.cell(row=3, column=i).value = year
+        if years:
+            self._apply_header_style(ws, 3, len(years) + 1)
+        
+        row = 4
+        
+        if ratios and years:
+            first_year_data = ratios.get(years[0], {})
+            ratio_items = list(first_year_data.keys())
+            
+            for item in ratio_items:
+                ws.cell(row=row, column=1).value = item
+                ws.cell(row=row, column=1).border = THIN_BORDER
+                
+                for col_idx, year in enumerate(years, start=2):
+                    year_data = ratios.get(year, {})
+                    value = year_data.get(item)
+                    
+                    cell = ws.cell(row=row, column=col_idx)
+                    if value is not None:
+                        cell.value = value
+                        # Format as percentage if it looks like one
+                        if isinstance(value, (int, float)) and abs(value) < 100:
+                            cell.number_format = '0.00'
+                        else:
+                            cell.number_format = '#,##0.00'
+                    cell.border = THIN_BORDER
+                    cell.font = NUMBER_FONT
+                    cell.alignment = Alignment(horizontal='right')
+                
+                row += 1
+        
+        ws.column_dimensions['A'].width = 25
+        for i in range(2, len(years) + 2):
             ws.column_dimensions[get_column_letter(i)].width = 12
     
     def _create_valuation_sheet(self, data: Dict[str, Any]):
