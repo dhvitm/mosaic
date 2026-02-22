@@ -1,0 +1,8 @@
+{
+  "ticker": "TEST",
+  "key": "test_key",
+  "data": {
+    "foo": "bar"
+  },
+  "cached_at": "2026-02-22T16:06:42.921718+00:00"
+}
