@@ -264,6 +264,7 @@ class MosaicAgent:
         self._current_job_id = job_id
         self._current_ticker = ticker
         self._tool_calls_log = []
+        self._collected_data = {}  # Reset collected data
         
         self.tool_executor.set_context(ticker, job_id)
         
@@ -280,7 +281,8 @@ Use cache_read() to retrieve any of these before scraping.
 
 Today's date: {today}
 
-Now build the complete financial model for {ticker}. Start by gathering data, then analyze, generate assumptions, run valuation, write thesis, and finally create the Excel model.
+Build the complete financial model for {ticker}. Be efficient - gather data, analyze, and create the Excel model.
+Note: Tool results are summarized. Full data is stored internally for write_excel_model().
 """
         
         # Initialize messages with system prompt (OpenAI format)
@@ -291,13 +293,13 @@ Now build the complete financial model for {ticker}. Start by gathering data, th
         
         await ws_manager.send_activity(
             job_id, "agent_start", 
-            f"🤖 Mosaic agent started analyzing {ticker}",
+            f"🤖 Mosaic agent started analyzing {ticker} (fast mode)",
             {"ticker": ticker, "cached_keys": cache_summary}
         )
         
         # Agent loop
         loop_count = 0
-        max_loops = 50  # Safety limit
+        max_loops = 30  # Reduced from 50
         final_response = None
         excel_path = None
         
@@ -305,10 +307,14 @@ Now build the complete financial model for {ticker}. Start by gathering data, th
             while loop_count < max_loops:
                 loop_count += 1
                 
+                # Decide which model to use based on loop count
+                # Use fast model for data gathering, full model for final analysis
+                use_fast = loop_count < 20  # Switch to full model near the end
+                
                 # Call LLM with tools via LiteLLM
                 try:
-                    logger.info(f"Agent loop {loop_count}: calling LLM with {len(messages)} messages")
-                    response = self._call_llm_with_tools(messages, MOSAIC_TOOLS_OPENAI_FORMAT)
+                    logger.info(f"Agent loop {loop_count}: calling LLM with {len(messages)} messages (fast={use_fast})")
+                    response = self._call_llm_with_tools(messages, MOSAIC_TOOLS_OPENAI_FORMAT, use_fast_model=use_fast)
                 except Exception as e:
                     logger.error(f"LLM API error: {str(e)}")
                     await ws_manager.send_activity(job_id, "error", f"LLM API error: {str(e)[:100]}")
@@ -390,11 +396,12 @@ Now build the complete financial model for {ticker}. Start by gathering data, th
                             {"success": result.get("success", False), "duration": tool_duration}
                         )
                         
-                        # Add tool result to messages (OpenAI format)
+                        # Add SUMMARIZED tool result to messages (reduces context size)
+                        summarized_result = self._summarize_tool_result(tool_name, result)
                         messages.append({
                             "role": "tool",
                             "tool_call_id": tool_id,
-                            "content": json.dumps(result, default=str)
+                            "content": summarized_result
                         })
                 
                 else:
