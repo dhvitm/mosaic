@@ -249,6 +249,191 @@ Return ONLY valid JSON, no explanation."""
             logger.error(f"AI extraction failed: {str(e)}")
             return {}
     
+    async def extract_detailed_financials_from_annual_report(self, text: str, claude_service, is_bank: bool = True) -> Dict[str, Any]:
+        """Use Claude AI to extract detailed P&L and Balance Sheet line items from annual report"""
+        try:
+            # Annual reports are large - focus on financial statements section
+            # Look for P&L and Balance Sheet sections
+            truncated_text = text[:25000] if len(text) > 25000 else text
+            
+            system_prompt = """You are an expert financial analyst. Extract DETAILED Profit & Loss and Balance Sheet line items from this annual report.
+
+For a BANK, extract these P&L items (in Rs. Crores):
+- Interest Earned (total)
+- Interest/Discount on Advances
+- Income on Investments  
+- Interest on Balances with RBI
+- Other Interest Income
+- Other Income (total)
+- Commission and Brokerage
+- Profit on Sale of Investments
+- Profit on Exchange Transactions
+- Miscellaneous Income
+- Interest Expended (total)
+- Interest on Deposits
+- Interest on RBI/Inter-Bank Borrowings
+- Other Interest Expense
+- Operating Expenses (total)
+- Payments to Employees / Staff Cost
+- Rent, Taxes and Lighting
+- Depreciation
+- Other Operating Expenses
+- Provisions and Contingencies (total)
+- Provision for NPAs
+- Provision for Standard Assets
+- Provision for Tax
+- Other Provisions
+- Operating Profit / PBT
+- Tax Expense
+- Net Profit / PAT
+
+For Balance Sheet, extract:
+- Share Capital
+- Reserves and Surplus
+- Deposits (total, also CASA if available)
+- Borrowings (total)
+- Other Liabilities
+- Cash and Bank Balances
+- Investments (total)
+- Advances / Loans (total)
+- Fixed Assets
+- Other Assets
+
+Return ONLY a JSON object with structure:
+{
+  "pnl": {
+    "interest_earned": float,
+    "interest_on_advances": float,
+    "income_on_investments": float,
+    "other_income": float,
+    "commission_brokerage": float,
+    "profit_on_investments": float,
+    "interest_expended": float,
+    "interest_on_deposits": float,
+    "operating_expenses": float,
+    "employee_cost": float,
+    "depreciation": float,
+    "other_opex": float,
+    "provisions_contingencies": float,
+    "provision_for_npa": float,
+    "provision_for_tax": float,
+    "operating_profit": float,
+    "pbt": float,
+    "tax": float,
+    "pat": float
+  },
+  "balance_sheet": {
+    "share_capital": float,
+    "reserves": float,
+    "total_equity": float,
+    "deposits": float,
+    "casa_deposits": float,
+    "borrowings": float,
+    "other_liabilities": float,
+    "total_liabilities": float,
+    "cash_and_bank": float,
+    "investments": float,
+    "advances": float,
+    "fixed_assets": float,
+    "other_assets": float,
+    "total_assets": float
+  },
+  "year": "FY2025 or Mar 2025"
+}
+
+Extract the LATEST year's figures. All amounts in Rs. Crores."""
+
+            user_prompt = f"""Extract detailed P&L and Balance Sheet from this annual report:
+
+{truncated_text}
+
+Return ONLY valid JSON with numerical values in Rs. Crores."""
+
+            response = await claude_service.call_claude(system_prompt, user_prompt, "annual_report_extraction")
+            
+            import json
+            
+            # Try to find JSON in response - allow nested objects
+            json_match = re.search(r'\{[\s\S]*\}', response)
+            if json_match:
+                try:
+                    financials = json.loads(json_match.group())
+                    return financials
+                except:
+                    pass
+            
+            return {}
+            
+        except Exception as e:
+            logger.error(f"Annual report extraction failed: {str(e)}")
+            return {}
+    
+    async def process_annual_reports(self, annual_reports: List[Dict], claude_service, 
+                                    is_bank: bool = True, max_reports: int = 2) -> Dict[str, Any]:
+        """Process annual reports to extract detailed financials"""
+        all_financials = {
+            'reports_processed': 0,
+            'years': [],
+            'detailed_pnl': {},
+            'detailed_bs': {},
+            'latest_year': None
+        }
+        
+        processed = 0
+        
+        for report in annual_reports[:max_reports]:
+            url = report.get('url', '')
+            year_info = report.get('year', 'Unknown')
+            
+            if not url:
+                continue
+            
+            try:
+                # Download PDF
+                year_clean = re.sub(r'[^\w]', '_', year_info)[:20]
+                filepath = self.download_pdf(url, f"annual_{year_clean}.pdf")
+                if not filepath:
+                    continue
+                
+                # Extract text - focus on first 50 pages for financial statements
+                text = self.extract_text_from_pdf(filepath, max_pages=50)
+                if not text or len(text) < 5000:
+                    logger.warning(f"Annual report text too short: {len(text)} chars")
+                    continue
+                
+                # Use AI to extract detailed financials
+                logger.info(f"Extracting detailed financials from {year_info}...")
+                financials = await self.extract_detailed_financials_from_annual_report(text, claude_service, is_bank)
+                
+                if financials:
+                    year = financials.get('year', year_info)
+                    all_financials['years'].append(year)
+                    
+                    if financials.get('pnl'):
+                        all_financials['detailed_pnl'][year] = financials['pnl']
+                    
+                    if financials.get('balance_sheet'):
+                        all_financials['detailed_bs'][year] = financials['balance_sheet']
+                    
+                    if not all_financials['latest_year']:
+                        all_financials['latest_year'] = year
+                    
+                    processed += 1
+                    logger.info(f"Extracted financials for {year}: {len(financials.get('pnl', {}))} P&L items, {len(financials.get('balance_sheet', {}))} BS items")
+                
+                # Clean up
+                try:
+                    os.remove(filepath)
+                except:
+                    pass
+                    
+            except Exception as e:
+                logger.error(f"Error processing annual report: {str(e)}")
+                continue
+        
+        all_financials['reports_processed'] = processed
+        return all_financials
+    
     async def process_presentations(self, presentations: List[Dict], claude_service, 
                                    is_bank: bool = True, max_pdfs: int = 3) -> Dict[str, Any]:
         """Process multiple presentations and aggregate metrics"""
