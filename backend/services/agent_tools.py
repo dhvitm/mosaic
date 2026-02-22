@@ -346,15 +346,27 @@ class ToolExecutor:
             # Get quarterly data
             quarterly_data = await self.scraper.scrape_quarterly_results(ticker)
             
+            # Truncate to recent 5 years only
+            def truncate_dict(d: Dict, max_items: int = 5) -> Dict:
+                if not d:
+                    return d
+                keys = sorted(d.keys())[-max_items:]
+                return {k: d[k] for k in keys}
+            
+            annual_pnl = truncate_dict(annual_data.get("annual_pnl", {}), 5)
+            annual_bs = truncate_dict(annual_data.get("annual_bs", {}), 5)
+            ratios = truncate_dict(annual_data.get("ratios", {}), 5)
+            quarterly = truncate_dict(quarterly_data.get("quarters", {}), 8)
+            
             return {
                 "success": True,
                 "ticker": ticker,
-                "annual_pnl": annual_data.get("annual_pnl", {}),
-                "annual_bs": annual_data.get("annual_bs", {}),
-                "ratios": annual_data.get("ratios", {}),
-                "quarterly": quarterly_data.get("quarters", {}),
-                "years_available": list(annual_data.get("annual_pnl", {}).keys()),
-                "quarters_available": list(quarterly_data.get("quarters", {}).keys())
+                "annual_pnl": annual_pnl,
+                "annual_bs": annual_bs,
+                "ratios": ratios,
+                "quarterly": quarterly,
+                "years_available": list(annual_pnl.keys()),
+                "quarters_available": list(quarterly.keys())
             }
         except Exception as e:
             return {"success": False, "error": str(e)}
