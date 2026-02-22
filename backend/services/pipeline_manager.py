@@ -254,15 +254,18 @@ Return ONLY a JSON object with these exact keys:
     async def _step2_annual_financial_data(self, job_id: str, ticker: str, company_metadata: Dict) -> Dict[str, Any]:
         """Step 2: Extract annual financial statements"""
         await self._update_step(job_id, 2, "in_progress", "Fetching annual financials from Screener.in...")
+        await ws_manager.send_activity(job_id, "data_processing", "Extracting annual P&L and Balance Sheet data...")
         
         try:
             # Check cache first
             cached_data = CacheService.load_step_data(ticker, 2)
             if cached_data:
                 logger.info(f"Using cached step 2 data for {ticker}")
+                await ws_manager.send_activity(job_id, "info", "Found cached financial data, skipping extraction")
                 await self._update_step(job_id, 2, "completed", "Annual financial data extracted (from cache)")
                 return cached_data
             
+            await ws_manager.send_activity(job_id, "llm_thinking", "Claude AI extracting financial statement line items...")
             knowledge_file = self.claude.load_knowledge_file(company_metadata.get('knowledge_file', 'generic.md'))
             
             system_message = f"{knowledge_file}\n\nYou are a financial data extraction agent."
