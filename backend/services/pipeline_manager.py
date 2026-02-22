@@ -905,6 +905,27 @@ Use bullet points for key metrics. Be direct and actionable."""
                 for h in highlights[:4]:
                     highlights_context += f"\n- {h}"
             
+            # ===== NEW: Add concall transcript insights =====
+            concall_context = ""
+            concall_themes = management_commentary.get('concall_themes', []) if management_commentary else []
+            mgmt_outlook = management_commentary.get('management_outlook', []) if management_commentary else []
+            analyst_concerns = management_commentary.get('analyst_concerns', []) if management_commentary else []
+            
+            if concall_themes or mgmt_outlook:
+                concall_context = "\n\nCONCALL INSIGHTS:"
+                if mgmt_outlook:
+                    concall_context += "\nManagement Outlook:"
+                    for m in mgmt_outlook[:3]:
+                        concall_context += f"\n- {m}"
+                if concall_themes:
+                    concall_context += "\nKey Themes:"
+                    for t in concall_themes[:3]:
+                        concall_context += f"\n- {t}"
+                if analyst_concerns:
+                    concall_context += "\nAnalyst Concerns:"
+                    for c in analyst_concerns[:2]:
+                        concall_context += f"\n- {c}"
+            
             # Build strengths/risks context
             strengths_text = ""
             if pros:
