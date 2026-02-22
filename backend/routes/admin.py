@@ -159,3 +159,63 @@ async def delete_knowledge_file(filename: str):
     except Exception as e:
         logger.error(f"Error deleting knowledge file: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/knowledge-gaps")
+async def get_knowledge_gaps():
+    """
+    Get all flagged knowledge gaps for human review.
+    These are gaps identified by the Mosaic agent when it lacks
+    sufficient sector context to make assumptions.
+    """
+    try:
+        gaps_file = KNOWLEDGE_DIR / "knowledge_gaps.json"
+        
+        if not gaps_file.exists():
+            return {"gaps": [], "total": 0, "by_sector": {}}
+        
+        gaps = json.loads(gaps_file.read_text())
+        
+        # Group by sector
+        by_sector = {}
+        for gap in gaps:
+            sector = gap.get("sector", "unknown")
+            if sector not in by_sector:
+                by_sector[sector] = []
+            by_sector[sector].append(gap)
+        
+        return {
+            "gaps": gaps,
+            "total": len(gaps),
+            "by_sector": by_sector
+        }
+    except Exception as e:
+        logger.error(f"Error reading knowledge gaps: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/knowledge-gaps/{index}")
+async def resolve_knowledge_gap(index: int):
+    """
+    Mark a knowledge gap as resolved (removes it from the list)
+    """
+    try:
+        gaps_file = KNOWLEDGE_DIR / "knowledge_gaps.json"
+        
+        if not gaps_file.exists():
+            raise HTTPException(status_code=404, detail="No knowledge gaps file found")
+        
+        gaps = json.loads(gaps_file.read_text())
+        
+        if index < 0 or index >= len(gaps):
+            raise HTTPException(status_code=404, detail="Gap index out of range")
+        
+        removed = gaps.pop(index)
+        gaps_file.write_text(json.dumps(gaps, indent=2))
+        
+        return {"message": "Knowledge gap resolved", "removed": removed}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error resolving knowledge gap: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
