@@ -418,6 +418,13 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
                 {"elapsed_seconds": elapsed, "iterations": loop_count, "tool_calls": len(self._tool_calls_log)}
             )
             
+            # Get the collected analysis data from tool executor
+            collected = self.tool_executor._collected_data
+            
+            # Get stock price for current price
+            stock_price = collected.get("stock_price", {})
+            financials = collected.get("financials", {})
+            
             return {
                 "success": True,
                 "ticker": ticker,
@@ -425,7 +432,15 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
                 "reasoning": final_response,
                 "tool_calls": self._tool_calls_log,
                 "iterations": loop_count,
-                "elapsed_seconds": elapsed
+                "elapsed_seconds": elapsed,
+                # Include analysis data for frontend display
+                "valuation": collected.get("valuation", {}),
+                "thesis": collected.get("thesis", {}),
+                "company_info": collected.get("company_info", {}),
+                "assumptions": collected.get("assumptions", {}),
+                "management_commentary": collected.get("management_commentary", {}),
+                "current_price": stock_price.get("current_price", 0),
+                "market_cap": stock_price.get("market_cap", 0)
             }
             
         except Exception as e:
