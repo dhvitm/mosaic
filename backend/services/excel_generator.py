@@ -44,9 +44,11 @@ class ExcelGenerator:
             
             # Create all sheets with real data
             self._create_cover_sheet(company_name, ticker, data)
-            self._create_assumptions_sheet(data)
             self._create_pnl_sheet(data)
             self._create_balance_sheet(data)
+            self._create_quarterly_sheet(data)
+            self._create_ratios_sheet(data)
+            self._create_assumptions_sheet(data)
             self._create_valuation_sheet(data)
             self._create_thesis_sheet(data)
             self._create_key_metrics_sheet(data)
