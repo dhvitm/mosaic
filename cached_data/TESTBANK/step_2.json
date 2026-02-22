@@ -1,0 +1,11 @@
+{
+  "ticker": "TESTBANK",
+  "step_number": 2,
+  "data": {
+    "annual_pnl": {},
+    "annual_bs": {},
+    "quarterly_results": []
+  },
+  "cached_at": "2026-02-22T08:26:59.298995+00:00",
+  "cache_version": "1.0"
+}

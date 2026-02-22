@@ -1,0 +1,10 @@
+{
+  "ticker": "TESTBANK",
+  "step_number": 3,
+  "data": {
+    "quarterly_data": [],
+    "note": "Operational metrics extraction requires BSE filing access"
+  },
+  "cached_at": "2026-02-22T08:26:59.302038+00:00",
+  "cache_version": "1.0"
+}
