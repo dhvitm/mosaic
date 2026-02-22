@@ -746,7 +746,7 @@ Return ONLY the JSON."""
     async def _step7_thesis_generation(self, job_id: str, company_metadata: Dict,
                                       historical_financials: Dict, assumptions: Dict,
                                       valuation: Dict, management_commentary: Dict = None) -> Dict[str, Any]:
-        """Step 7: Generate investment thesis using all collected data including investor presentations"""
+        """Step 7: Generate investment thesis using all collected data including PDF-extracted metrics"""
         await self._update_step(job_id, 7, "in_progress", "Writing investment thesis...")
         await ws_manager.send_activity(job_id, "llm_thinking", "Claude AI writing investment note...")
         
@@ -761,13 +761,13 @@ Return ONLY the JSON."""
                 await self._update_step(job_id, 7, "completed", "Investment thesis generated (from cache)")
                 return cached_data
             
-            await ws_manager.send_activity(job_id, "data_processing", "Compiling key findings from financials and investor presentations...")
+            await ws_manager.send_activity(job_id, "data_processing", "Compiling key findings from financials, PDFs, and investor presentations...")
             
             # Focused system message
             system_message = """You are a senior equity research analyst at a top investment bank.
 Write concise, professional investment notes in the style of institutional research.
-Use bullet points for key metrics. Be direct and actionable.
-Incorporate insights from investor presentations when available."""
+Use specific metrics and data points from investor presentations.
+Use bullet points for key metrics. Be direct and actionable."""
 
             # Build concise prompt with available data
             target_price = valuation.get('target_price', valuation.get('fair_value', 0))
@@ -779,13 +779,53 @@ Incorporate insights from investor presentations when available."""
             cons = management_commentary.get('cons', []) if management_commentary else []
             presentations = management_commentary.get('bse_presentations', []) if management_commentary else []
             
+            # ===== NEW: Get PDF-extracted metrics =====
+            pdf_metrics = management_commentary.get('pdf_extracted_metrics', {}) if management_commentary else {}
+            latest_metrics = pdf_metrics.get('latest_metrics', {})
+            guidance = management_commentary.get('management_guidance', []) if management_commentary else []
+            highlights = management_commentary.get('key_highlights', []) if management_commentary else []
+            
             # Build context from presentations
             presentation_context = ""
             if presentations:
                 pres_quarters = [p.get('quarter', 'N/A') for p in presentations[:5] if p.get('quarter')]
                 if pres_quarters:
-                    presentation_context = f"\nINVESTOR PRESENTATIONS AVAILABLE: {', '.join(pres_quarters)}"
-                    presentation_context += "\n(Note: PPT links available for detailed operational metrics and management guidance)"
+                    presentation_context = f"\nQUARTERS WITH PRESENTATIONS: {', '.join(pres_quarters)}"
+            
+            # ===== NEW: Add actual metrics from PDF extraction =====
+            metrics_context = ""
+            if latest_metrics:
+                metrics_context = "\n\nKEY METRICS FROM LATEST INVESTOR PRESENTATION:"
+                metric_labels = {
+                    'nim': 'Net Interest Margin',
+                    'casa': 'CASA Ratio',
+                    'gnpa': 'Gross NPA',
+                    'nnpa': 'Net NPA',
+                    'car': 'Capital Adequacy',
+                    'roe': 'ROE',
+                    'roa': 'ROA',
+                    'cost_to_income': 'Cost-to-Income',
+                    'loan_growth': 'Loan Growth',
+                    'deposit_growth': 'Deposit Growth',
+                    'provision_coverage': 'Provision Coverage',
+                }
+                for key, value in latest_metrics.items():
+                    if key in metric_labels and isinstance(value, (int, float)):
+                        metrics_context += f"\n- {metric_labels[key]}: {value:.2f}%"
+            
+            # Add management guidance from PDFs
+            guidance_context = ""
+            if guidance:
+                guidance_context = "\n\nMANAGEMENT GUIDANCE (from investor presentations):"
+                for g in guidance[:4]:
+                    guidance_context += f"\n- {g}"
+            
+            # Add key highlights
+            highlights_context = ""
+            if highlights:
+                highlights_context = "\n\nOPERATIONAL HIGHLIGHTS:"
+                for h in highlights[:4]:
+                    highlights_context += f"\n- {h}"
             
             # Build strengths/risks context
             strengths_text = ""
@@ -796,7 +836,7 @@ Incorporate insights from investor presentations when available."""
             if cons:
                 risks_text = "\nRISKS (from Screener.in):\n" + "\n".join([f"- {c}" for c in cons[:4]])
             
-            user_prompt = f"""Write a brief investment thesis for {company_metadata.get('full_name')} ({ticker}).
+            user_prompt = f"""Write a detailed investment thesis for {company_metadata.get('full_name')} ({ticker}).
 
 KEY DATA:
 - Current Price: ₹{company_metadata.get('current_price', 0):,.2f}
@@ -806,6 +846,9 @@ KEY DATA:
 - Sector: {company_metadata.get('sector', 'N/A')}
 - Market Cap: ₹{company_metadata.get('market_cap', 0):,.0f} Cr
 {presentation_context}
+{metrics_context}
+{guidance_context}
+{highlights_context}
 {strengths_text}
 {risks_text}
 
