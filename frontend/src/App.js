@@ -5,6 +5,7 @@ import Landing from "./pages/Landing";
 import Processing from "./pages/Processing";
 import Results from "./pages/Results";
 import Admin from "./pages/Admin";
+import Jobs from "./pages/Jobs";
 import { Toaster } from "@/components/ui/sonner";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/processing/:jobId" element={<Processing />} />
           <Route path="/results/:jobId" element={<Results />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/jobs" element={<Jobs />} />
         </Routes>
       </BrowserRouter>
       <Toaster />
