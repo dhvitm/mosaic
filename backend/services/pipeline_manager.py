@@ -91,17 +91,30 @@ class PipelineManager:
             excel_path = result.get("excel_path")
             reasoning = result.get("reasoning", "")
             
+            # Get valuation data from agent result
+            valuation = result.get("valuation", {})
+            thesis = result.get("thesis", {})
+            company_info = result.get("company_info", {})
+            
             # Build result data for storage
             result_data = {
-                "company_metadata": {"ticker": ticker},
+                "company_metadata": {
+                    "ticker": ticker,
+                    "sector": company_info.get("sector", ""),
+                    "sub_sector": company_info.get("sub_sector", ""),
+                    "business_description": company_info.get("business_description", ""),
+                    "current_price": result.get("current_price", 0),
+                    "market_cap": result.get("market_cap", 0)
+                },
+                "valuation": valuation,
+                "thesis": thesis,
+                "assumptions": result.get("assumptions", {}),
+                "management_commentary": result.get("management_commentary", {}),
                 "reasoning": reasoning,
                 "tool_calls": result.get("tool_calls", []),
                 "iterations": result.get("iterations", 0),
                 "elapsed_seconds": result.get("elapsed_seconds", 0)
             }
-            
-            # Try to extract valuation and thesis from the final result
-            # The agent stores these in the Excel model data
             
             # Mark job as completed
             await self.db.model_jobs.update_one(
