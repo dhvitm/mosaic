@@ -510,9 +510,36 @@ Market Cap: ₹{company_metadata.get('market_cap', 'N/A')} Cr
             else:
                 data_context += "\nHistorical Financial Data Available: Limited"
 
-            # Add management guidance if available  
-            if management_commentary and management_commentary.get('guidance'):
-                data_context += f"\nManagement Guidance: {management_commentary.get('guidance', [])}"
+            # ===== NEW: Add PDF-extracted metrics for more accurate assumptions =====
+            pdf_metrics = management_commentary.get('pdf_extracted_metrics', {}) if management_commentary else {}
+            latest_metrics = pdf_metrics.get('latest_metrics', {})
+            
+            if latest_metrics:
+                data_context += "\n\nLATEST METRICS FROM INVESTOR PRESENTATION:"
+                for key, value in latest_metrics.items():
+                    if key not in ['guidance', 'key_highlights']:
+                        data_context += f"\n- {key.replace('_', ' ').title()}: {value}"
+            
+            # Add management guidance from PDFs
+            guidance = management_commentary.get('management_guidance', []) if management_commentary else []
+            if guidance:
+                data_context += "\n\nMANAGEMENT GUIDANCE (from investor presentations):"
+                for g in guidance[:5]:
+                    data_context += f"\n- {g}"
+            
+            # Add key highlights from PDFs
+            highlights = management_commentary.get('key_highlights', []) if management_commentary else []
+            if highlights:
+                data_context += "\n\nKEY OPERATIONAL HIGHLIGHTS:"
+                for h in highlights[:5]:
+                    data_context += f"\n- {h}"
+            
+            # Add operational metrics from Screener
+            op_metrics = management_commentary.get('operational_metrics', {}) if management_commentary else {}
+            if op_metrics:
+                data_context += "\n\nOPERATIONAL METRICS:"
+                for key, value in list(op_metrics.items())[:10]:
+                    data_context += f"\n- {key}: {value}"
             
             await ws_manager.send_activity(job_id, "api_call", "Calling Claude API for assumptions generation...")
             
