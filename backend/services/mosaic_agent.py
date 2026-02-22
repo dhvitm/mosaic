@@ -110,6 +110,8 @@ class MosaicAgent:
         """
         Run the agentic loop to build a complete financial model.
         
+        Uses LiteLLM with Emergent's LLM gateway for tool-use capabilities.
+        
         Args:
             ticker: Stock ticker to analyze
             job_id: Job ID for tracking and WebSocket updates
@@ -139,7 +141,11 @@ Today's date: {today}
 Now build the complete financial model for {ticker}. Start by gathering data, then analyze, generate assumptions, run valuation, write thesis, and finally create the Excel model.
 """
         
-        messages = [{"role": "user", "content": primer}]
+        # Initialize messages with system prompt (OpenAI format)
+        messages = [
+            {"role": "system", "content": MOSAIC_SYSTEM_PROMPT},
+            {"role": "user", "content": primer}
+        ]
         
         await ws_manager.send_activity(
             job_id, "agent_start", 
@@ -157,84 +163,102 @@ Now build the complete financial model for {ticker}. Start by gathering data, th
             while loop_count < max_loops:
                 loop_count += 1
                 
-                # Call Claude with tools
+                # Call LLM with tools via LiteLLM
                 try:
-                    response = self.client.messages.create(
-                        model="claude-sonnet-4-5-20250929",
-                        max_tokens=8096,
-                        system=MOSAIC_SYSTEM_PROMPT,
-                        tools=MOSAIC_TOOLS,
-                        messages=messages
-                    )
+                    logger.info(f"Agent loop {loop_count}: calling LLM with {len(messages)} messages")
+                    response = self._call_llm_with_tools(messages, MOSAIC_TOOLS_OPENAI_FORMAT)
                 except Exception as e:
-                    logger.error(f"Claude API error: {str(e)}")
-                    await ws_manager.send_activity(job_id, "error", f"Claude API error: {str(e)[:100]}")
+                    logger.error(f"LLM API error: {str(e)}")
+                    await ws_manager.send_activity(job_id, "error", f"LLM API error: {str(e)[:100]}")
                     raise
                 
-                # Check stop reason
-                if response.stop_reason == "end_turn":
+                # Extract the message from response (OpenAI format)
+                choice = response.choices[0]
+                assistant_message = choice.message
+                finish_reason = choice.finish_reason
+                
+                logger.info(f"Agent loop {loop_count}: finish_reason={finish_reason}")
+                
+                # Check if we're done (no tool calls)
+                if finish_reason == "stop" or not assistant_message.tool_calls:
                     # Extract final text response
-                    for block in response.content:
-                        if hasattr(block, 'text'):
-                            final_response = block.text
+                    final_response = assistant_message.content or ""
+                    logger.info(f"Agent finished with response length: {len(final_response)}")
                     break
                 
-                if response.stop_reason == "tool_use":
-                    tool_results = []
-                    
-                    for block in response.content:
-                        if block.type == "tool_use":
-                            tool_name = block.name
-                            tool_input = block.input
-                            tool_id = block.id
-                            
-                            # Log and broadcast tool call
-                            label = get_tool_label(tool_name, tool_input)
-                            await ws_manager.send_activity(job_id, "tool_call", label, {
-                                "tool": tool_name,
-                                "input_keys": list(tool_input.keys())
-                            })
-                            
-                            # Execute tool
-                            tool_start = time.time()
-                            result = await self.tool_executor.execute(tool_name, tool_input)
-                            tool_duration = time.time() - tool_start
-                            
-                            # Track Excel path
-                            if tool_name == "write_excel_model" and result.get("success"):
-                                excel_path = result.get("file_path")
-                            
-                            # Log tool call
-                            tool_log = {
-                                "tool": tool_name,
-                                "input": tool_input,
-                                "result_success": result.get("success", False),
-                                "duration_seconds": round(tool_duration, 2),
-                                "timestamp": datetime.now(timezone.utc).isoformat()
+                # Handle tool calls (OpenAI format)
+                if assistant_message.tool_calls:
+                    # Add assistant message with tool calls to history
+                    messages.append({
+                        "role": "assistant",
+                        "content": assistant_message.content,
+                        "tool_calls": [
+                            {
+                                "id": tc.id,
+                                "type": "function",
+                                "function": {
+                                    "name": tc.function.name,
+                                    "arguments": tc.function.arguments
+                                }
                             }
-                            self._tool_calls_log.append(tool_log)
-                            
-                            # Broadcast result
-                            status = "✓" if result.get("success", False) else "✗"
-                            await ws_manager.send_activity(
-                                job_id, "tool_result",
-                                f"{status} {tool_name} completed ({tool_duration:.1f}s)",
-                                {"success": result.get("success", False), "duration": tool_duration}
-                            )
-                            
-                            tool_results.append({
-                                "type": "tool_result",
-                                "tool_use_id": tool_id,
-                                "content": json.dumps(result, default=str)
-                            })
+                            for tc in assistant_message.tool_calls
+                        ]
+                    })
                     
-                    # Add assistant response and tool results to messages
-                    messages.append({"role": "assistant", "content": response.content})
-                    messages.append({"role": "user", "content": tool_results})
+                    # Process each tool call
+                    for tool_call in assistant_message.tool_calls:
+                        tool_name = tool_call.function.name
+                        try:
+                            tool_input = json.loads(tool_call.function.arguments)
+                        except json.JSONDecodeError:
+                            tool_input = {}
+                        tool_id = tool_call.id
+                        
+                        # Log and broadcast tool call
+                        label = get_tool_label(tool_name, tool_input)
+                        await ws_manager.send_activity(job_id, "tool_call", label, {
+                            "tool": tool_name,
+                            "input_keys": list(tool_input.keys())
+                        })
+                        
+                        # Execute tool
+                        tool_start = time.time()
+                        result = await self.tool_executor.execute(tool_name, tool_input)
+                        tool_duration = time.time() - tool_start
+                        
+                        # Track Excel path
+                        if tool_name == "write_excel_model" and result.get("success"):
+                            excel_path = result.get("file_path")
+                        
+                        # Log tool call
+                        tool_log = {
+                            "tool": tool_name,
+                            "input": tool_input,
+                            "result_success": result.get("success", False),
+                            "duration_seconds": round(tool_duration, 2),
+                            "timestamp": datetime.now(timezone.utc).isoformat()
+                        }
+                        self._tool_calls_log.append(tool_log)
+                        
+                        # Broadcast result
+                        status = "✓" if result.get("success", False) else "✗"
+                        await ws_manager.send_activity(
+                            job_id, "tool_result",
+                            f"{status} {tool_name} completed ({tool_duration:.1f}s)",
+                            {"success": result.get("success", False), "duration": tool_duration}
+                        )
+                        
+                        # Add tool result to messages (OpenAI format)
+                        messages.append({
+                            "role": "tool",
+                            "tool_call_id": tool_id,
+                            "content": json.dumps(result, default=str)
+                        })
                 
                 else:
-                    # Unknown stop reason
-                    logger.warning(f"Unknown stop reason: {response.stop_reason}")
+                    # No tool calls and not finished - unexpected state
+                    logger.warning(f"Unexpected state: finish_reason={finish_reason}, no tool_calls")
+                    final_response = assistant_message.content or ""
                     break
             
             elapsed = time.time() - start_time
