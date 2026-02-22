@@ -330,14 +330,14 @@ Return ONLY a JSON object with these exact keys:
             raise
     
     async def _step4_management_commentary(self, job_id: str, ticker: str, company_metadata: Dict) -> Dict[str, Any]:
-        """Step 4: Scrape management commentary (pros/cons) from Screener.in"""
-        await self._update_step(job_id, 4, "in_progress", "Scraping management commentary from Screener.in...")
-        await ws_manager.send_activity(job_id, "data_processing", "Extracting pros, cons, and analysis...")
+        """Step 4: Scrape management commentary + enhanced data (peers, shareholding) from Screener.in"""
+        await self._update_step(job_id, 4, "in_progress", "Scraping management commentary and peer data...")
+        await ws_manager.send_activity(job_id, "data_processing", "Extracting pros, cons, peers, shareholding...")
         
         try:
             # Check cache first
             cached_data = CacheService.load_step_data(ticker, 4)
-            if cached_data and (cached_data.get('pros') or cached_data.get('cons')) and cached_data.get('scraped_successfully'):
+            if cached_data and (cached_data.get('pros') or cached_data.get('cons') or cached_data.get('peer_comparison')) and cached_data.get('scraped_successfully'):
                 logger.info(f"Using cached step 4 data for {ticker}")
                 await ws_manager.send_activity(job_id, "info", "Found cached commentary")
                 await self._update_step(job_id, 4, "completed", "Commentary extracted (from cache)")
@@ -345,23 +345,35 @@ Return ONLY a JSON object with these exact keys:
             
             await ws_manager.send_activity(job_id, "api_call", f"Scraping analysis from Screener.in...")
             
-            # Actually scrape commentary
+            # Scrape commentary (pros/cons)
             commentary_data = await self.scraper.scrape_concall_commentary(ticker)
             
-            if not commentary_data.get('scraped_successfully'):
+            # Also get enhanced data (peers, shareholding)
+            await ws_manager.send_activity(job_id, "api_call", "Scraping peer comparison and shareholding...")
+            enhanced_data = await self.scraper._scrape_enhanced_screener_data(ticker)
+            
+            # Merge data
+            commentary_data['peer_comparison'] = enhanced_data.get('peer_comparison', [])
+            commentary_data['shareholding'] = enhanced_data.get('shareholding', {})
+            commentary_data['operational_metrics'] = enhanced_data.get('operational_metrics', {})
+            
+            if not commentary_data.get('scraped_successfully') and not enhanced_data.get('scraped_successfully'):
                 await ws_manager.send_activity(job_id, "error", "Commentary scraping failed")
                 logger.warning(f"Commentary scraping failed for {ticker}")
             else:
+                commentary_data['scraped_successfully'] = True
                 pros_count = len(commentary_data.get('pros', []))
                 cons_count = len(commentary_data.get('cons', []))
-                await ws_manager.send_activity(job_id, "info", f"Scraped {pros_count} pros, {cons_count} cons")
+                peers_count = len(commentary_data.get('peer_comparison', []))
+                await ws_manager.send_activity(job_id, "info", f"Scraped {pros_count} pros, {cons_count} cons, {peers_count} peers")
             
             # Cache the result
             CacheService.save_step_data(ticker, 4, commentary_data)
             
             pros = len(commentary_data.get('pros', []))
             cons = len(commentary_data.get('cons', []))
-            await self._update_step(job_id, 4, "completed", f"Scraped {pros} pros, {cons} cons")
+            peers = len(commentary_data.get('peer_comparison', []))
+            await self._update_step(job_id, 4, "completed", f"Scraped {pros} pros, {cons} cons, {peers} peers")
             return commentary_data
             
         except Exception as e:
