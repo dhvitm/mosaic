@@ -259,58 +259,49 @@ class ExcelGenerator:
         # Determine if we have detailed data from annual reports
         has_detailed = bool(detailed_pnl)
         
+        # Define P&L items with mappings:
+        # (display_name, [screener_keys], [detailed_ar_keys])
+        # AR keys map to the JSON structure from pdf_extractor's extract_detailed_financials_from_annual_report
+        pnl_items = [
+            ('Interest Earned', ['Revenue +', 'Interest Earned', 'Revenue', 'Sales +'], ['interest_earned']),
+            ('Interest on Advances', ['Interest', 'Interest Income'], ['interest_on_advances']),
+            ('Income on Investments', [], ['income_on_investments']),
+            ('Other Income', ['Other Income +', 'Other Income'], ['other_income']),
+            ('Commission & Brokerage', [], ['commission_brokerage']),
+            ('Profit on Investments', [], ['profit_on_investments']),
+            ('Total Income', None, None),  # Calculated
+            ('', None, None),  # Spacer
+            ('Interest Expended', [], ['interest_expended']),
+            ('Interest on Deposits', [], ['interest_on_deposits']),
+            ('Operating Expenses', ['Expenses +', 'Operating Expenses', 'Expenses'], ['operating_expenses']),
+            ('Employee Cost', ['Employee Cost', 'Payments to Employees'], ['employee_cost']),
+            ('Depreciation', ['Depreciation', 'Depreciation and Amortisation'], ['depreciation']),
+            ('Other OpEx', [], ['other_opex']),
+            ('Total Expenses', None, None),  # Calculated
+            ('', None, None),  # Spacer
+            ('Provisions & Contingencies', ['Provisions +', 'Provisions and Contingencies'], ['provisions_contingencies']),
+            ('Provision for NPA', [], ['provision_for_npa']),
+            ('Provision for Tax', [], ['provision_for_tax']),
+            ('Operating Profit', ['Operating Profit'], ['operating_profit']),
+            ('Profit Before Tax', ['Profit before tax', 'PBT'], ['pbt']),
+            ('Tax', ['Tax %', 'Tax', 'Tax Expense'], ['tax']),
+            ('Net Profit', ['Net Profit +', 'Net Profit', 'PAT'], ['pat']),
+            ('EPS (Rs.)', ['EPS in Rs', 'EPS'], []),
+            ('Dividend Payout (%)', ['Dividend Payout %'], []),
+        ]
+        
         if has_detailed:
-            # Use detailed P&L structure from annual report
-            pnl_items = [
-                ('Interest Earned', ['interest_earned']),
-                ('Interest on Advances', ['interest_on_advances']),
-                ('Income on Investments', ['income_on_investments']),
-                ('Other Income', ['other_income']),
-                ('Commission & Brokerage', ['commission_brokerage']),
-                ('Profit on Investments', ['profit_on_investments']),
-                ('Total Income', None),  # Calculated
-                ('', None),  # Spacer
-                ('Interest Expended', ['interest_expended']),
-                ('Interest on Deposits', ['interest_on_deposits']),
-                ('Operating Expenses', ['operating_expenses']),
-                ('Employee Cost', ['employee_cost']),
-                ('Depreciation', ['depreciation']),
-                ('Other OpEx', ['other_opex']),
-                ('Total Expenses', None),  # Calculated
-                ('', None),  # Spacer
-                ('Provisions & Contingencies', ['provisions_contingencies']),
-                ('Provision for NPA', ['provision_for_npa']),
-                ('Provision for Tax', ['provision_for_tax']),
-                ('Operating Profit', ['operating_profit']),
-                ('Profit Before Tax', ['pbt']),
-                ('Tax', ['tax']),
-                ('Net Profit', ['pat']),
-            ]
             logger.info("Using DETAILED P&L from annual reports")
-        else:
-            # Use simplified Screener structure
-            pnl_items = [
-                ('Revenue / Interest Earned', ['Revenue +', 'Interest Earned', 'Revenue', 'Sales +']),
-                ('Interest Income', ['Interest', 'Interest Income']),
-                ('Other Income', ['Other Income +', 'Other Income']),
-                ('Total Income', None),
-                ('', None),
-                ('Operating Expenses', ['Expenses +', 'Operating Expenses', 'Expenses']),
-                ('Depreciation', ['Depreciation', 'Depreciation and Amortisation']),
-                ('Total Expenses', None),
-                ('', None),
-                ('Profit Before Tax', ['Profit before tax', 'PBT']),
-                ('Tax', ['Tax %', 'Tax']),
-                ('Net Profit', ['Net Profit +', 'Net Profit', 'PAT']),
-                ('EPS (Rs.)', ['EPS in Rs', 'EPS']),
-                ('Dividend Payout (%)', ['Dividend Payout %']),
-            ]
         
         row = 5
         forecast_col_start = len(hist_years) + 2
         self.pnl_rows = {}
         
-        for display_name, screener_keys in pnl_items:
+        for item in pnl_items:
+            display_name = item[0]
+            screener_keys = item[1] if len(item) > 1 else None
+            ar_keys = item[2] if len(item) > 2 else None
+            
             if not display_name:  # Spacer row
                 row += 1
                 continue
@@ -327,43 +318,43 @@ class ExcelGenerator:
             self.pnl_rows[key] = row
             
             # Fill historical data
-            if screener_keys:
-                if has_detailed and detailed_pnl:
-                    # Use detailed data from annual report (usually just latest year)
-                    for year, year_data in detailed_pnl.items():
-                        # Find matching column
+            if screener_keys is not None or ar_keys is not None:
+                # First, fill from Screener data (which covers more years)
+                if annual_pnl and screener_keys:
+                    for col_idx, year in enumerate(hist_years, start=2):
+                        year_data = annual_pnl.get(year, {})
+                        cell = ws.cell(row=row, column=col_idx)
+                        
+                        value = None
+                        for skey in screener_keys:
+                            if skey in year_data:
+                                value = year_data[skey]
+                                break
+                        
+                        if value is not None:
+                            cell.value = value
+                            cell.number_format = '#,##0.00'
+                        cell.border = THIN_BORDER
+                        cell.font = NUMBER_FONT
+                        cell.alignment = Alignment(horizontal='right')
+                
+                # Then, overlay with detailed AR data (prioritize this for latest year)
+                if has_detailed and detailed_pnl and ar_keys:
+                    for ar_year, ar_data in detailed_pnl.items():
+                        # Find matching column for this AR year
                         for col_idx, hist_year in enumerate(hist_years, start=2):
-                            if year in hist_year or hist_year in year:
-                                for key in screener_keys:
-                                    if key in year_data:
+                            # Match year (e.g., "FY2025" matches "Mar 2025", "2025" matches "Mar 2025")
+                            if self._year_matches(ar_year, hist_year):
+                                # Look for value in AR data
+                                for ar_key in ar_keys:
+                                    if ar_key in ar_data and ar_data[ar_key] is not None:
                                         cell = ws.cell(row=row, column=col_idx)
-                                        cell.value = year_data[key]
+                                        cell.value = ar_data[ar_key]
                                         cell.number_format = '#,##0.00'
                                         cell.border = THIN_BORDER
                                         cell.font = NUMBER_FONT
                                         cell.alignment = Alignment(horizontal='right')
                                         break
-                
-                # Also fill from Screener data (which covers more years)
-                if annual_pnl:
-                    for col_idx, year in enumerate(hist_years, start=2):
-                        year_data = annual_pnl.get(year, {})
-                        
-                        # Only fill if cell is empty
-                        cell = ws.cell(row=row, column=col_idx)
-                        if cell.value is None:
-                            value = None
-                            for key in screener_keys:
-                                if key in year_data:
-                                    value = year_data[key]
-                                    break
-                            
-                            if value is not None:
-                                cell.value = value
-                                cell.number_format = '#,##0.00'
-                            cell.border = THIN_BORDER
-                            cell.font = NUMBER_FONT
-                            cell.alignment = Alignment(horizontal='right')
             
             # Fill calculated fields for historical years
             elif display_name == 'Total Income' and annual_pnl:
