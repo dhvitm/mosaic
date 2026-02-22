@@ -91,12 +91,17 @@ class PDFExtractor:
             
             logger.info(f"Downloading PDF from: {url[:80]}...")
             
-            response = requests.get(url, headers=self.headers, timeout=30, allow_redirects=True)
+            # Shorter timeout for faster failure
+            response = requests.get(url, headers=self.headers, timeout=20, allow_redirects=True)
             
             if response.status_code == 200:
                 # Check if it's actually a PDF
                 content_type = response.headers.get('content-type', '')
                 if 'pdf' in content_type.lower() or url.lower().endswith('.pdf'):
+                    # Skip very large PDFs (>15MB) to save time
+                    if len(response.content) > 15 * 1024 * 1024:
+                        logger.warning(f"PDF too large ({len(response.content) / 1024 / 1024:.1f}MB), skipping")
+                        return None
                     with open(filepath, 'wb') as f:
                         f.write(response.content)
                     logger.info(f"Downloaded PDF: {filepath} ({len(response.content)} bytes)")
@@ -108,6 +113,9 @@ class PDFExtractor:
                 logger.warning(f"Failed to download PDF: HTTP {response.status_code}")
                 return None
                 
+        except requests.Timeout:
+            logger.warning(f"Timeout downloading PDF from {url[:50]}...")
+            return None
         except Exception as e:
             logger.error(f"Error downloading PDF: {str(e)}")
             return None
