@@ -157,37 +157,66 @@ class ScraperService:
     
     async def get_current_market_price(self, ticker: str) -> Dict[str, Any]:
         """
-        Get the current market price for a ticker from Screener.in.
-        This is a dedicated method for fetching just the price for valuation purposes.
+        Get the current market price for a ticker.
+        Uses Yahoo Finance API for reliable data (no scraping needed).
+        Falls back to Screener.in scraping if yfinance fails.
         """
+        result = {
+            'ticker': ticker,
+            'current_price': None,
+            'price_fetched_at': None,
+            'market_cap': None,
+            'book_value': None,
+            'pe_ratio': None,
+            'source': None
+        }
+        
+        # Try Yahoo Finance first (most reliable)
+        try:
+            import yfinance as yf
+            from datetime import datetime, timezone
+            
+            # NSE tickers use .NS suffix, BSE use .BO
+            yf_ticker = yf.Ticker(f"{ticker}.NS")
+            info = yf_ticker.info
+            
+            if info.get('currentPrice') or info.get('regularMarketPrice'):
+                result['current_price'] = info.get('currentPrice') or info.get('regularMarketPrice')
+                result['price_fetched_at'] = datetime.now(timezone.utc).isoformat()
+                result['source'] = 'yahoo_finance'
+                
+                # Get additional data
+                if info.get('marketCap'):
+                    result['market_cap'] = info.get('marketCap') / 10000000  # Convert to Cr
+                if info.get('bookValue'):
+                    result['book_value'] = info.get('bookValue')
+                if info.get('trailingPE'):
+                    result['pe_ratio'] = info.get('trailingPE')
+                
+                logger.info(f"Got price for {ticker} from Yahoo Finance: Rs.{result['current_price']}")
+                return result
+        except Exception as e:
+            logger.warning(f"Yahoo Finance failed for {ticker}: {str(e)}")
+        
+        # Fallback to Screener.in scraping
         try:
             await self.initialize()
             url = f"https://www.screener.in/company/{ticker}/consolidated/"
             
             page = await self.context.new_page()
-            logger.info(f"Fetching current price for {ticker} from Screener.in")
+            logger.info(f"Fetching current price for {ticker} from Screener.in (fallback)")
             
             try:
-                response = await page.goto(url, wait_until='domcontentloaded', timeout=20000)
+                response = await page.goto(url, wait_until='networkidle', timeout=20000)
                 
                 if response.status == 404:
                     await page.close()
-                    return {'current_price': None, 'error': 'Ticker not found'}
+                    return result
                 
-                await page.wait_for_selector('.number', timeout=10000)
                 await asyncio.sleep(1)
                 
                 content = await page.content()
                 soup = BeautifulSoup(content, 'html.parser')
-                
-                result = {
-                    'ticker': ticker,
-                    'current_price': None,
-                    'price_fetched_at': None,
-                    'market_cap': None,
-                    'book_value': None,
-                    'pe_ratio': None
-                }
                 
                 # Get current price - usually the first big number
                 price_elem = soup.find('span', class_='number')
@@ -196,6 +225,7 @@ class ScraperService:
                         result['current_price'] = float(price_elem.text.strip().replace(',', ''))
                         from datetime import datetime, timezone
                         result['price_fetched_at'] = datetime.now(timezone.utc).isoformat()
+                        result['source'] = 'screener_in'
                     except:
                         pass
                 
@@ -225,17 +255,17 @@ class ScraperService:
                                 pass
                 
                 await page.close()
-                logger.info(f"Fetched current price for {ticker}: Rs.{result['current_price']}")
+                logger.info(f"Fetched current price for {ticker} from Screener: Rs.{result['current_price']}")
                 return result
                 
             except Exception as e:
                 logger.error(f"Error fetching price for {ticker}: {str(e)}")
                 await page.close()
-                return {'current_price': None, 'error': str(e)}
+                return result
                 
         except Exception as e:
             logger.error(f"Failed to get current price for {ticker}: {str(e)}")
-            return {'current_price': None, 'error': str(e)}
+            return result
     
     async def scrape_annual_financials(self, ticker: str) -> Dict[str, Any]:
         """
