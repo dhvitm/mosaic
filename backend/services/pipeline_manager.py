@@ -332,20 +332,20 @@ Return ONLY a JSON object with these exact keys:
             raise
     
     async def _step4_management_commentary(self, job_id: str, ticker: str, company_metadata: Dict) -> Dict[str, Any]:
-        """Step 4: Scrape management commentary + enhanced data (peers, shareholding, BSE presentations)"""
+        """Step 4: Scrape management commentary + presentations + extract metrics from PDFs"""
         await self._update_step(job_id, 4, "in_progress", "Scraping management commentary and investor presentations...")
-        await ws_manager.send_activity(job_id, "data_processing", "Extracting pros, cons, peers, shareholding, BSE filings...")
+        await ws_manager.send_activity(job_id, "data_processing", "Extracting pros, cons, peers, investor presentations...")
         
         try:
             # Check cache first
             cached_data = CacheService.load_step_data(ticker, 4)
-            if cached_data and (cached_data.get('pros') or cached_data.get('cons') or cached_data.get('peer_comparison') or cached_data.get('bse_presentations')) and cached_data.get('scraped_successfully'):
+            if cached_data and cached_data.get('scraped_successfully') and cached_data.get('pdf_metrics_extracted'):
                 logger.info(f"Using cached step 4 data for {ticker}")
-                await ws_manager.send_activity(job_id, "info", "Found cached commentary and presentations")
+                await ws_manager.send_activity(job_id, "info", "Found cached commentary with PDF metrics")
                 await self._update_step(job_id, 4, "completed", "Commentary extracted (from cache)")
                 return cached_data
             
-            await ws_manager.send_activity(job_id, "api_call", f"Scraping analysis from Screener.in...")
+            await ws_manager.send_activity(job_id, "api_call", "Scraping analysis from Screener.in...")
             
             # Scrape commentary (pros/cons)
             commentary_data = await self.scraper.scrape_concall_commentary(ticker)
@@ -354,27 +354,61 @@ Return ONLY a JSON object with these exact keys:
             await ws_manager.send_activity(job_id, "api_call", "Scraping peer comparison and shareholding...")
             enhanced_data = await self.scraper._scrape_enhanced_screener_data(ticker)
             
-            # NEW: Scrape BSE investor presentations
-            await ws_manager.send_activity(job_id, "api_call", "Scraping BSE India for investor presentations...")
+            # Scrape investor presentations from Screener Documents
+            await ws_manager.send_activity(job_id, "api_call", "Scraping investor presentations from Screener...")
             bse_code = company_metadata.get('bse_code', '')
             company_name = company_metadata.get('full_name', '')
-            bse_data = await self.scraper.scrape_bse_investor_presentation(ticker, bse_code, company_name)
+            pres_data = await self.scraper.scrape_bse_investor_presentation(ticker, bse_code, company_name)
             
             # Merge all data
             commentary_data['peer_comparison'] = enhanced_data.get('peer_comparison', [])
             commentary_data['shareholding'] = enhanced_data.get('shareholding', {})
             commentary_data['operational_metrics'] = enhanced_data.get('operational_metrics', {})
             
-            # Add BSE data
-            commentary_data['bse_presentations'] = bse_data.get('presentations', [])
-            commentary_data['presentation_summaries'] = bse_data.get('presentation_summaries', [])
+            # Add presentation data
+            commentary_data['bse_presentations'] = pres_data.get('presentations', [])
+            commentary_data['presentation_summaries'] = pres_data.get('presentation_summaries', [])
+            commentary_data['transcripts'] = pres_data.get('transcripts', [])
+            commentary_data['annual_reports'] = pres_data.get('annual_reports', [])
             
-            # Merge operational metrics from BSE (if any)
-            bse_metrics = bse_data.get('operational_metrics', {})
-            if bse_metrics:
-                commentary_data['operational_metrics'].update(bse_metrics)
+            # ===== NEW: Extract metrics from PDF presentations =====
+            presentations = commentary_data.get('bse_presentations', [])
+            if presentations:
+                await ws_manager.send_activity(job_id, "data_processing", f"Downloading and parsing {min(len(presentations), 3)} investor presentation PDFs...")
+                
+                # Determine if it's a bank
+                sector = company_metadata.get('sector', '').lower()
+                is_bank = 'bank' in sector or 'financ' in sector or 'nbfc' in sector
+                
+                # Process PDFs and extract metrics
+                pdf_metrics = await self.pdf_extractor.process_presentations(
+                    presentations, 
+                    self.claude, 
+                    is_bank=is_bank,
+                    max_pdfs=3  # Limit to 3 PDFs to save time
+                )
+                
+                commentary_data['pdf_extracted_metrics'] = pdf_metrics
+                commentary_data['pdf_metrics_extracted'] = pdf_metrics.get('extracted_from_pdfs', 0) > 0
+                
+                # Merge extracted metrics into operational_metrics
+                if pdf_metrics.get('latest_metrics'):
+                    commentary_data['operational_metrics'].update(pdf_metrics['latest_metrics'])
+                
+                # Add guidance and highlights
+                commentary_data['management_guidance'] = pdf_metrics.get('guidance', [])
+                commentary_data['key_highlights'] = pdf_metrics.get('key_highlights', [])
+                
+                await ws_manager.send_activity(
+                    job_id, "info", 
+                    f"Extracted metrics from {pdf_metrics.get('extracted_from_pdfs', 0)} PDFs: "
+                    f"{len(pdf_metrics.get('latest_metrics', {}))} metrics found"
+                )
+            else:
+                commentary_data['pdf_metrics_extracted'] = False
+                commentary_data['pdf_extracted_metrics'] = {}
             
-            if not commentary_data.get('scraped_successfully') and not enhanced_data.get('scraped_successfully') and not bse_data.get('scraped_successfully'):
+            if not commentary_data.get('scraped_successfully') and not enhanced_data.get('scraped_successfully'):
                 await ws_manager.send_activity(job_id, "error", "Commentary scraping failed")
                 logger.warning(f"Commentary scraping failed for {ticker}")
             else:
@@ -383,7 +417,11 @@ Return ONLY a JSON object with these exact keys:
                 cons_count = len(commentary_data.get('cons', []))
                 peers_count = len(commentary_data.get('peer_comparison', []))
                 pres_count = len(commentary_data.get('bse_presentations', []))
-                await ws_manager.send_activity(job_id, "info", f"Scraped {pros_count} pros, {cons_count} cons, {peers_count} peers, {pres_count} BSE filings")
+                pdf_count = commentary_data.get('pdf_extracted_metrics', {}).get('extracted_from_pdfs', 0)
+                await ws_manager.send_activity(
+                    job_id, "info", 
+                    f"Scraped {pros_count} pros, {cons_count} cons, {peers_count} peers, {pres_count} presentations, {pdf_count} PDFs parsed"
+                )
             
             # Cache the result
             CacheService.save_step_data(ticker, 4, commentary_data)
@@ -392,7 +430,8 @@ Return ONLY a JSON object with these exact keys:
             cons = len(commentary_data.get('cons', []))
             peers = len(commentary_data.get('peer_comparison', []))
             pres = len(commentary_data.get('bse_presentations', []))
-            await self._update_step(job_id, 4, "completed", f"Scraped {pros} pros, {cons} cons, {peers} peers, {pres} presentations")
+            pdfs = commentary_data.get('pdf_extracted_metrics', {}).get('extracted_from_pdfs', 0)
+            await self._update_step(job_id, 4, "completed", f"Scraped {pros} pros, {cons} cons, {peers} peers, {pres} presentations, {pdfs} PDFs parsed")
             return commentary_data
             
         except Exception as e:
