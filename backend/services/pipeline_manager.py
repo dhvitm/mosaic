@@ -60,26 +60,27 @@ class PipelineManager:
                 operational_data, management_commentary
             )
             
-            # Step 6: Excel Model Generation
-            excel_path = await self._step6_excel_generation(
-                job_id, company_metadata, historical_financials,
-                operational_data, assumptions
-            )
+            # Step 6: Valuation (moved before Excel)
+            valuation = await self._step6_valuation(job_id, company_metadata, assumptions)
             
-            # Step 7: Valuation
-            valuation = await self._step7_valuation(job_id, company_metadata, assumptions)
-            
-            # Step 8: Thesis Generation
-            thesis = await self._step8_thesis_generation(
+            # Step 7: Thesis Generation (moved before Excel)
+            thesis = await self._step7_thesis_generation(
                 job_id, company_metadata, historical_financials,
                 assumptions, valuation
+            )
+            
+            # Step 8: Excel Model Generation (now last, with all data)
+            excel_path = await self._step8_excel_generation(
+                job_id, ticker, company_metadata, historical_financials,
+                operational_data, assumptions, valuation, thesis
             )
             
             # Mark job as completed
             await self._complete_job(job_id, excel_path, {
                 'company_metadata': company_metadata,
                 'valuation': valuation,
-                'thesis': thesis
+                'thesis': thesis,
+                'assumptions': assumptions
             })
             
             logger.info(f"Pipeline completed successfully for job {job_id}")
