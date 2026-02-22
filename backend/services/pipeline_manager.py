@@ -455,12 +455,12 @@ Return ONLY a JSON object with these exact keys:
             # ===== NEW: Process Concall Transcripts (last 4 quarters) =====
             transcripts = commentary_data.get('transcripts', [])
             if transcripts:
-                await ws_manager.send_activity(job_id, "data_processing", f"Parsing {min(len(transcripts), 4)} concall transcripts...")
+                await ws_manager.send_activity(job_id, "data_processing", f"Parsing {min(len(transcripts), 2)} concall transcripts...")
                 
                 transcript_data = await self.pdf_extractor.process_concall_transcripts(
                     transcripts,
                     self.claude,
-                    max_transcripts=4  # Last 4 quarters as per user request
+                    max_transcripts=2  # Reduced from 4 to 2 for speed
                 )
                 
                 commentary_data['transcript_insights'] = transcript_data
