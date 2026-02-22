@@ -621,63 +621,8 @@ class ExcelGenerator:
         ws.column_dimensions['A'].width = 22
         for i in range(2, len(all_years) + 2):
             ws.column_dimensions[get_column_letter(i)].width = 14
-                    
-                    value = None
-                    for key in bs_keys.get(item_key, [item_name]):
-                        if key in year_data:
-                            value = year_data[key]
-                            break
-                    
-                    cell = ws.cell(row=row, column=col_idx)
-                    if value is not None:
-                        cell.value = value
-                        cell.number_format = '#,##0.00'
-                    cell.border = THIN_BORDER
-                    cell.font = NUMBER_FONT
-                    cell.alignment = Alignment(horizontal='right')
-            
-            # Forecast formulas
-            for fc_idx, fc_year in enumerate(self.forecast_years):
-                col_idx = forecast_col_start + fc_idx
-                cell = ws.cell(row=row, column=col_idx)
-                prev_col = get_column_letter(col_idx - 1)
-                curr_col = get_column_letter(col_idx)
-                
-                if item_key == 'share_capital':
-                    # Share capital stays constant
-                    cell.value = f"={prev_col}{row}"
-                    
-                elif item_key == 'reserves':
-                    # Reserves = Previous + Retained Earnings (PAT - Dividends)
-                    pat_row = self.pnl_rows.get('pat')
-                    div_ref = self.assumption_refs.get('dividend_payout', {}).get(fc_year)
-                    if pat_row and div_ref:
-                        cell.value = f"={prev_col}{row}+'P&L'!{curr_col}{pat_row}*(1-{div_ref}/100)"
-                    elif pat_row:
-                        cell.value = f"={prev_col}{row}+'P&L'!{curr_col}{pat_row}*0.7"
-                    else:
-                        cell.value = f"={prev_col}{row}*1.08"
-                        
-                elif item_key == 'total_equity':
-                    # Total Equity = Share Capital + Reserves
-                    sc_row = self.bs_rows.get('share_capital')
-                    res_row = self.bs_rows.get('reserves')
-                    if sc_row and res_row:
-                        cell.value = f"={curr_col}{sc_row}+{curr_col}{res_row}"
-                    else:
-                        cell.value = f"={prev_col}{row}*1.08"
-                    cell.font = Font(bold=True)
-                    
-                elif item_key == 'borrowings':
-                    # Borrowings grow moderately
-                    cell.value = f"={prev_col}{row}*1.08"
-                    
-                elif item_key == 'other_liabilities':
-                    cell.value = f"={prev_col}{row}*1.06"
-                    
-                elif item_key == 'total_liabilities':
-                    # Total = Borrowings + Other
-                    borr_row = self.bs_rows.get('borrowings')
+    
+    def _create_roe_tree_sheet(self, data: Dict[str, Any]):
                     oth_row = self.bs_rows.get('other_liabilities')
                     if borr_row and oth_row:
                         cell.value = f"={curr_col}{borr_row}+{curr_col}{oth_row}"
