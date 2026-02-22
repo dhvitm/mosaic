@@ -304,15 +304,18 @@ Return JSON with:
     async def _step3_operational_metrics(self, job_id: str, ticker: str, company_metadata: Dict) -> Dict[str, Any]:
         """Step 3: Extract quarterly operational metrics"""
         await self._update_step(job_id, 3, "in_progress", "Extracting quarterly metrics...")
+        await ws_manager.send_activity(job_id, "data_processing", "Fetching operational KPIs from investor presentations...")
         
         try:
             # Check cache first
             cached_data = CacheService.load_step_data(ticker, 3)
             if cached_data:
                 logger.info(f"Using cached step 3 data for {ticker}")
+                await ws_manager.send_activity(job_id, "info", "Found cached operational metrics")
                 await self._update_step(job_id, 3, "completed", "Operational metrics extracted (from cache)", cached_data)
                 return cached_data
             
+            await ws_manager.send_activity(job_id, "info", "Generating operational metrics structure...")
             # Mock operational data for now
             operational_data = {
                 "quarterly_data": [],
