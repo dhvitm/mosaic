@@ -155,6 +155,88 @@ class ScraperService:
                 'fallback_mode': True
             }
     
+    async def get_current_market_price(self, ticker: str) -> Dict[str, Any]:
+        """
+        Get the current market price for a ticker from Screener.in.
+        This is a dedicated method for fetching just the price for valuation purposes.
+        """
+        try:
+            await self.initialize()
+            url = f"https://www.screener.in/company/{ticker}/consolidated/"
+            
+            page = await self.context.new_page()
+            logger.info(f"Fetching current price for {ticker} from Screener.in")
+            
+            try:
+                response = await page.goto(url, wait_until='domcontentloaded', timeout=20000)
+                
+                if response.status == 404:
+                    await page.close()
+                    return {'current_price': None, 'error': 'Ticker not found'}
+                
+                await page.wait_for_selector('.number', timeout=10000)
+                await asyncio.sleep(1)
+                
+                content = await page.content()
+                soup = BeautifulSoup(content, 'html.parser')
+                
+                result = {
+                    'ticker': ticker,
+                    'current_price': None,
+                    'price_fetched_at': None,
+                    'market_cap': None,
+                    'book_value': None,
+                    'pe_ratio': None
+                }
+                
+                # Get current price - usually the first big number
+                price_elem = soup.find('span', class_='number')
+                if price_elem:
+                    try:
+                        result['current_price'] = float(price_elem.text.strip().replace(',', ''))
+                        from datetime import datetime, timezone
+                        result['price_fetched_at'] = datetime.now(timezone.utc).isoformat()
+                    except:
+                        pass
+                
+                # Extract other key metrics
+                ratio_sections = soup.find_all('li', class_='flex flex-space-between')
+                for section in ratio_sections:
+                    name_elem = section.find('span', class_='name')
+                    value_elem = section.find('span', class_='number')
+                    if name_elem and value_elem:
+                        name = name_elem.text.strip()
+                        value = value_elem.text.strip()
+                        
+                        if 'Market Cap' in name:
+                            try:
+                                result['market_cap'] = float(value.replace(',', '').replace('Cr.', '').strip())
+                            except:
+                                pass
+                        elif 'Stock P/E' in name:
+                            try:
+                                result['pe_ratio'] = float(value)
+                            except:
+                                pass
+                        elif 'Book Value' in name:
+                            try:
+                                result['book_value'] = float(value.replace(',', ''))
+                            except:
+                                pass
+                
+                await page.close()
+                logger.info(f"Fetched current price for {ticker}: Rs.{result['current_price']}")
+                return result
+                
+            except Exception as e:
+                logger.error(f"Error fetching price for {ticker}: {str(e)}")
+                await page.close()
+                return {'current_price': None, 'error': str(e)}
+                
+        except Exception as e:
+            logger.error(f"Failed to get current price for {ticker}: {str(e)}")
+            return {'current_price': None, 'error': str(e)}
+    
     async def scrape_annual_financials(self, ticker: str) -> Dict[str, Any]:
         """
         Scrape annual P&L and Balance Sheet from Screener.in
