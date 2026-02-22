@@ -239,6 +239,21 @@ Return ONLY a JSON object with these exact keys:
                         "face_value": 10.0
                     }
             
+            # Fetch current market price (always get fresh price)
+            await ws_manager.send_activity(job_id, "api_call", "Fetching current market price...")
+            price_data = await self.scraper.get_current_market_price(ticker)
+            
+            if price_data.get('current_price'):
+                metadata['current_price'] = price_data['current_price']
+                metadata['price_fetched_at'] = price_data.get('price_fetched_at')
+                if price_data.get('market_cap'):
+                    metadata['market_cap'] = price_data['market_cap']
+                if price_data.get('book_value'):
+                    metadata['book_value'] = price_data['book_value']
+                if price_data.get('pe_ratio'):
+                    metadata['pe_ratio'] = price_data['pe_ratio']
+                await ws_manager.send_activity(job_id, "info", f"Current price: ₹{price_data['current_price']:,.2f}")
+            
             # Cache the result
             CacheService.save_step_data(ticker, 1, metadata)
             
