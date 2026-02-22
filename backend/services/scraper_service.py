@@ -429,22 +429,17 @@ class ScraperService:
                 'error': str(e)
             }
     
-    async def scrape_bse_investor_presentation(self, ticker: str, company_name: str = None) -> Dict[str, Any]:
+    async def scrape_bse_investor_presentation(self, ticker: str, bse_code: str = None, company_name: str = None) -> Dict[str, Any]:
         """
-        Scrape investor presentations from BSE India for operational metrics
+        Scrape investor presentations from BSE India corporate filings
+        Uses BSE's announcement search to find quarterly investor presentations
         """
         try:
             await self.initialize()
             
-            # BSE search URL - we'll search for the company
-            search_term = company_name or ticker
-            url = f"https://www.bseindia.com/stock-share-price/{ticker.lower()}/"
-            
-            page = await self.context.new_page()
-            logger.info(f"Attempting to scrape BSE investor presentations for {ticker}")
-            
             data = {
                 'presentations': [],
+                'presentation_summaries': [],
                 'operational_metrics': {},
                 'guidance': [],
                 'segment_data': {},
@@ -452,35 +447,225 @@ class ScraperService:
                 'scraped_successfully': False
             }
             
+            page = await self.context.new_page()
+            logger.info(f"Scraping BSE investor presentations for {ticker} (BSE: {bse_code})")
+            
             try:
-                # Try BSE announcements page
-                announcements_url = f"https://www.bseindia.com/corporates/ann.html"
-                await page.goto(announcements_url, wait_until='domcontentloaded', timeout=30000)
-                await asyncio.sleep(2)
+                # First, try to find BSE code if not provided
+                if not bse_code:
+                    bse_code = await self._find_bse_code(ticker, company_name)
                 
-                # Search for company - this is complex due to BSE's dynamic nature
-                # For now, we'll extract what we can from Screener's data which often includes
-                # information derived from investor presentations
+                if not bse_code:
+                    logger.warning(f"Could not find BSE code for {ticker}, falling back to Screener")
+                    await page.close()
+                    return await self._scrape_enhanced_screener_data(ticker)
+                
+                # BSE Corporate Announcements API endpoint
+                # Using their corporate filings page which lists all announcements
+                base_url = "https://www.bseindia.com/corporates/ann.html"
+                
+                await page.goto(base_url, wait_until='networkidle', timeout=45000)
+                await asyncio.sleep(3)
+                
+                # Try to search for the company using BSE code
+                try:
+                    # BSE has a search input - try to use it
+                    search_input = await page.query_selector('input[type="text"]')
+                    if search_input:
+                        await search_input.fill(bse_code)
+                        await asyncio.sleep(1)
+                        
+                        # Look for search/submit button
+                        submit_btn = await page.query_selector('input[type="submit"], button[type="submit"]')
+                        if submit_btn:
+                            await submit_btn.click()
+                            await asyncio.sleep(3)
+                except Exception as e:
+                    logger.debug(f"Search interaction failed: {str(e)}")
+                
+                content = await page.content()
+                soup = BeautifulSoup(content, 'html.parser')
+                
+                # Look for investor presentation links in the page
+                presentations = []
+                
+                # Search for links containing keywords
+                all_links = soup.find_all('a', href=True)
+                for link in all_links:
+                    href = link.get('href', '').lower()
+                    text = link.text.strip().lower()
+                    
+                    # Keywords that indicate investor presentations
+                    ppt_keywords = ['investor', 'presentation', 'ppt', 'quarterly', 'results']
+                    
+                    if any(kw in text for kw in ppt_keywords) or any(kw in href for kw in ppt_keywords):
+                        full_url = href if href.startswith('http') else f"https://www.bseindia.com{href}"
+                        presentations.append({
+                            'title': link.text.strip()[:100],
+                            'url': full_url,
+                            'type': 'investor_presentation'
+                        })
+                
+                # Also try the specific company page on BSE
+                company_url = f"https://www.bseindia.com/stock-share-price/{ticker.lower()}/{bse_code}"
+                
+                try:
+                    await page.goto(company_url, wait_until='domcontentloaded', timeout=30000)
+                    await asyncio.sleep(2)
+                    
+                    content = await page.content()
+                    soup = BeautifulSoup(content, 'html.parser')
+                    
+                    # Look for announcements or corporate filings section
+                    announcement_links = soup.find_all('a', href=True)
+                    
+                    for link in announcement_links:
+                        href = link.get('href', '')
+                        text = link.text.strip().lower()
+                        
+                        if 'pdf' in href.lower() or 'investor' in text or 'presentation' in text:
+                            full_url = href if href.startswith('http') else f"https://www.bseindia.com{href}"
+                            if full_url not in [p['url'] for p in presentations]:
+                                presentations.append({
+                                    'title': link.text.strip()[:100] or 'Investor Presentation',
+                                    'url': full_url,
+                                    'type': 'corporate_filing'
+                                })
+                    
+                    # Extract any visible financial metrics from the page
+                    tables = soup.find_all('table')
+                    for table in tables:
+                        # Look for tables with financial data
+                        table_text = table.text.lower()
+                        if any(kw in table_text for kw in ['nim', 'casa', 'npa', 'gnpa', 'nnpa', 'car', 'roe', 'roa']):
+                            # Parse this table for operational metrics
+                            rows = table.find_all('tr')
+                            for row in rows:
+                                cells = row.find_all(['td', 'th'])
+                                if len(cells) >= 2:
+                                    label = cells[0].text.strip()
+                                    value = cells[-1].text.strip()
+                                    
+                                    # Store relevant metrics
+                                    metric_keywords = {
+                                        'nim': 'net_interest_margin',
+                                        'casa': 'casa_ratio',
+                                        'gnpa': 'gross_npa',
+                                        'nnpa': 'net_npa',
+                                        'car': 'capital_adequacy',
+                                        'roe': 'return_on_equity',
+                                        'roa': 'return_on_assets',
+                                        'crar': 'capital_adequacy'
+                                    }
+                                    
+                                    for kw, metric_name in metric_keywords.items():
+                                        if kw in label.lower():
+                                            try:
+                                                data['operational_metrics'][metric_name] = float(value.replace('%', '').replace(',', '').strip())
+                                            except:
+                                                data['operational_metrics'][metric_name] = value
+                
+                except Exception as e:
+                    logger.debug(f"Company page scraping failed: {str(e)}")
                 
                 await page.close()
                 
-                # Fall back to enhanced Screener scraping for operational metrics
-                return await self._scrape_enhanced_screener_data(ticker)
+                # Deduplicate presentations
+                seen_urls = set()
+                unique_presentations = []
+                for p in presentations[:10]:  # Limit to 10
+                    if p['url'] not in seen_urls:
+                        seen_urls.add(p['url'])
+                        unique_presentations.append(p)
+                
+                data['presentations'] = unique_presentations
+                data['scraped_successfully'] = bool(presentations) or bool(data['operational_metrics'])
+                
+                logger.info(f"BSE scraping complete: {len(unique_presentations)} presentations, {len(data['operational_metrics'])} metrics")
+                
+                # If we got presentations, try to extract summaries from a few
+                if unique_presentations and len(unique_presentations) > 0:
+                    data['presentation_summaries'] = await self._extract_presentation_summaries(unique_presentations[:3])
+                
+                return data
                 
             except Exception as e:
                 logger.warning(f"BSE scraping failed for {ticker}: {str(e)}")
                 await page.close()
-                return data
+                # Fall back to enhanced Screener scraping
+                return await self._scrape_enhanced_screener_data(ticker)
                 
         except Exception as e:
             logger.error(f"BSE presentation scraping error: {str(e)}")
             return {
                 'presentations': [],
+                'presentation_summaries': [],
                 'operational_metrics': {},
                 'guidance': [],
                 'scraped_successfully': False,
                 'error': str(e)
             }
+    
+    async def _find_bse_code(self, ticker: str, company_name: str = None) -> Optional[str]:
+        """
+        Try to find BSE code for a ticker by searching BSE website
+        """
+        try:
+            page = await self.context.new_page()
+            
+            # Try BSE search
+            search_url = f"https://www.bseindia.com/stock-share-price/search.aspx?q={ticker}"
+            await page.goto(search_url, wait_until='domcontentloaded', timeout=20000)
+            await asyncio.sleep(2)
+            
+            content = await page.content()
+            soup = BeautifulSoup(content, 'html.parser')
+            
+            # Look for BSE code in search results
+            # BSE codes are typically 6-digit numbers
+            import re
+            bse_code_pattern = re.compile(r'\b(\d{6})\b')
+            
+            # Search in links and text
+            for link in soup.find_all('a', href=True):
+                href = link.get('href', '')
+                text = link.text
+                
+                match = bse_code_pattern.search(href) or bse_code_pattern.search(text)
+                if match:
+                    await page.close()
+                    return match.group(1)
+            
+            await page.close()
+            return None
+            
+        except Exception as e:
+            logger.debug(f"BSE code lookup failed: {str(e)}")
+            return None
+    
+    async def _extract_presentation_summaries(self, presentations: List[Dict]) -> List[Dict]:
+        """
+        Try to extract key information from PDF presentations
+        Note: This is a best-effort extraction from PDF links
+        """
+        summaries = []
+        
+        for pres in presentations:
+            summary = {
+                'title': pres.get('title', 'Unknown'),
+                'url': pres.get('url', ''),
+                'key_points': [],
+                'metrics_found': {}
+            }
+            
+            # For PDF files, we can note them for later AI analysis
+            # Actual PDF parsing would require additional libraries
+            if '.pdf' in pres.get('url', '').lower():
+                summary['note'] = 'PDF file available for detailed analysis'
+            
+            summaries.append(summary)
+        
+        return summaries
     
     async def _scrape_enhanced_screener_data(self, ticker: str) -> Dict[str, Any]:
         """
