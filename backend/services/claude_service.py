@@ -1,5 +1,6 @@
 from emergentintegrations.llm.chat import LlmChat, UserMessage
 import os
+import time
 from dotenv import load_dotenv
 from pathlib import Path
 import logging
@@ -20,6 +21,17 @@ class ClaudeService:
         self.api_key = os.environ.get('EMERGENT_LLM_KEY')
         if not self.api_key:
             raise ValueError("EMERGENT_LLM_KEY not found in environment")
+        self._current_job_id = None  # Track current job for activity logging
+    
+    def set_job_id(self, job_id: str):
+        """Set current job ID for activity logging"""
+        self._current_job_id = job_id
+    
+    async def _broadcast_activity(self, activity_type: str, message: str, details: dict = None):
+        """Broadcast activity to WebSocket if job_id is set"""
+        if self._current_job_id:
+            from services.websocket_manager import ws_manager
+            await ws_manager.send_activity(self._current_job_id, activity_type, message, details)
     
     @retry(
         stop=stop_after_attempt(5),
@@ -32,7 +44,17 @@ class ClaudeService:
         Call Claude API with system message and user prompt.
         Retries on 502/503/504 errors with exponential backoff.
         """
+        start_time = time.time()
+        
         try:
+            # Broadcast that we're starting the API call
+            prompt_preview = user_prompt[:150] + "..." if len(user_prompt) > 150 else user_prompt
+            await self._broadcast_activity(
+                "api_call", 
+                "Calling Claude API...",
+                {"model": "claude-sonnet-4-5", "prompt_preview": prompt_preview}
+            )
+            
             chat = LlmChat(
                 api_key=self.api_key,
                 session_id=session_id,
@@ -42,18 +64,38 @@ class ClaudeService:
             # Use Anthropic Claude Sonnet 4.5
             chat.with_model("anthropic", "claude-sonnet-4-5-20250929")
             
+            await self._broadcast_activity("llm_thinking", "Claude is analyzing and generating response...")
+            
             user_message = UserMessage(text=user_prompt)
             response = await chat.send_message(user_message)
             
-            logger.info(f"Claude API call successful for session: {session_id}")
+            elapsed = round(time.time() - start_time, 2)
+            response_preview = response[:100] + "..." if len(response) > 100 else response
+            
+            await self._broadcast_activity(
+                "api_call", 
+                f"Claude API response received ({elapsed}s)",
+                {"elapsed_seconds": elapsed, "response_preview": response_preview}
+            )
+            
+            logger.info(f"Claude API call successful for session: {session_id} ({elapsed}s)")
             return response
             
         except Exception as e:
             error_msg = str(e)
+            elapsed = round(time.time() - start_time, 2)
+            
+            await self._broadcast_activity(
+                "error", 
+                f"Claude API call failed after {elapsed}s",
+                {"error": error_msg[:200], "elapsed_seconds": elapsed}
+            )
+            
             logger.error(f"Claude API call failed: {error_msg}")
             
             # Check if it's a retryable error
             if is_retryable_error(e):
+                await self._broadcast_activity("info", "Retrying API call with backoff...")
                 logger.warning(f"Retryable error detected, will retry: {error_msg[:100]}")
             
             raise
