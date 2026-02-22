@@ -204,7 +204,7 @@ class MosaicAgent:
                     break
         return key_sections
     
-    def _call_llm_with_tools(self, messages: List[Dict], tools: List[Dict], use_fast_model: bool = True, max_retries: int = 3) -> Dict:
+    def _call_llm_with_tools(self, messages: List[Dict], tools: List[Dict], use_fast_model: bool = True, max_retries: int = 3, high_tokens: bool = False) -> Dict:
         """
         Call LiteLLM with tools support via Emergent's LLM gateway.
         
@@ -213,11 +213,12 @@ class MosaicAgent:
             tools: Tool definitions
             use_fast_model: Use Haiku for speed, Sonnet for quality
             max_retries: Number of retry attempts
+            high_tokens: Use higher token limit for complex operations like Excel generation
         
         Returns the raw response from litellm.completion()
         """
         model = FAST_MODEL if use_fast_model else FULL_MODEL
-        max_tokens = 4096  # Reduced from 8096 for faster responses
+        max_tokens = 8192 if high_tokens else 4096  # Higher for Excel model generation
         
         last_error = None
         for attempt in range(max_retries):
