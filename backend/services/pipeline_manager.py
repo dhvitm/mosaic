@@ -746,25 +746,27 @@ Keep total length under 400 words. Professional tone, no marketing language."""
     
     async def _step8_excel_generation(self, job_id: str, ticker: str, company_metadata: Dict,
                                      historical_financials: Dict, operational_data: Dict,
-                                     assumptions: Dict, valuation: Dict, thesis: Dict) -> str:
+                                     management_commentary: Dict, assumptions: Dict, 
+                                     valuation: Dict, thesis: Dict) -> str:
         """Step 8: Generate Excel model with all collected data"""
         await self._update_step(job_id, 8, "in_progress", "Building Excel model...")
-        await ws_manager.send_activity(job_id, "data_processing", "Creating multi-sheet financial model with all data...")
+        await ws_manager.send_activity(job_id, "data_processing", "Creating multi-sheet financial model with formulas and ROE tree...")
         
         try:
-            await ws_manager.send_activity(job_id, "info", "Compiling assumptions, valuation, and thesis into Excel...")
+            await ws_manager.send_activity(job_id, "info", "Compiling assumptions, valuation, thesis, and BSE data into Excel...")
             
             # Build complete data package for Excel
             data = {
                 'company_metadata': company_metadata,
                 'historical_financials': historical_financials,
                 'operational_data': operational_data,
+                'management_commentary': management_commentary,  # Includes BSE presentations
                 'assumptions': assumptions,
                 'valuation': valuation,
                 'thesis': thesis
             }
             
-            await ws_manager.send_activity(job_id, "data_processing", "Generating Excel file with formulas and formatting...")
+            await ws_manager.send_activity(job_id, "data_processing", "Generating Excel file with mechanical linking and ROE tree...")
             excel_path = self.excel_gen.generate_model(job_id, data)
             
             await self._update_step(job_id, 8, "completed", f"Excel model generated: {excel_path}")
