@@ -664,17 +664,6 @@ class ScraperService:
     
     # Keep old method as alias for backwards compatibility
     async def scrape_bse_investor_presentation(self, ticker: str, bse_code: str = None, company_name: str = None) -> Dict[str, Any]:
-                'annual_reports': [],
-                'announcements': [],
-                'presentations': [],
-                'transcripts': [],
-                'ai_summaries': [],
-                'scraped_successfully': False,
-                'error': str(e)
-            }
-    
-    # Keep old method as alias for backwards compatibility
-    async def scrape_bse_investor_presentation(self, ticker: str, bse_code: str = None, company_name: str = None) -> Dict[str, Any]:
         """
         DEPRECATED: Use scrape_investor_documents instead.
         This now redirects to Screener.in Documents section scraping.
