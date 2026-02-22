@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Banknote, TrendingUp, FileSpreadsheet, Sparkles } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
+import { Banknote, TrendingUp, FileSpreadsheet, Sparkles, Database } from "lucide-react";
 import axios from "axios";
 import JobsList from "../components/JobsList";
 
