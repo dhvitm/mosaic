@@ -669,11 +669,11 @@ Return ONLY the JSON."""
             "rationale": "Default valuation - insufficient data for precise estimate"
         }
     
-    async def _step8_thesis_generation(self, job_id: str, company_metadata: Dict,
+    async def _step7_thesis_generation(self, job_id: str, company_metadata: Dict,
                                       historical_financials: Dict, assumptions: Dict,
                                       valuation: Dict) -> Dict[str, Any]:
-        """Step 8: Generate investment thesis"""
-        await self._update_step(job_id, 8, "in_progress", "Writing investment thesis...")
+        """Step 7: Generate investment thesis"""
+        await self._update_step(job_id, 7, "in_progress", "Writing investment thesis...")
         await ws_manager.send_activity(job_id, "llm_thinking", "Claude AI writing investment note...")
         
         ticker = company_metadata.get('ticker', 'UNKNOWN')
