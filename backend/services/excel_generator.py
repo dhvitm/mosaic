@@ -227,7 +227,7 @@ class ExcelGenerator:
             ws.column_dimensions[get_column_letter(i)].width = 12
     
     def _create_pnl_with_formulas(self, data: Dict[str, Any]):
-        """Create P&L with mechanical linking formulas and projections - using actual Screener keys"""
+        """Create P&L with mechanical linking formulas and projections - using actual Screener keys or detailed AR data"""
         ws = self.wb.create_sheet("P&L")
         
         ws['A1'] = "PROFIT & LOSS STATEMENT"
@@ -239,6 +239,10 @@ class ExcelGenerator:
         # Get historical data
         historical = data.get('historical_financials', {})
         annual_pnl = historical.get('annual_pnl', {})
+        
+        # Check if we have detailed P&L from annual reports
+        management_commentary = data.get('management_commentary', {})
+        detailed_pnl = management_commentary.get('detailed_pnl', {})
         
         hist_years = self._get_historical_years(data)
         all_years = hist_years + self.forecast_years
@@ -252,24 +256,55 @@ class ExcelGenerator:
                 cell.fill = FORECAST_FILL
         self._apply_header_style(ws, 4, 1, len(all_years) + 1)
         
-        # P&L structure matching ACTUAL Screener.in keys for banks
-        # Banks have simpler P&L: Revenue +, Interest, Expenses +, Other Income +, Depreciation, Profit before tax, Tax %, Net Profit +
-        pnl_items = [
-            ('Revenue / Interest Earned', ['Revenue +', 'Interest Earned', 'Revenue', 'Sales +']),
-            ('Interest Income', ['Interest', 'Interest Income']),
-            ('Other Income', ['Other Income +', 'Other Income']),
-            ('Total Income', None),  # Calculated = sum of above
-            ('', None),  # Spacer
-            ('Operating Expenses', ['Expenses +', 'Operating Expenses', 'Expenses']),
-            ('Depreciation', ['Depreciation', 'Depreciation and Amortisation']),
-            ('Total Expenses', None),  # Calculated
-            ('', None),  # Spacer
-            ('Profit Before Tax', ['Profit before tax', 'PBT']),
-            ('Tax', ['Tax %', 'Tax']),
-            ('Net Profit', ['Net Profit +', 'Net Profit', 'PAT']),
-            ('EPS (Rs.)', ['EPS in Rs', 'EPS']),
-            ('Dividend Payout (%)', ['Dividend Payout %']),
-        ]
+        # Determine if we have detailed data from annual reports
+        has_detailed = bool(detailed_pnl)
+        
+        if has_detailed:
+            # Use detailed P&L structure from annual report
+            pnl_items = [
+                ('Interest Earned', ['interest_earned']),
+                ('Interest on Advances', ['interest_on_advances']),
+                ('Income on Investments', ['income_on_investments']),
+                ('Other Income', ['other_income']),
+                ('Commission & Brokerage', ['commission_brokerage']),
+                ('Profit on Investments', ['profit_on_investments']),
+                ('Total Income', None),  # Calculated
+                ('', None),  # Spacer
+                ('Interest Expended', ['interest_expended']),
+                ('Interest on Deposits', ['interest_on_deposits']),
+                ('Operating Expenses', ['operating_expenses']),
+                ('Employee Cost', ['employee_cost']),
+                ('Depreciation', ['depreciation']),
+                ('Other OpEx', ['other_opex']),
+                ('Total Expenses', None),  # Calculated
+                ('', None),  # Spacer
+                ('Provisions & Contingencies', ['provisions_contingencies']),
+                ('Provision for NPA', ['provision_for_npa']),
+                ('Provision for Tax', ['provision_for_tax']),
+                ('Operating Profit', ['operating_profit']),
+                ('Profit Before Tax', ['pbt']),
+                ('Tax', ['tax']),
+                ('Net Profit', ['pat']),
+            ]
+            logger.info("Using DETAILED P&L from annual reports")
+        else:
+            # Use simplified Screener structure
+            pnl_items = [
+                ('Revenue / Interest Earned', ['Revenue +', 'Interest Earned', 'Revenue', 'Sales +']),
+                ('Interest Income', ['Interest', 'Interest Income']),
+                ('Other Income', ['Other Income +', 'Other Income']),
+                ('Total Income', None),
+                ('', None),
+                ('Operating Expenses', ['Expenses +', 'Operating Expenses', 'Expenses']),
+                ('Depreciation', ['Depreciation', 'Depreciation and Amortisation']),
+                ('Total Expenses', None),
+                ('', None),
+                ('Profit Before Tax', ['Profit before tax', 'PBT']),
+                ('Tax', ['Tax %', 'Tax']),
+                ('Net Profit', ['Net Profit +', 'Net Profit', 'PAT']),
+                ('EPS (Rs.)', ['EPS in Rs', 'EPS']),
+                ('Dividend Payout (%)', ['Dividend Payout %']),
+            ]
         
         row = 5
         forecast_col_start = len(hist_years) + 2
