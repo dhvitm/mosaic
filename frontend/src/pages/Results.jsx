@@ -53,6 +53,20 @@ export default function Results() {
     }
   };
 
+  const handleRetry = async () => {
+    setRetrying(true);
+    try {
+      const response = await axios.post(`${API}/generate/retry/${jobId}`);
+      const newJobId = response.data.new_job_id;
+      
+      // Navigate to the new job's processing page
+      navigate(`/processing/${newJobId}`);
+    } catch (err) {
+      setError("Failed to retry job");
+      setRetrying(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
