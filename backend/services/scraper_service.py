@@ -155,6 +155,280 @@ class ScraperService:
                 'fallback_mode': True
             }
     
+    async def scrape_annual_financials(self, ticker: str) -> Dict[str, Any]:
+        """
+        Scrape annual P&L and Balance Sheet from Screener.in
+        """
+        try:
+            await self.initialize()
+            url = f"https://www.screener.in/company/{ticker}/consolidated/"
+            
+            page = await self.context.new_page()
+            logger.info(f"Scraping annual financials for {ticker}")
+            
+            try:
+                await page.goto(url, wait_until='domcontentloaded', timeout=30000)
+                await page.wait_for_selector('section#profit-loss', timeout=15000)
+                await asyncio.sleep(2)
+                
+                content = await page.content()
+                soup = BeautifulSoup(content, 'html.parser')
+                
+                data = {
+                    'annual_pnl': {},
+                    'annual_bs': {},
+                    'ratios': {},
+                    'years': []
+                }
+                
+                # ===== SCRAPE PROFIT & LOSS =====
+                pnl_section = soup.find('section', {'id': 'profit-loss'})
+                if pnl_section:
+                    logger.info("Found P&L section")
+                    pnl_table = pnl_section.find('table')
+                    if pnl_table:
+                        data['annual_pnl'] = self._parse_screener_table(pnl_table)
+                        if data['annual_pnl']:
+                            data['years'] = list(data['annual_pnl'].keys())
+                            logger.info(f"Extracted P&L for years: {data['years']}")
+                
+                # ===== SCRAPE BALANCE SHEET =====
+                bs_section = soup.find('section', {'id': 'balance-sheet'})
+                if bs_section:
+                    logger.info("Found Balance Sheet section")
+                    bs_table = bs_section.find('table')
+                    if bs_table:
+                        data['annual_bs'] = self._parse_screener_table(bs_table)
+                        logger.info(f"Extracted Balance Sheet data")
+                
+                # ===== SCRAPE KEY RATIOS =====
+                ratios_section = soup.find('section', {'id': 'ratios'})
+                if ratios_section:
+                    logger.info("Found Ratios section")
+                    ratios_table = ratios_section.find('table')
+                    if ratios_table:
+                        data['ratios'] = self._parse_screener_table(ratios_table)
+                        logger.info(f"Extracted Ratios data")
+                
+                await page.close()
+                
+                data['scraped_successfully'] = bool(data['annual_pnl'] or data['annual_bs'])
+                logger.info(f"Annual financials scraping complete for {ticker}: success={data['scraped_successfully']}")
+                return data
+                
+            except Exception as e:
+                logger.error(f"Error scraping financials for {ticker}: {str(e)}")
+                await page.close()
+                raise
+                
+        except Exception as e:
+            logger.error(f"Scraping annual financials failed for {ticker}: {str(e)}")
+            return {
+                'annual_pnl': {},
+                'annual_bs': {},
+                'ratios': {},
+                'years': [],
+                'scraped_successfully': False,
+                'error': str(e)
+            }
+    
+    def _parse_screener_table(self, table) -> Dict[str, Dict[str, float]]:
+        """
+        Parse a Screener.in financial table into structured data
+        Returns: {year: {line_item: value, ...}, ...}
+        """
+        result = {}
+        
+        try:
+            # Find header row to get years
+            thead = table.find('thead')
+            if not thead:
+                return result
+            
+            header_row = thead.find('tr')
+            if not header_row:
+                return result
+            
+            headers = []
+            for th in header_row.find_all('th'):
+                text = th.text.strip()
+                # Extract year like "Mar 2024" or "FY24"
+                if text and text != '+':
+                    headers.append(text)
+            
+            # Initialize result dict for each year
+            for year in headers[1:]:  # Skip first column (line item names)
+                result[year] = {}
+            
+            # Parse data rows
+            tbody = table.find('tbody')
+            if not tbody:
+                return result
+            
+            for row in tbody.find_all('tr'):
+                cells = row.find_all(['td', 'th'])
+                if len(cells) < 2:
+                    continue
+                
+                # First cell is line item name
+                line_item = cells[0].text.strip()
+                if not line_item or line_item == '+':
+                    continue
+                
+                # Clean up line item name
+                line_item = re.sub(r'\s+', ' ', line_item)
+                
+                # Get values for each year
+                for i, cell in enumerate(cells[1:], 1):
+                    if i < len(headers):
+                        year = headers[i]
+                        value_text = cell.text.strip()
+                        
+                        # Parse number (handle commas, negative, %)
+                        try:
+                            value_text = value_text.replace(',', '').replace('%', '')
+                            if value_text and value_text != '-':
+                                value = float(value_text)
+                                result[year][line_item] = value
+                        except ValueError:
+                            pass
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error parsing table: {str(e)}")
+            return result
+    
+    async def scrape_quarterly_results(self, ticker: str) -> Dict[str, Any]:
+        """
+        Scrape quarterly results from Screener.in
+        """
+        try:
+            await self.initialize()
+            url = f"https://www.screener.in/company/{ticker}/consolidated/"
+            
+            page = await self.context.new_page()
+            logger.info(f"Scraping quarterly results for {ticker}")
+            
+            try:
+                await page.goto(url, wait_until='domcontentloaded', timeout=30000)
+                await page.wait_for_selector('section#quarters', timeout=15000)
+                await asyncio.sleep(2)
+                
+                content = await page.content()
+                soup = BeautifulSoup(content, 'html.parser')
+                
+                data = {
+                    'quarterly_results': {},
+                    'quarters': []
+                }
+                
+                # Find quarters section
+                quarters_section = soup.find('section', {'id': 'quarters'})
+                if quarters_section:
+                    logger.info("Found Quarters section")
+                    quarters_table = quarters_section.find('table')
+                    if quarters_table:
+                        data['quarterly_results'] = self._parse_screener_table(quarters_table)
+                        data['quarters'] = list(data['quarterly_results'].keys())
+                        logger.info(f"Extracted quarterly data for: {data['quarters']}")
+                
+                await page.close()
+                
+                data['scraped_successfully'] = bool(data['quarterly_results'])
+                return data
+                
+            except Exception as e:
+                logger.error(f"Error scraping quarterly for {ticker}: {str(e)}")
+                await page.close()
+                raise
+                
+        except Exception as e:
+            logger.error(f"Quarterly scraping failed for {ticker}: {str(e)}")
+            return {
+                'quarterly_results': {},
+                'quarters': [],
+                'scraped_successfully': False,
+                'error': str(e)
+            }
+    
+    async def scrape_concall_commentary(self, ticker: str) -> Dict[str, Any]:
+        """
+        Scrape management commentary from Screener.in (concall highlights)
+        """
+        try:
+            await self.initialize()
+            url = f"https://www.screener.in/company/{ticker}/consolidated/"
+            
+            page = await self.context.new_page()
+            logger.info(f"Scraping concall commentary for {ticker}")
+            
+            try:
+                await page.goto(url, wait_until='domcontentloaded', timeout=30000)
+                await asyncio.sleep(3)
+                
+                content = await page.content()
+                soup = BeautifulSoup(content, 'html.parser')
+                
+                data = {
+                    'concall_highlights': [],
+                    'pros': [],
+                    'cons': [],
+                    'management_analysis': ''
+                }
+                
+                # Look for concall/analysis section
+                # Screener sometimes has "Concall" or analysis sections
+                for section in soup.find_all('section'):
+                    section_id = section.get('id', '')
+                    section_text = section.text.lower()
+                    
+                    if 'analysis' in section_id or 'concall' in section_text:
+                        # Extract text content
+                        paragraphs = section.find_all('p')
+                        for p in paragraphs:
+                            text = p.text.strip()
+                            if text and len(text) > 20:
+                                data['concall_highlights'].append(text)
+                
+                # Extract Pros
+                pros_section = soup.find('div', class_='pros')
+                if pros_section:
+                    for li in pros_section.find_all('li'):
+                        text = li.text.strip()
+                        if text:
+                            data['pros'].append(text)
+                
+                # Extract Cons
+                cons_section = soup.find('div', class_='cons')
+                if cons_section:
+                    for li in cons_section.find_all('li'):
+                        text = li.text.strip()
+                        if text:
+                            data['cons'].append(text)
+                
+                await page.close()
+                
+                data['scraped_successfully'] = bool(data['pros'] or data['cons'] or data['concall_highlights'])
+                logger.info(f"Concall scraping for {ticker}: {len(data['pros'])} pros, {len(data['cons'])} cons")
+                return data
+                
+            except Exception as e:
+                logger.error(f"Error scraping concall for {ticker}: {str(e)}")
+                await page.close()
+                raise
+                
+        except Exception as e:
+            logger.error(f"Concall scraping failed for {ticker}: {str(e)}")
+            return {
+                'concall_highlights': [],
+                'pros': [],
+                'cons': [],
+                'management_analysis': '',
+                'scraped_successfully': False,
+                'error': str(e)
+            }
+    
     @retry(
         stop=stop_after_attempt(2),
         wait=wait_exponential(multiplier=1, min=2, max=8),
