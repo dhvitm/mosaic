@@ -1,6 +1,6 @@
 """
-PDF Extraction Service for Investor Presentations
-Downloads and parses PDF files to extract key financial metrics
+PDF Extraction Service for Investor Presentations and Annual Reports
+Downloads and parses PDF files to extract key financial metrics and detailed financials
 """
 import os
 import re
@@ -14,7 +14,7 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 class PDFExtractor:
-    """Extract text and metrics from investor presentation PDFs"""
+    """Extract text and metrics from investor presentation and annual report PDFs"""
     
     def __init__(self):
         self.download_dir = Path("/app/temp_pdfs")
@@ -29,82 +29,52 @@ class PDFExtractor:
         
         # Key metrics patterns for banks
         self.bank_metric_patterns = {
-            'nim': [
-                r'NIM[:\s]+(\d+\.?\d*)\s*%',
-                r'Net Interest Margin[:\s]+(\d+\.?\d*)\s*%',
-                r'NIM.*?(\d+\.?\d*)\s*%',
-            ],
-            'casa': [
-                r'CASA[:\s]+(\d+\.?\d*)\s*%',
-                r'CASA Ratio[:\s]+(\d+\.?\d*)\s*%',
-                r'CASA.*?(\d+\.?\d*)\s*%',
-            ],
-            'gnpa': [
-                r'GNPA[:\s]+(\d+\.?\d*)\s*%',
-                r'Gross NPA[:\s]+(\d+\.?\d*)\s*%',
-                r'Gross NPA.*?(\d+\.?\d*)\s*%',
-            ],
-            'nnpa': [
-                r'NNPA[:\s]+(\d+\.?\d*)\s*%',
-                r'Net NPA[:\s]+(\d+\.?\d*)\s*%',
-                r'Net NPA.*?(\d+\.?\d*)\s*%',
-            ],
-            'car': [
-                r'CAR[:\s]+(\d+\.?\d*)\s*%',
-                r'Capital Adequacy[:\s]+(\d+\.?\d*)\s*%',
-                r'CRAR[:\s]+(\d+\.?\d*)\s*%',
-            ],
-            'roe': [
-                r'RoE[:\s]+(\d+\.?\d*)\s*%',
-                r'Return on Equity[:\s]+(\d+\.?\d*)\s*%',
-                r'ROE.*?(\d+\.?\d*)\s*%',
-            ],
-            'roa': [
-                r'RoA[:\s]+(\d+\.?\d*)\s*%',
-                r'Return on Assets[:\s]+(\d+\.?\d*)\s*%',
-                r'ROA.*?(\d+\.?\d*)\s*%',
-            ],
-            'cost_to_income': [
-                r'Cost[- ]to[- ]Income[:\s]+(\d+\.?\d*)\s*%',
-                r'C/I Ratio[:\s]+(\d+\.?\d*)\s*%',
-                r'Cost Income.*?(\d+\.?\d*)\s*%',
-            ],
-            'provision_coverage': [
-                r'PCR[:\s]+(\d+\.?\d*)\s*%',
-                r'Provision Coverage[:\s]+(\d+\.?\d*)\s*%',
-            ],
-            'loan_growth': [
-                r'Loan Growth[:\s]+(\d+\.?\d*)\s*%',
-                r'Advances Growth[:\s]+(\d+\.?\d*)\s*%',
-                r'Credit Growth[:\s]+(\d+\.?\d*)\s*%',
-            ],
-            'deposit_growth': [
-                r'Deposit Growth[:\s]+(\d+\.?\d*)\s*%',
-                r'Deposits.*?grew.*?(\d+\.?\d*)\s*%',
-            ],
+            'nim': [r'NIM[:\s]+(\d+\.?\d*)\s*%', r'Net Interest Margin[:\s]+(\d+\.?\d*)\s*%'],
+            'casa': [r'CASA[:\s]+(\d+\.?\d*)\s*%', r'CASA Ratio[:\s]+(\d+\.?\d*)\s*%'],
+            'gnpa': [r'GNPA[:\s]+(\d+\.?\d*)\s*%', r'Gross NPA[:\s]+(\d+\.?\d*)\s*%'],
+            'nnpa': [r'NNPA[:\s]+(\d+\.?\d*)\s*%', r'Net NPA[:\s]+(\d+\.?\d*)\s*%'],
+            'car': [r'CAR[:\s]+(\d+\.?\d*)\s*%', r'Capital Adequacy[:\s]+(\d+\.?\d*)\s*%', r'CRAR[:\s]+(\d+\.?\d*)\s*%'],
+            'roe': [r'RoE[:\s]+(\d+\.?\d*)\s*%', r'Return on Equity[:\s]+(\d+\.?\d*)\s*%'],
+            'roa': [r'RoA[:\s]+(\d+\.?\d*)\s*%', r'Return on Assets[:\s]+(\d+\.?\d*)\s*%'],
+            'cost_to_income': [r'Cost[- ]to[- ]Income[:\s]+(\d+\.?\d*)\s*%', r'C/I Ratio[:\s]+(\d+\.?\d*)\s*%'],
+            'provision_coverage': [r'PCR[:\s]+(\d+\.?\d*)\s*%', r'Provision Coverage[:\s]+(\d+\.?\d*)\s*%'],
+            'loan_growth': [r'Loan Growth[:\s]+(\d+\.?\d*)\s*%', r'Advances Growth[:\s]+(\d+\.?\d*)\s*%'],
+            'deposit_growth': [r'Deposit Growth[:\s]+(\d+\.?\d*)\s*%'],
         }
         
-        # General company metric patterns
-        self.general_metric_patterns = {
-            'revenue_growth': [
-                r'Revenue Growth[:\s]+(\d+\.?\d*)\s*%',
-                r'Sales Growth[:\s]+(\d+\.?\d*)\s*%',
-                r'Top[- ]line.*?(\d+\.?\d*)\s*%',
-            ],
-            'ebitda_margin': [
-                r'EBITDA Margin[:\s]+(\d+\.?\d*)\s*%',
-                r'EBITDA.*?(\d+\.?\d*)\s*%.*?margin',
-            ],
-            'pat_growth': [
-                r'PAT Growth[:\s]+(\d+\.?\d*)\s*%',
-                r'Net Profit Growth[:\s]+(\d+\.?\d*)\s*%',
-                r'Profit.*?grew.*?(\d+\.?\d*)\s*%',
-            ],
-            'capex': [
-                r'Capex[:\s]+(?:Rs\.?|INR)?\s*(\d+[\d,]*)\s*(?:Cr|Crore)',
-                r'Capital Expenditure[:\s]+(?:Rs\.?|INR)?\s*(\d+[\d,]*)',
-            ],
-        }
+        # P&L line items to extract from annual reports (for banks)
+        self.bank_pnl_items = [
+            'Interest Earned', 'Interest/Discount on Advances/Bills', 'Income on Investments',
+            'Interest on Balances with RBI', 'Others',
+            'Other Income', 'Commission, Exchange and Brokerage', 'Profit on Sale of Investments',
+            'Profit on Sale of Land, Buildings', 'Profit on Exchange Transactions',
+            'Interest Expended', 'Interest on Deposits', 'Interest on RBI/Inter-Bank Borrowings',
+            'Operating Expenses', 'Payments to and Provisions for Employees', 'Employee Cost',
+            'Rent, Taxes and Lighting', 'Printing and Stationery', 'Advertisement and Publicity',
+            'Depreciation', 'Directors Fees', 'Auditors Fees', 'Law Charges', 'Postage, Telegram',
+            'Repairs and Maintenance', 'Insurance', 'Other Expenditure',
+            'Provisions and Contingencies', 'Provision for Tax', 'Provision for NPA',
+            'Provision for Standard Assets', 'Provision for Depreciation on Investments',
+            'Operating Profit', 'Profit Before Tax', 'Tax Expense', 'Net Profit', 'PAT'
+        ]
+        
+        # Balance Sheet items for banks
+        self.bank_bs_items = [
+            'Capital', 'Share Capital', 'Equity Share Capital', 'Reserves and Surplus',
+            'Statutory Reserves', 'Capital Reserves', 'Revenue Reserves', 'Balance in P&L',
+            'Deposits', 'Demand Deposits', 'Savings Bank Deposits', 'Term Deposits',
+            'Borrowings', 'Borrowings from RBI', 'Borrowings from Banks', 'Other Borrowings',
+            'Other Liabilities and Provisions', 'Bills Payable', 'Inter-Office Adjustments',
+            'Interest Accrued', 'Contingent Provisions',
+            'Cash and Balances with RBI', 'Cash in Hand', 'Balances with RBI',
+            'Balances with Banks', 'Money at Call and Short Notice',
+            'Investments', 'Government Securities', 'Other Approved Securities',
+            'Shares', 'Debentures and Bonds', 'Subsidiaries/Joint Ventures',
+            'Advances', 'Bills Purchased and Discounted', 'Cash Credits and Overdrafts',
+            'Term Loans', 'Fixed Assets', 'Premises', 'Other Fixed Assets',
+            'Other Assets', 'Interest Accrued', 'Tax Paid in Advance', 'Stationery and Stamps',
+            'Non-banking Assets', 'Deferred Tax Assets'
+        ]
     
     def download_pdf(self, url: str, filename: str = None) -> Optional[str]:
         """Download PDF from URL and return local path"""
