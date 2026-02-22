@@ -69,7 +69,8 @@ Build a web app called "Mosaic" for investment professionals that takes an India
 
 ### Not Started / Placeholder
 - [ ] Admin page backend for knowledge file management
-- [ ] Historical financials population from scraped data (P&L values are templates)
+- [ ] Excel formulas for mechanical linking (currently values only)
+- [ ] Forecast model projections (FY26E-FY30E) with formulas based on assumptions
 
 ## Key Files
 
