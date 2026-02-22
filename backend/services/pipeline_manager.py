@@ -673,41 +673,64 @@ Return ONLY the JSON."""
                                       valuation: Dict) -> Dict[str, Any]:
         """Step 8: Generate investment thesis"""
         await self._update_step(job_id, 8, "in_progress", "Writing investment thesis...")
-        await ws_manager.send_activity(job_id, "llm_thinking", "Claude AI writing professional investment note...")
+        await ws_manager.send_activity(job_id, "llm_thinking", "Claude AI writing investment note...")
+        
+        ticker = company_metadata.get('ticker', 'UNKNOWN')
         
         try:
-            await ws_manager.send_activity(job_id, "data_processing", "Compiling key findings and recommendations...")
-            knowledge_file = self.claude.load_knowledge_file(company_metadata.get('knowledge_file', 'generic.md'))
+            # Check cache first
+            cached_data = CacheService.load_step_data(ticker, 8)
+            if cached_data:
+                logger.info(f"Using cached step 8 data for {ticker}")
+                await ws_manager.send_activity(job_id, "info", "Found cached thesis")
+                await self._update_step(job_id, 8, "completed", "Investment thesis generated (from cache)")
+                return cached_data
             
-            await ws_manager.send_activity(job_id, "llm_thinking", "Structuring investment thesis with risks and catalysts...")
+            await ws_manager.send_activity(job_id, "data_processing", "Compiling key findings...")
             
-            system_message = f"{knowledge_file}\n\nYou are a senior equity research analyst writing an investment note."
-            
-            user_prompt = f"""
-Write a professional investment thesis for {company_metadata.get('full_name')}.
+            # Focused system message
+            system_message = """You are a senior equity research analyst at a top investment bank.
+Write concise, professional investment notes in the style of institutional research.
+Use bullet points for key metrics. Be direct and actionable."""
 
-Target Price: ₹{valuation.get('target_price')}
-Recommendation: {valuation.get('recommendation')}
-
-Include sections:
-1. RECOMMENDATION
-2. INVESTMENT CASE
-3. KEY ASSUMPTIONS
-4. WHERE WE COULD BE WRONG
-5. RISKS
-6. VALUATION
-
-Write in professional equity research style.
-"""
+            # Build concise prompt with available data
+            target_price = valuation.get('target_price', valuation.get('fair_value', 0))
+            recommendation = valuation.get('recommendation', 'HOLD')
+            upside = valuation.get('upside_percent', 0)
             
+            user_prompt = f"""Write a brief investment thesis for {company_metadata.get('full_name')} ({ticker}).
+
+KEY DATA:
+- Current Price: ₹{company_metadata.get('current_price', 0)}
+- Target Price: ₹{target_price}
+- Recommendation: {recommendation}
+- Upside: {upside}%
+- Sector: {company_metadata.get('sector', 'N/A')}
+- Market Cap: ₹{company_metadata.get('market_cap', 0)} Cr
+
+Write 4-6 short paragraphs covering:
+1. RECOMMENDATION SUMMARY (1-2 sentences)
+2. INVESTMENT CASE (3-4 bullet points)
+3. KEY RISKS (2-3 bullet points)
+4. VALUATION (brief methodology note)
+
+Keep total length under 400 words. Professional tone, no marketing language."""
+            
+            await ws_manager.send_activity(job_id, "api_call", "Calling Claude API for thesis generation...")
             response = await self.claude.call_claude(system_message, user_prompt, f"job_{job_id}_step8")
             
             thesis = {
                 "full_text": response,
-                "summary": f"{valuation.get('recommendation')} with target price of ₹{valuation.get('target_price')}"
+                "summary": f"{recommendation} with target price of ₹{target_price}",
+                "recommendation": recommendation,
+                "target_price": target_price,
+                "upside": upside
             }
             
-            await self._update_step(job_id, 8, "completed", "Investment thesis generated")
+            # Cache the result
+            CacheService.save_step_data(ticker, 8, thesis)
+            
+            await self._update_step(job_id, 8, "completed", f"Thesis: {recommendation} - TP ₹{target_price}")
             return thesis
             
         except Exception as e:
