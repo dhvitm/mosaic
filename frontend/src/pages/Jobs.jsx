@@ -173,9 +173,21 @@ export default function Jobs() {
                     <button
                       onClick={(e) => handleRetry(e, job.id)}
                       className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors flex items-center gap-2"
+                      data-testid={`retry-job-${job.ticker}`}
                     >
                       <RefreshCw className="w-4 h-4" />
                       Retry
+                    </button>
+                  )}
+
+                  {job.status === 'processing' && (
+                    <button
+                      onClick={(e) => handleAbort(e, job.id, job.ticker)}
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors flex items-center gap-2"
+                      data-testid={`abort-job-${job.ticker}`}
+                    >
+                      <StopCircle className="w-4 h-4" />
+                      Abort
                     </button>
                   )}
                 </div>
