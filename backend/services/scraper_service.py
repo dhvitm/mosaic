@@ -429,6 +429,159 @@ class ScraperService:
                 'error': str(e)
             }
     
+    async def scrape_bse_investor_presentation(self, ticker: str, company_name: str = None) -> Dict[str, Any]:
+        """
+        Scrape investor presentations from BSE India for operational metrics
+        """
+        try:
+            await self.initialize()
+            
+            # BSE search URL - we'll search for the company
+            search_term = company_name or ticker
+            url = f"https://www.bseindia.com/stock-share-price/{ticker.lower()}/"
+            
+            page = await self.context.new_page()
+            logger.info(f"Attempting to scrape BSE investor presentations for {ticker}")
+            
+            data = {
+                'presentations': [],
+                'operational_metrics': {},
+                'guidance': [],
+                'segment_data': {},
+                'asset_quality': {},
+                'scraped_successfully': False
+            }
+            
+            try:
+                # Try BSE announcements page
+                announcements_url = f"https://www.bseindia.com/corporates/ann.html"
+                await page.goto(announcements_url, wait_until='domcontentloaded', timeout=30000)
+                await asyncio.sleep(2)
+                
+                # Search for company - this is complex due to BSE's dynamic nature
+                # For now, we'll extract what we can from Screener's data which often includes
+                # information derived from investor presentations
+                
+                await page.close()
+                
+                # Fall back to enhanced Screener scraping for operational metrics
+                return await self._scrape_enhanced_screener_data(ticker)
+                
+            except Exception as e:
+                logger.warning(f"BSE scraping failed for {ticker}: {str(e)}")
+                await page.close()
+                return data
+                
+        except Exception as e:
+            logger.error(f"BSE presentation scraping error: {str(e)}")
+            return {
+                'presentations': [],
+                'operational_metrics': {},
+                'guidance': [],
+                'scraped_successfully': False,
+                'error': str(e)
+            }
+    
+    async def _scrape_enhanced_screener_data(self, ticker: str) -> Dict[str, Any]:
+        """
+        Enhanced scraping from Screener.in to get operational metrics typically found in investor presentations
+        """
+        try:
+            await self.initialize()
+            url = f"https://www.screener.in/company/{ticker}/consolidated/"
+            
+            page = await self.context.new_page()
+            logger.info(f"Enhanced scraping for {ticker} operational data")
+            
+            try:
+                await page.goto(url, wait_until='domcontentloaded', timeout=30000)
+                await page.wait_for_selector('section', timeout=15000)
+                await asyncio.sleep(3)
+                
+                content = await page.content()
+                soup = BeautifulSoup(content, 'html.parser')
+                
+                data = {
+                    'operational_metrics': {},
+                    'shareholding': {},
+                    'peer_comparison': [],
+                    'guidance': [],
+                    'scraped_successfully': False
+                }
+                
+                # ===== SCRAPE SHAREHOLDING PATTERN =====
+                shareholding_section = soup.find('section', {'id': 'shareholding'})
+                if shareholding_section:
+                    logger.info("Found Shareholding section")
+                    sh_table = shareholding_section.find('table')
+                    if sh_table:
+                        data['shareholding'] = self._parse_screener_table(sh_table)
+                
+                # ===== SCRAPE PEER COMPARISON =====
+                peer_section = soup.find('section', {'id': 'peers'})
+                if peer_section:
+                    logger.info("Found Peers section")
+                    peer_table = peer_section.find('table')
+                    if peer_table:
+                        # Extract peer data differently - row by row
+                        tbody = peer_table.find('tbody')
+                        if tbody:
+                            for row in tbody.find_all('tr')[:10]:  # Top 10 peers
+                                cells = row.find_all(['td', 'th'])
+                                if cells:
+                                    peer_name = cells[0].text.strip()
+                                    peer_data = {'name': peer_name}
+                                    # Get other columns
+                                    headers = peer_table.find('thead')
+                                    if headers:
+                                        header_cells = headers.find_all('th')
+                                        for i, cell in enumerate(cells[1:], 1):
+                                            if i < len(header_cells):
+                                                col_name = header_cells[i].text.strip()
+                                                try:
+                                                    peer_data[col_name] = float(cell.text.strip().replace(',', ''))
+                                                except:
+                                                    peer_data[col_name] = cell.text.strip()
+                                    data['peer_comparison'].append(peer_data)
+                
+                # ===== EXTRACT KEY OPERATIONAL METRICS from various sections =====
+                # Look for any data tables that might have operational KPIs
+                all_tables = soup.find_all('table')
+                for table in all_tables:
+                    # Check if this looks like an operational metrics table
+                    first_row = table.find('tr')
+                    if first_row:
+                        first_cell = first_row.find(['td', 'th'])
+                        if first_cell:
+                            cell_text = first_cell.text.lower()
+                            if any(kw in cell_text for kw in ['casa', 'npa', 'nim', 'roe', 'roa', 'car', 'crar']):
+                                # This might be a ratios/operational table
+                                parsed = self._parse_screener_table(table)
+                                if parsed:
+                                    data['operational_metrics'].update(parsed)
+                
+                await page.close()
+                
+                data['scraped_successfully'] = bool(data['shareholding'] or data['peer_comparison'])
+                logger.info(f"Enhanced scraping complete: {len(data['peer_comparison'])} peers found")
+                return data
+                
+            except Exception as e:
+                logger.error(f"Enhanced scraping error: {str(e)}")
+                await page.close()
+                raise
+                
+        except Exception as e:
+            logger.error(f"Enhanced scraping failed: {str(e)}")
+            return {
+                'operational_metrics': {},
+                'shareholding': {},
+                'peer_comparison': [],
+                'guidance': [],
+                'scraped_successfully': False,
+                'error': str(e)
+            }
+    
     @retry(
         stop=stop_after_attempt(2),
         wait=wait_exponential(multiplier=1, min=2, max=8),
