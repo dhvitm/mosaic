@@ -33,6 +33,12 @@ class PipelineManager:
         try:
             logger.info(f"Starting pipeline for job {job_id}, ticker {ticker}")
             
+            # Set job_id for activity logging in ClaudeService
+            self.claude.set_job_id(job_id)
+            
+            # Broadcast pipeline start
+            await ws_manager.send_activity(job_id, "info", f"Starting analysis pipeline for {ticker}")
+            
             # Initialize job steps
             await self._init_job_steps(job_id)
             
