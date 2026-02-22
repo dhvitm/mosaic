@@ -437,6 +437,38 @@ Return ONLY a JSON object with these exact keys:
                     f"Extracted detailed financials from {reports_processed} annual reports"
                 )
             
+            # ===== NEW: Process Concall Transcripts (last 4 quarters) =====
+            transcripts = commentary_data.get('transcripts', [])
+            if transcripts:
+                await ws_manager.send_activity(job_id, "data_processing", f"Parsing {min(len(transcripts), 4)} concall transcripts...")
+                
+                transcript_data = await self.pdf_extractor.process_concall_transcripts(
+                    transcripts,
+                    self.claude,
+                    max_transcripts=4  # Last 4 quarters as per user request
+                )
+                
+                commentary_data['transcript_insights'] = transcript_data
+                
+                # Add transcript insights to management guidance
+                if transcript_data.get('guidance_statements'):
+                    existing_guidance = commentary_data.get('management_guidance', [])
+                    for g in transcript_data['guidance_statements']:
+                        if g not in existing_guidance:
+                            existing_guidance.append(g)
+                    commentary_data['management_guidance'] = existing_guidance
+                
+                # Add key themes
+                commentary_data['concall_themes'] = transcript_data.get('key_themes', [])
+                commentary_data['analyst_concerns'] = transcript_data.get('analyst_concerns', [])
+                commentary_data['management_outlook'] = transcript_data.get('management_outlook', [])
+                
+                transcripts_processed = transcript_data.get('transcripts_processed', 0)
+                await ws_manager.send_activity(
+                    job_id, "info",
+                    f"Parsed {transcripts_processed} concall transcripts, extracted {len(transcript_data.get('key_themes', []))} themes"
+                )
+            
             if not commentary_data.get('scraped_successfully') and not enhanced_data.get('scraped_successfully'):
                 await ws_manager.send_activity(job_id, "error", "Commentary scraping failed")
                 logger.warning(f"Commentary scraping failed for {ticker}")
