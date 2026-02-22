@@ -244,6 +244,13 @@ Return ONLY a JSON object with these exact keys:
         await self._update_step(job_id, 2, "in_progress", "Fetching annual financials from Screener.in...")
         
         try:
+            # Check cache first
+            cached_data = CacheService.load_step_data(ticker, 2)
+            if cached_data:
+                logger.info(f"Using cached step 2 data for {ticker}")
+                await self._update_step(job_id, 2, "completed", "Annual financial data extracted (from cache)")
+                return cached_data
+            
             knowledge_file = self.claude.load_knowledge_file(company_metadata.get('knowledge_file', 'generic.md'))
             
             system_message = f"{knowledge_file}\n\nYou are a financial data extraction agent."
@@ -269,6 +276,9 @@ Return JSON with:
             except:
                 financial_data = {"annual_pnl": {}, "annual_bs": {}, "quarterly_results": []}
             
+            # Cache the result
+            CacheService.save_step_data(ticker, 2, financial_data)
+            
             await self._update_step(job_id, 2, "completed", "Annual financial data extracted")
             return financial_data
             
@@ -281,11 +291,21 @@ Return JSON with:
         await self._update_step(job_id, 3, "in_progress", "Extracting quarterly metrics...")
         
         try:
+            # Check cache first
+            cached_data = CacheService.load_step_data(ticker, 3)
+            if cached_data:
+                logger.info(f"Using cached step 3 data for {ticker}")
+                await self._update_step(job_id, 3, "completed", "Operational metrics extracted (from cache)", cached_data)
+                return cached_data
+            
             # Mock operational data for now
             operational_data = {
                 "quarterly_data": [],
                 "note": "Operational metrics extraction requires BSE filing access"
             }
+            
+            # Cache the result
+            CacheService.save_step_data(ticker, 3, operational_data)
             
             await self._update_step(job_id, 3, "completed", "Operational metrics extracted", operational_data)
             return operational_data
@@ -299,10 +319,20 @@ Return JSON with:
         await self._update_step(job_id, 4, "in_progress", "Processing concall transcripts...")
         
         try:
+            # Check cache first
+            cached_data = CacheService.load_step_data(ticker, 4)
+            if cached_data:
+                logger.info(f"Using cached step 4 data for {ticker}")
+                await self._update_step(job_id, 4, "completed", "Management commentary processed (from cache)")
+                return cached_data
+            
             commentary = {
                 "guidance": [],
                 "note": "Concall transcript extraction requires additional data sources"
             }
+            
+            # Cache the result
+            CacheService.save_step_data(ticker, 4, commentary)
             
             await self._update_step(job_id, 4, "completed", "Management commentary processed")
             return commentary
@@ -318,6 +348,13 @@ Return JSON with:
         await self._update_step(job_id, 5, "in_progress", "Generating forecast assumptions...")
         
         try:
+            # Check cache first
+            cached_data = CacheService.load_step_data(ticker, 5)
+            if cached_data:
+                logger.info(f"Using cached step 5 data for {ticker}")
+                await self._update_step(job_id, 5, "completed", "Forecast assumptions generated (from cache)")
+                return cached_data
+            
             knowledge_file = self.claude.load_knowledge_file(company_metadata.get('knowledge_file', 'generic.md'))
             
             system_message = f"{knowledge_file}\n\nYou are a senior equity research analyst building forecast assumptions."
@@ -337,6 +374,9 @@ Return JSON with assumptions for each parameter for each forecast year.
                 assumptions = json.loads(response)
             except:
                 assumptions = {"forecast_years": ["FY26E", "FY27E", "FY28E", "FY29E", "FY30E"]}
+            
+            # Cache the result
+            CacheService.save_step_data(ticker, 5, assumptions)
             
             await self._update_step(job_id, 5, "completed", "Forecast assumptions generated")
             return assumptions
