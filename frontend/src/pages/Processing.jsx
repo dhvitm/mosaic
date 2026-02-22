@@ -35,10 +35,13 @@ export default function Processing() {
     // Fetch initial job data
     const fetchInitialData = async () => {
       try {
-        const response = await axios.get(`${API}/generate/progress/${jobId}`);
+        const response = await axios.get(`${API}/generate/progress/${jobId}`, {
+          timeout: 60000 // 60 second timeout
+        });
         setJob(response.data);
       } catch (err) {
-        setError(err.response?.data?.detail || "Failed to fetch job progress");
+        console.error("Error fetching initial job data:", err);
+        setError(err.response?.data?.detail || err.message || "Failed to fetch job progress");
       }
     };
 
