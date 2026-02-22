@@ -440,7 +440,7 @@ class ExcelGenerator:
             ws.column_dimensions[get_column_letter(i)].width = 14
     
     def _create_balance_sheet_with_formulas(self, data: Dict[str, Any]):
-        """Create Balance Sheet with forecast projections linked to assumptions"""
+        """Create Balance Sheet with forecast projections - using actual Screener keys"""
         ws = self.wb.create_sheet("Balance Sheet")
         
         ws['A1'] = "BALANCE SHEET"
@@ -464,60 +464,163 @@ class ExcelGenerator:
                 cell.fill = FORECAST_FILL
         self._apply_header_style(ws, 4, 1, len(all_years) + 1)
         
-        # Balance Sheet structure
-        bs_structure = [
-            ('ASSETS', '', False),
-            ('Share Capital', 'share_capital', True),
-            ('Reserves', 'reserves', True),
-            ('Total Equity', 'total_equity', False),
-            ('', '', False),
-            ('Borrowings', 'borrowings', True),
-            ('Other Liabilities', 'other_liabilities', True),
-            ('Total Liabilities', 'total_liabilities', False),
-            ('', '', False),
-            ('Fixed Assets', 'fixed_assets', True),
-            ('Investments', 'investments', True),
-            ('Advances/Loans', 'advances', True),
-            ('Other Assets', 'other_assets', True),
-            ('Total Assets', 'total_assets', False),
+        # Balance Sheet items matching ACTUAL Screener.in keys for banks
+        # Screener keys: Equity Capital, Reserves, Deposits, Borrowing, Other Liabilities +, Total Liabilities,
+        #                Fixed Assets +, CWIP, Investments, Other Assets +, Total Assets
+        bs_items = [
+            ('LIABILITIES', None),
+            ('Equity Capital', ['Equity Capital', 'Share Capital']),
+            ('Reserves', ['Reserves', 'Reserves and Surplus']),
+            ('Total Equity', None),  # Calculated
+            ('', None),  # Spacer
+            ('Deposits', ['Deposits']),
+            ('Borrowings', ['Borrowing', 'Borrowings']),
+            ('Other Liabilities', ['Other Liabilities +', 'Other Liabilities']),
+            ('Total Liabilities', ['Total Liabilities']),
+            ('', None),  # Spacer
+            ('ASSETS', None),
+            ('Fixed Assets', ['Fixed Assets +', 'Fixed Assets']),
+            ('CWIP', ['CWIP']),
+            ('Investments', ['Investments']),
+            ('Advances', ['Advances +', 'Loans and Advances']),
+            ('Other Assets', ['Other Assets +', 'Other Assets']),
+            ('Total Assets', ['Total Assets']),
         ]
         
         row = 5
         self.bs_rows = {}
-        hist_col_end = len(hist_years) + 1
         forecast_col_start = len(hist_years) + 2
         
-        for item_name, item_key, is_input in bs_structure:
-            if not item_name:
+        for display_name, screener_keys in bs_items:
+            if not display_name:  # Spacer row
                 row += 1
                 continue
             
-            ws.cell(row=row, column=1).value = item_name
+            ws.cell(row=row, column=1).value = display_name
             ws.cell(row=row, column=1).border = THIN_BORDER
             
-            if item_key in ['total_equity', 'total_liabilities', 'total_assets'] or item_name == 'ASSETS':
+            # Bold section headers and totals
+            if display_name in ['LIABILITIES', 'ASSETS'] or 'Total' in display_name:
                 ws.cell(row=row, column=1).font = Font(bold=True)
             
-            if item_key:
-                self.bs_rows[item_key] = row
+            # Store row reference
+            key = display_name.lower().replace(' ', '_')
+            self.bs_rows[key] = row
             
-            # Historical values
-            if annual_bs and hist_years:
+            # Fill historical data
+            if screener_keys and annual_bs:
                 for col_idx, year in enumerate(hist_years, start=2):
                     year_data = annual_bs.get(year, {})
                     
-                    # Map keys
-                    bs_keys = {
-                        'share_capital': ['Share Capital', 'Equity Share Capital'],
-                        'reserves': ['Reserves', 'Reserves and Surplus', 'Other Equity'],
-                        'borrowings': ['Borrowings', 'Total Debt', 'Long Term Borrowings'],
-                        'other_liabilities': ['Other Liabilities', 'Other liabilities'],
-                        'fixed_assets': ['Fixed Assets', 'Property, Plant and Equipment', 'Net Block'],
-                        'investments': ['Investments', 'Non-current Investments'],
-                        'advances': ['Advances +', 'Loans and Advances', 'Trade Receivables'],
-                        'other_assets': ['Other Assets', 'Other assets'],
-                        'total_assets': ['Total Assets', 'Total'],
-                    }
+                    value = None
+                    for key in screener_keys:
+                        if key in year_data:
+                            value = year_data[key]
+                            break
+                    
+                    cell = ws.cell(row=row, column=col_idx)
+                    if value is not None:
+                        cell.value = value
+                        cell.number_format = '#,##0.00'
+                    cell.border = THIN_BORDER
+                    cell.font = NUMBER_FONT
+                    cell.alignment = Alignment(horizontal='right')
+            
+            # Fill calculated fields for historical years
+            elif display_name == 'Total Equity' and annual_bs:
+                eq_row = self.bs_rows.get('equity_capital')
+                res_row = self.bs_rows.get('reserves')
+                
+                for col_idx, year in enumerate(hist_years, start=2):
+                    col = get_column_letter(col_idx)
+                    cell = ws.cell(row=row, column=col_idx)
+                    cell.value = f"={col}{eq_row}+{col}{res_row}"
+                    cell.number_format = '#,##0.00'
+                    cell.border = THIN_BORDER
+                    cell.font = Font(bold=True)
+            
+            # Add formulas for forecast columns
+            for fc_idx, fc_year in enumerate(self.forecast_years):
+                col_idx = forecast_col_start + fc_idx
+                cell = ws.cell(row=row, column=col_idx)
+                prev_col = get_column_letter(col_idx - 1)
+                curr_col = get_column_letter(col_idx)
+                
+                if display_name == 'Equity Capital':
+                    cell.value = f"={prev_col}{row}"  # Stays constant
+                    
+                elif display_name == 'Reserves':
+                    # Reserves = Previous + Retained Earnings (PAT * retention)
+                    pat_row = self.pnl_rows.get('net_profit')
+                    if pat_row:
+                        cell.value = f"={prev_col}{row}+'P&L'!{curr_col}{pat_row}*0.70"
+                    else:
+                        cell.value = f"={prev_col}{row}*1.12"
+                        
+                elif display_name == 'Total Equity':
+                    eq_row = self.bs_rows.get('equity_capital')
+                    res_row = self.bs_rows.get('reserves')
+                    cell.value = f"={curr_col}{eq_row}+{curr_col}{res_row}"
+                    cell.font = Font(bold=True)
+                    
+                elif display_name == 'Deposits':
+                    growth_ref = self.assumption_refs.get('deposit_growth', {}).get(fc_year)
+                    if growth_ref:
+                        cell.value = f"={prev_col}{row}*(1+{growth_ref}/100)"
+                    else:
+                        cell.value = f"={prev_col}{row}*1.12"
+                        
+                elif display_name == 'Borrowings':
+                    cell.value = f"={prev_col}{row}*1.08"
+                    
+                elif display_name == 'Other Liabilities':
+                    cell.value = f"={prev_col}{row}*1.10"
+                    
+                elif display_name == 'Total Liabilities':
+                    # Total = Equity + Deposits + Borrowings + Other
+                    te_row = self.bs_rows.get('total_equity')
+                    dep_row = self.bs_rows.get('deposits')
+                    borr_row = self.bs_rows.get('borrowings')
+                    oth_row = self.bs_rows.get('other_liabilities')
+                    cell.value = f"={curr_col}{te_row}+{curr_col}{dep_row}+{curr_col}{borr_row}+{curr_col}{oth_row}"
+                    cell.font = Font(bold=True)
+                    
+                elif display_name == 'Fixed Assets':
+                    cell.value = f"={prev_col}{row}*1.05"
+                    
+                elif display_name == 'CWIP':
+                    cell.value = f"={prev_col}{row}*1.02"
+                    
+                elif display_name == 'Investments':
+                    cell.value = f"={prev_col}{row}*1.10"
+                    
+                elif display_name == 'Advances':
+                    growth_ref = self.assumption_refs.get('loan_growth_rate', {}).get(fc_year)
+                    if growth_ref:
+                        cell.value = f"={prev_col}{row}*(1+{growth_ref}/100)"
+                    else:
+                        cell.value = f"={prev_col}{row}*1.12"
+                        
+                elif display_name == 'Other Assets':
+                    cell.value = f"={prev_col}{row}*1.08"
+                    
+                elif display_name == 'Total Assets':
+                    # Total Assets = Total Liabilities (BS identity)
+                    tl_row = self.bs_rows.get('total_liabilities')
+                    cell.value = f"={curr_col}{tl_row}"
+                    cell.font = Font(bold=True)
+                
+                if display_name not in ['LIABILITIES', 'ASSETS']:
+                    cell.number_format = '#,##0.00'
+                    cell.fill = FORECAST_FILL
+                cell.border = THIN_BORDER
+                cell.alignment = Alignment(horizontal='right')
+            
+            row += 1
+        
+        ws.column_dimensions['A'].width = 22
+        for i in range(2, len(all_years) + 2):
+            ws.column_dimensions[get_column_letter(i)].width = 14
                     
                     value = None
                     for key in bs_keys.get(item_key, [item_name]):
