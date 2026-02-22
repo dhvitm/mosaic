@@ -505,4 +505,5 @@ P/E is secondary. DDM is used as a cross-check for high-dividend banks.
 - Quarter-end window dressing common for CD and CASA ratios
 
 ## Observed Data (Auto-updated by Mosaic)
+- HDFCBANK FY26: HDFC Bank post-merger: NIM 3.45%, CASA 43% improving to 45%, GNPA 1.25%, NNPA 0.35%, ROE 17-18%, Credit Cost 0.45-0.55%, C/I ratio 43-44%. Trading at P/B 2.48x vs historical 2.8-3.2x. Merger with HDFC Ltd completed July 2023. (source: FY25 Annual Report and cached assumptions as of Feb 2026, added: 2026-02-22)
 
