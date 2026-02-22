@@ -646,9 +646,98 @@ class ToolExecutor:
     
     # ============== MODEL OUTPUT TOOLS ==============
     
-    def _write_excel_model(self, model_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Generate the complete Excel model"""
+    def _store_analysis_data(self, data_type: str, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Store a piece of analysis data for later Excel generation"""
         try:
+            valid_types = ["company_info", "valuation", "assumptions", "thesis", "management_commentary"]
+            if data_type not in valid_types:
+                return {"success": False, "error": f"Invalid data_type. Must be one of: {valid_types}"}
+            
+            # Store in the shared collected_data dict
+            self._collected_data[data_type] = data
+            
+            stored_keys = list(self._collected_data.keys())
+            
+            return {
+                "success": True,
+                "stored": data_type,
+                "all_stored_types": stored_keys,
+                "ready_for_excel": all(k in stored_keys for k in ["company_info", "valuation", "assumptions", "thesis"])
+            }
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+    
+    async def _generate_excel_model(self, ticker: str, confirm_ready: bool) -> Dict[str, Any]:
+        """Generate the complete Excel model using all collected data"""
+        try:
+            if not confirm_ready:
+                return {
+                    "success": False, 
+                    "error": "Set confirm_ready=true to generate the model",
+                    "hint": "Make sure you have stored company_info, valuation, assumptions, thesis first"
+                }
+            
+            # Check what data we have collected
+            collected = self._collected_data
+            required = ["company_info", "valuation", "assumptions", "thesis"]
+            missing = [k for k in required if k not in collected]
+            
+            if missing:
+                return {
+                    "success": False,
+                    "error": f"Missing required data: {missing}",
+                    "hint": "Use store_analysis_data to store these before generating Excel"
+                }
+            
+            # Get financials from collected data or cache
+            financials = collected.get("financials", {})
+            if not financials:
+                # Try to load from cache
+                cache_result = self._cache_read(ticker, "screener_financials")
+                if cache_result.get("cached"):
+                    financials = cache_result.get("data", {})
+            
+            # Get stock price
+            stock_price = collected.get("stock_price", {})
+            if not stock_price:
+                cache_result = self._cache_read(ticker, "stock_price")
+                if cache_result.get("cached"):
+                    stock_price = cache_result.get("data", {})
+            
+            # Get peer data
+            peers = collected.get("peers", {})
+            if not peers:
+                cache_result = self._cache_read(ticker, "peer_comparison")
+                if cache_result.get("cached"):
+                    peers = cache_result.get("data", {})
+            
+            # Build the model_data structure for Excel generator
+            model_data = {
+                "company_metadata": {
+                    "ticker": ticker,
+                    "name": financials.get("company_name", ticker),
+                    "sector": collected.get("company_info", {}).get("sector", "Unknown"),
+                    "sub_sector": collected.get("company_info", {}).get("sub_sector", ""),
+                    "current_price": stock_price.get("current_price", 0),
+                    "market_cap": stock_price.get("market_cap", 0),
+                    "pe_ratio": stock_price.get("pe_ratio", 0),
+                    "book_value": stock_price.get("book_value", 0),
+                    "business_description": collected.get("company_info", {}).get("business_description", "")
+                },
+                "historical_financials": {
+                    "annual_pnl": financials.get("annual_pnl", {}),
+                    "annual_bs": financials.get("annual_bs", {}),
+                    "ratios": financials.get("ratios", {})
+                },
+                "quarterly_results": financials.get("quarterly", {}),
+                "assumptions": collected.get("assumptions", {}),
+                "valuation": collected.get("valuation", {}),
+                "thesis": collected.get("thesis", {}),
+                "management_commentary": collected.get("management_commentary", {}),
+                "peer_comparison": peers.get("peers", []) if isinstance(peers, dict) else []
+            }
+            
+            # Generate the Excel file
             job_id = self._current_job_id or "manual"
             excel_path = self.excel_generator.generate_model(job_id, model_data)
             
@@ -659,7 +748,8 @@ class ToolExecutor:
                     "Cover", "Assumptions", "P&L", "Balance Sheet", 
                     "ROE Tree", "Quarterly", "Key Ratios", "Valuation",
                     "Peer Comparison", "Thesis"
-                ]
+                ],
+                "data_sources_used": list(collected.keys())
             }
         except Exception as e:
             return {"success": False, "error": str(e)}
