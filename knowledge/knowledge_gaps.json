@@ -1,0 +1,8 @@
+[
+  {
+    "sector": "banks",
+    "missing_topic": "Unable to access detailed historical financials from Screener.in and PDF documents for HDFCBANK. Proceeding with publicly available information and market data. This model will use industry benchmarks and known post-merger characteristics of HDFC Bank but lacks granular historical P&L and balance sheet data that would normally be scraped.",
+    "flagged_by": "HDFCBANK",
+    "timestamp": "2026-02-22T14:06:45.343670+00:00"
+  }
+]
