@@ -1,0 +1,671 @@
+{
+  "ticker": "UNIONBANK",
+  "step_number": 4,
+  "data": {
+    "concall_highlights": [
+      "*\nThe pros and cons are machine generated.\n\n\n\n            Pros / cons are based on a checklist to highlight important points. Please exercise caution and do your own analysis."
+    ],
+    "pros": [
+      "Stock is trading at 1.13 times its book value",
+      "Company has delivered good profit growth of 50.7% CAGR over last 5 years",
+      "Company has been maintaining a healthy dividend payout of 21.4%",
+      "Company's working capital requirements have reduced from 224 days to 117 days"
+    ],
+    "cons": [
+      "Company has low interest coverage ratio.",
+      "Contingent liabilities of Rs.6,06,539 Cr.",
+      "Company might be capitalizing the interest cost"
+    ],
+    "management_analysis": "",
+    "scraped_successfully": true,
+    "peer_comparison": [
+      {
+        "name": "S.No."
+      },
+      {
+        "name": "1."
+      },
+      {
+        "name": "2."
+      },
+      {
+        "name": "3."
+      },
+      {
+        "name": "4."
+      },
+      {
+        "name": "5."
+      },
+      {
+        "name": "6."
+      },
+      {
+        "name": "7."
+      }
+    ],
+    "shareholding": {
+      "Jun 2023": {
+        "Promoters +": 83.49,
+        "FIIs +": 1.66,
+        "DIIs +": 8.27,
+        "Public +": 6.57,
+        "No. of Shareholders": 783550.0
+      },
+      "Sep 2023": {
+        "Promoters +": 83.49,
+        "FIIs +": 1.46,
+        "DIIs +": 7.88,
+        "Public +": 7.17,
+        "No. of Shareholders": 775773.0
+      },
+      "Dec 2023": {
+        "Promoters +": 76.99,
+        "FIIs +": 2.89,
+        "DIIs +": 12.69,
+        "Public +": 7.42,
+        "No. of Shareholders": 865251.0
+      },
+      "Mar 2024": {
+        "Promoters +": 76.99,
+        "FIIs +": 3.97,
+        "DIIs +": 12.28,
+        "Public +": 6.76,
+        "No. of Shareholders": 874309.0
+      },
+      "Jun 2024": {
+        "Promoters +": 74.76,
+        "FIIs +": 6.75,
+        "DIIs +": 12.24,
+        "Public +": 6.25,
+        "No. of Shareholders": 914940.0
+      },
+      "Sep 2024": {
+        "Promoters +": 74.76,
+        "FIIs +": 7.37,
+        "DIIs +": 11.38,
+        "Public +": 6.5,
+        "No. of Shareholders": 984229.0
+      },
+      "Dec 2024": {
+        "Promoters +": 74.76,
+        "FIIs +": 6.89,
+        "DIIs +": 11.22,
+        "Public +": 7.12,
+        "No. of Shareholders": 1019061.0
+      },
+      "Mar 2025": {
+        "Promoters +": 74.76,
+        "FIIs +": 6.46,
+        "DIIs +": 11.94,
+        "Public +": 6.85,
+        "No. of Shareholders": 1022300.0
+      },
+      "Jun 2025": {
+        "Promoters +": 74.76,
+        "FIIs +": 7.11,
+        "DIIs +": 11.63,
+        "Public +": 6.5,
+        "No. of Shareholders": 1041211.0
+      },
+      "Sep 2025": {
+        "Promoters +": 74.76,
+        "FIIs +": 7.7,
+        "DIIs +": 11.93,
+        "Public +": 5.6,
+        "No. of Shareholders": 961173.0
+      },
+      "Dec 2025": {
+        "Promoters +": 74.76,
+        "FIIs +": 7.86,
+        "DIIs +": 11.7,
+        "Public +": 5.67,
+        "No. of Shareholders": 955839.0
+      }
+    },
+    "operational_metrics": {
+      "nim": 2.76,
+      "gnpa": 3.06,
+      "nnpa": 0.51,
+      "car": 16.49,
+      "roe": 17.09,
+      "provision_coverage": 95.13,
+      "guidance": [
+        "Branch expansion plan of 200 new branches for FY26-27",
+        "Consistent and sustained growth in RAM advances at 11.50% YoY",
+        "Credit to Deposit Ratio: Global 83.89%, Domestic 80.95%"
+      ],
+      "casa": 33.96,
+      "roa": 1.35,
+      "loan_growth": 7.13,
+      "deposit_growth": 3.36,
+      "slippage_ratio": 0.89,
+      "key_highlights": [
+        "GNPA improved by 79 bps YoY to 3.06%, NNPA improved by 31 bps YoY to 0.51%",
+        "RAM advances grew 11.50% YoY with Retail at 21.67%, MSME at 19.75%, Agriculture at -5.39%",
+        "PCR improved by 171 bps YoY to 95.13% with credit cost at 0.09%",
+        "CASA ratio improved 53 bps YoY to 33.96% (140 bps QoQ improvement)",
+        "Strong capital position with CRAR at 16.49% and CET-I at 13.94%"
+      ]
+    },
+    "bse_presentations": [
+      {
+        "quarter": "Jan 2026",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/8e897980-03de-492b-a42b-a194e364a363.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jan 2026"
+      },
+      {
+        "quarter": "Nov 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/a707e5ce-3d44-4e9c-b2f2-dccfbccef390.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Nov 2025"
+      },
+      {
+        "quarter": "Jul 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/b6b9dca3-6daf-48d2-9c09-87f45fee96a4.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jul 2025"
+      },
+      {
+        "quarter": "May 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/a5fa094f-2474-4a13-a865-5b69bba114a4.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation May 2025"
+      },
+      {
+        "quarter": "Feb 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/00327c74-04d6-443d-8bf8-434e9b258933.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Feb 2025"
+      },
+      {
+        "quarter": "Oct 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/b5ba3257-e22a-4608-925d-87f805e1afe9.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Oct 2024"
+      },
+      {
+        "quarter": "Jul 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/d005b8cc-a914-4f29-8cc1-74efaa183490.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jul 2024"
+      },
+      {
+        "quarter": "May 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/cbf0f5cd-4877-43e5-b0a8-08dda9f446a6.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation May 2024"
+      },
+      {
+        "quarter": "Jan 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/c2b7d13f-d95c-4a7d-9d9f-dee412ba8cbd.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jan 2024"
+      },
+      {
+        "quarter": "Nov 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/377de62c-82a3-478d-ab3f-6890b9f749cd.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Nov 2023"
+      },
+      {
+        "quarter": "Jul 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/96f6d1d3-e63b-4e32-a5e7-aad79ff8a58a.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jul 2023"
+      },
+      {
+        "quarter": "Jul 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/94c83fb3-6c76-482c-a5a3-5e2d2bf34f9f.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jul 2023"
+      },
+      {
+        "quarter": "May 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/b03ee25c-263b-47a5-9560-7a2d68e890ca.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation May 2023"
+      },
+      {
+        "quarter": "Jan 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/f645fd64-188b-45c9-8118-8bc87204db67.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Jan 2023"
+      },
+      {
+        "quarter": "Oct 2022",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/d56f4b8d-d453-4ce2-9658-f649aa9d2a14.pdf",
+        "type": "ppt",
+        "title": "Investor Presentation Oct 2022"
+      }
+    ],
+    "presentation_summaries": [
+      {
+        "quarter": null,
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachLive/924a9875-f407-4903-801e-db75f41b7f2c.pdf",
+        "type": "ai_summary",
+        "title": "Disclosure Pertaining To Analysts/Investors Meet/Call - Outcome.\n\n          \n            1d - Investor/Analyst meet with Kuwait Investment Office on 20 Feb 2026, 6:30\u20137:30 PM IST, London."
+      },
+      {
+        "quarter": null,
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachLive/cfcae9c4-ce55-435a-bea7-e16331649118.pdf",
+        "type": "ai_summary",
+        "title": "Disclosures Pertaining To Analysts/Investors Meet/Call - Outcome\n\n          \n            1d - Investors/Analysts meet with Universities Superannuation Scheme on 20 Feb 2026, one-to-one, London (physical)."
+      },
+      {
+        "quarter": null,
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachLive/337093fa-11e2-4289-a40b-80b252489292.pdf",
+        "type": "ai_summary",
+        "title": "Disclosures Pertaining To Analysts/Investors Meet/Call - Outcome\n\n          \n            1d - Union Bank met JPMorgan Asset Management (UK) on 20 Feb 2026; one-to-one investor meeting."
+      },
+      {
+        "quarter": null,
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachLive/a1fab5a2-011f-4e2a-994a-3be5cdef69db.pdf",
+        "type": "ai_summary",
+        "title": "Disclosures Pertaining To Analysts/Investors Meet/Call - Schedule\n\n          \n            17 Feb - Investors/Analysts one-to-one meet with UBS Global Asset Management Singapore in Mumbai on 26 February 2026."
+      }
+    ],
+    "transcripts": [
+      {
+        "quarter": "Jan 2026",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/517356d6-b7d0-4339-b1b4-89715a359f06.pdf",
+        "type": "transcript",
+        "title": "Transcript Jan 2026"
+      },
+      {
+        "quarter": "Nov 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/3f009e81-a774-404f-a378-bde9a10f8599.pdf",
+        "type": "transcript",
+        "title": "Transcript Nov 2025"
+      },
+      {
+        "quarter": "Jul 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/136a4abf-2bbe-4c98-a339-a1f137410e09.pdf",
+        "type": "transcript",
+        "title": "Transcript Jul 2025"
+      },
+      {
+        "quarter": "May 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/9d660145-0064-4400-84e1-289be7f5bb31.pdf",
+        "type": "transcript",
+        "title": "Transcript May 2025"
+      },
+      {
+        "quarter": "Feb 2025",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/7fbf2e42-4c05-42c1-841d-a7a6fda07c22.pdf",
+        "type": "transcript",
+        "title": "Transcript Feb 2025"
+      },
+      {
+        "quarter": "Oct 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/bff388a0-d034-4c8d-ba4f-1f667dab7436.pdf",
+        "type": "transcript",
+        "title": "Transcript Oct 2024"
+      },
+      {
+        "quarter": "Jul 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/045f69e4-b7a9-4027-a6eb-ba28a9b8c9ad.pdf",
+        "type": "transcript",
+        "title": "Transcript Jul 2024"
+      },
+      {
+        "quarter": "May 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/bd074b10-0bad-4166-9fa1-aa05d632ae5e.pdf",
+        "type": "transcript",
+        "title": "Transcript May 2024"
+      },
+      {
+        "quarter": "Jan 2024",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/94798d5c-c2e4-41bb-b4c6-f6f3117926ef.pdf",
+        "type": "transcript",
+        "title": "Transcript Jan 2024"
+      },
+      {
+        "quarter": "Nov 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/51dd1033-1178-4bed-b7a4-84c59cdb8084.pdf",
+        "type": "transcript",
+        "title": "Transcript Nov 2023"
+      },
+      {
+        "quarter": "Jul 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/3aa0dae8-68e2-4984-90d3-ea71f8e4dc7e.pdf",
+        "type": "transcript",
+        "title": "Transcript Jul 2023"
+      },
+      {
+        "quarter": "May 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/62a4b9c9-3c6a-455e-915b-07c29d5b2b71.pdf",
+        "type": "transcript",
+        "title": "Transcript May 2023"
+      },
+      {
+        "quarter": "Jan 2023",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/acd5310c-3109-418c-abb8-2f9e37dcdc96.pdf",
+        "type": "transcript",
+        "title": "Transcript Jan 2023"
+      },
+      {
+        "quarter": "Oct 2022",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/3d755666-bebb-42d5-a8e8-1a07af767556.pdf",
+        "type": "transcript",
+        "title": "Transcript Oct 2022"
+      },
+      {
+        "quarter": "Jul 2022",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/1c6e8a55-2833-4abc-9fc2-573b11e80bb5.pdf",
+        "type": "transcript",
+        "title": "Transcript Jul 2022"
+      }
+    ],
+    "annual_reports": [
+      {
+        "year": "Financial Year 2025\n      \n        from bse",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/5e30ef1f-658a-4b33-8721-25f6a462ae7c.pdf"
+      },
+      {
+        "year": "Financial Year 2024\n      \n        from bse",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/a59b26ca-8c5f-424f-ae8d-27c1b78e35f3.pdf"
+      },
+      {
+        "year": "Financial Year 2023\n      \n        from bse",
+        "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/083844e2-7459-4598-a74d-1254dc28b4bc.pdf"
+      },
+      {
+        "year": "Financial Year 2022\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/532477/73178532477.pdf"
+      },
+      {
+        "year": "Financial Year 2021\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/532477/68848532477.pdf"
+      },
+      {
+        "year": "Financial Year 2020\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/532477/5324770320.pdf"
+      },
+      {
+        "year": "Financial Year 2019\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/532477/5324770319.pdf"
+      },
+      {
+        "year": "Financial Year 2018\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/532477/5324770318.pdf"
+      },
+      {
+        "year": "Financial Year 2017\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/532477/5324770317.pdf"
+      },
+      {
+        "year": "Financial Year 2016\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/532477/5324770316.pdf"
+      },
+      {
+        "year": "Financial Year 2015\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/532477/5324770315.pdf"
+      },
+      {
+        "year": "Financial Year 2014\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/532477/5324770314.pdf"
+      },
+      {
+        "year": "Financial Year 2013\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/532477/5324770313.pdf"
+      },
+      {
+        "year": "Financial Year 2012\n      \n        from bse",
+        "url": "https://www.bseindia.com/bseplus/AnnualReport/532477/5324770312.pdf"
+      },
+      {
+        "year": "Financial Year 2012\n      \n        from nse",
+        "url": "https://archives.nseindia.com/annual_reports/AR_UNIONBANK_2011_2012_29062012101542.zip"
+      }
+    ],
+    "pdf_extracted_metrics": {
+      "extracted_from_pdfs": 2,
+      "quarters_processed": [
+        "Jan 2026",
+        "Nov 2025"
+      ],
+      "metrics": {
+        "Jan 2026": {
+          "nim": 2.76,
+          "gnpa": 3.06,
+          "nnpa": 0.51,
+          "car": 16.49,
+          "roe": 17.09,
+          "provision_coverage": 95.13,
+          "guidance": [
+            "Branch expansion plan of 200 new branches for FY26-27",
+            "Consistent and sustained growth in RAM advances at 11.50% YoY",
+            "Credit to Deposit Ratio: Global 83.89%, Domestic 80.95%"
+          ],
+          "casa": 33.96,
+          "roa": 1.35,
+          "loan_growth": 7.13,
+          "deposit_growth": 3.36,
+          "slippage_ratio": 0.89,
+          "key_highlights": [
+            "GNPA improved by 79 bps YoY to 3.06%, NNPA improved by 31 bps YoY to 0.51%",
+            "RAM advances grew 11.50% YoY with Retail at 21.67%, MSME at 19.75%, Agriculture at -5.39%",
+            "PCR improved by 171 bps YoY to 95.13% with credit cost at 0.09%",
+            "CASA ratio improved 53 bps YoY to 33.96% (140 bps QoQ improvement)",
+            "Strong capital position with CRAR at 16.49% and CET-I at 13.94%"
+          ]
+        },
+        "Nov 2025": {
+          "nim": 2.67,
+          "gnpa": 3.29,
+          "nnpa": 0.55,
+          "car": 17.07,
+          "roe": 15.08,
+          "roa": 1.16,
+          "provision_coverage": 95.13,
+          "guidance": [
+            "by Rating Agencies\nCapital Adequacy\nDomestic\nin %\nRating Agency AT-1 Tier-II\n17.",
+            "upgraded during FY-26\n1."
+          ],
+          "casa": 32.56,
+          "loan_growth": 4.99,
+          "deposit_growth": 1.9,
+          "slippage_ratio": 0.95,
+          "key_highlights": [
+            "5th Largest PSB in Business Mix with 8.7% share among PSBs",
+            "Global Business mix of \u20b922.10 Trillion (Advances: \u20b99.75 Trillion, Deposits: \u20b912.35 Trillion)",
+            "RAM advances grew 8.14% YoY to \u20b95.54 lakh crore",
+            "Asset quality improved significantly - GNPA improved by 107 bps YoY, PCR improved by 234 bps YoY to 95.13%",
+            "Strong capital position with CET-1 at 14.37%, improved by 49 bps YoY"
+          ]
+        }
+      },
+      "guidance": [
+        "Branch expansion plan of 200 new branches for FY26-27",
+        "Consistent and sustained growth in RAM advances at 11.50% YoY",
+        "Credit to Deposit Ratio: Global 83.89%, Domestic 80.95%",
+        "by Rating Agencies\nCapital Adequacy\nDomestic\nin %\nRating Agency AT-1 Tier-II\n17.",
+        "upgraded during FY-26\n1.",
+        "Credit cost expected to remain in the range of 20-40 basis points even after ECL implementation, with minimal increase from current run-rate",
+        "Provisioning Coverage Ratio maintained at more than 95%, providing adequate buffer for asset quality management",
+        "INR 24,000-26,000 crores of sanctioned loans in pipeline for disbursement, supporting near-term loan growth momentum",
+        "Cost of funds and deposits showing steep reduction trajectory due to strategic reduction of INR 38,000-40,000 crores high-cost bulk deposits",
+        "Capital ratios and liquidity ratios are comfortable and well within regulatory requirements to support growth plans",
+        "Target 9-10% growth on both assets and liabilities going forward, with aspiration to exceed system-level growth quarter-on-quarter",
+        "Aim to increase RAM (Retail, Agriculture, MSME) portfolio from current 55% to 58% while reducing corporate exposure from 45%",
+        "Maintain CD ratio between 78.5-80% levels with focus on increasing CASA by 1-1.5% and retail term deposits",
+        "Target retail to bulk deposit mix of 75:25 and RAM to corporate lending ratio of 55:45 (moving to 58:42)",
+        "NIM maintained at 2.67% with confidence in protecting and potentially improving margins going forward"
+      ],
+      "key_highlights": [
+        "GNPA improved by 79 bps YoY to 3.06%, NNPA improved by 31 bps YoY to 0.51%",
+        "RAM advances grew 11.50% YoY with Retail at 21.67%, MSME at 19.75%, Agriculture at -5.39%",
+        "PCR improved by 171 bps YoY to 95.13% with credit cost at 0.09%",
+        "CASA ratio improved 53 bps YoY to 33.96% (140 bps QoQ improvement)",
+        "Strong capital position with CRAR at 16.49% and CET-I at 13.94%",
+        "5th Largest PSB in Business Mix with 8.7% share among PSBs",
+        "Global Business mix of \u20b922.10 Trillion (Advances: \u20b99.75 Trillion, Deposits: \u20b912.35 Trillion)",
+        "RAM advances grew 8.14% YoY to \u20b95.54 lakh crore",
+        "Asset quality improved significantly - GNPA improved by 107 bps YoY, PCR improved by 234 bps YoY to 95.13%",
+        "Strong capital position with CET-1 at 14.37%, improved by 49 bps YoY"
+      ],
+      "raw_text_sample": "--- Page 1 ---\n\u0938\u0902\u0926\u0930\u094d\u092d Ref.:\u0928\u093f.\u0938\u0947.\u0928\u093f.ISD/365/2025-26 \u0928\u0926\u093f \u0902\u0915 Date : January 14, 2026\n\u092c\u0940\u090f\u0938\u0908 \u0928\u093f\u0928\u093f\u091f\u0947\u0921 BSE Ltd. \u093f\u0947\u0936\u093f\u093f \u091f\u0949\u0915 \u090f\u0915\u094d\u0938\u094d\u091a\u0947\u0902\u091c \u0911\u092b \u0907\u0902\u0928\u0921\u092f \u0928\u093f\u0928\u093f\u091f\u0947\u0921\n\u092c\u0940\u090f\u0938\u0908 \u0928\u093f\u0938\u094d\u091f\u0902\u0917 \u0938\u0947\u0902\u091f\u0930 BSE Listing Centre National Stock Exchange of India Ltd.\n\u0938\u094d\u093f\u092a \u0915\u094b\u0921 Scrip Code - 532 477 \u0928\u093f\u092a\u094d\u0938 NEAPS\n\u0938\u094d\u093f\u092a \u0915\u094b\u0921 Scrip Symbol-UNIONBANK-EQ\n\u0928\u0938\u0915\u094d\u092f\u094b\u0930\u0930\u091f\u0940 Security \u2013 UBI-AT/BB\n\u092e\u0939\u094b\u0926\u092f\u093e Madam / \u092e\u0939\u094b\u0926\u092f Sir,\nSubject: Presentation on Financial Results for the Third Quarter/Nine Months ended\non December 31, 2025.\nPursuant to Regulation 30 read with Clause 15 of Para A of Part A of Schedule III and\nRegulation 46(2)(o) of SEBI (Listing Obligations and Disclosure Requirements) Regulations,\n2015, we hereby submit the Presentation on Unaudited Reviewed Financial Results\n(Standalone and Consolidated) of the Bank for the Third Quarter/Nine Months ended on\nDecember 31, 2025.\nThe same is also being made available on our Bank\u2019s website -\nhttps://www.unionbankofindia.co.in/en/common/financial-results\nThe above is for your information and record.\nThanking you.\n\u092d\u0935\u0926\u0940\u092f Yours faithfully,\n(Mangesh Mandrekar)\nCompany Secretary\nEncl: As above.\n\u092f\u0942\u0928\u093f\u092f\u093f \u092c\u0948\u0902\u0915 \u0911\u092b \u0907\u0902\u0921\u093f\u092f\u093e, \u0928\u093f\u0935\u0947\u0936\u0915 \u0938\u0947\u0935\u093e\u092f\u0947\u0902 \u092a\u094d\u0930\u092d\u093e\u0917, \u092f\u0942\u0928\u093f\u092f\u093f \u092c\u0948\u0902\u0915 \u092d\u0935\u093f, 239, \u0935\u0935\u0927\u093e\u093f \u092d\u0935\u093f \u092e\u093e\u0917\u0917, \u093f\u0930\u0940\u092e\u093f \u092a\u0949\u0907\u0902\u091f, \u092e \u0902\u092c\u0908- 400021.\nUnion Bank of India, Investor Services Division, Union Bank Bhavan,239,Vidhan Bhavan Marg, Nariman Point, Mumbai- 400021.\n\uf028: + 91 22 2289 6636/2289 6643,\uf02a investorservices@unionbankofindia.bank , website: www.unionbankofindia.co.in\n\n[Table]\n\u092c\u0940\u090f\u0938\u0908 \u0928\u093f\u0928\u093f\u091f\u0947\u0921 BSE Ltd.\n\u092c\u0940\u090f\u0938\u0908 \u0928\u093f\u0938\u094d\u091f\u0902\u0917 \u0938\u0947\u0902\u091f\u0930 BSE Listing Centre\n\u0938\u094d\u093f\u092a \u0915\u094b\u0921 Scrip Code - 532 477 | \u093f\u0947\u0936\u093f\u093f \u091f\u0949\u0915 \u090f\u0915\u094d\u0938\u094d\u091a\u0947\u0902\u091c \u0911\u092b \u0907\u0902\u0928\u0921\u092f \u0928\u093f\u0928\u093f\u091f\u0947\u0921\nNational Stock Exchange of India Ltd.\n\u0928\u093f\u092a\u094d\u0938 NEAPS\n\u0938\u094d\u093f\u092a \u0915\u094b\u0921 Scrip Symbol-UNIONBANK-EQ\n\u0928\u0938\u0915\u094d\u092f\u094b\u0930\u0930\u091f\u0940 Security \u2013 UBI-AT/BB\n\n--- Page 2 ---\nYears\nof\nLegacy\nInvestor Presentation - Q3 FY2026\n14.01.2026\nPlease follow us on:\n\n[Table]\nYears\nof\nLegacy\nInvestor Presentation - Q3 FY2026\n14.01.2026\nPlease follow us on:\n\n\n--- Page 3 ---\nPan India Performance Business Financials Asset Quality & Financial Ease of Doing Cyber Group Entities\nPresence Highlights at a Glance at a Glance Capital Adequacy Inclusion & ESG Business Security & Awards\nBranch Network\nNORTH EASTERN\nNORTHERN CENTRAL 128 Branches\n1,045 Branches 1,745 Branches (102 ATMs) Shareholding (%)\n(968 ATMs) (1,594 ATMs)\nFII\nBranches Share 8.14\nDII\n\uf0a7 Rural (30%)\n11.55\n\uf0a7 Semi-urban (29%)\nPublic\n\uf0a7 Urban (20%) 5.55\n\uf0a7 Metro (21%)\n74.76 Govt. of India\nCentralized Processing Centres\nEASTERN\n1,033 Branches\n(878 ATMs)\n12 LCBs & 38 MCBs\nWESTERN\n1 ( , 1 2 , 1 1 0 1 6 B r A a T nc M h s e ) s Branch Expansion (New Branches) 113 Union MSME First Branches\n9M FY26 Q4FY26 FY26-27\nSOUTHERN\n65 43 200 143 Retail Loan Points & 75 Agriculture Loan Points\n3,508 Branches\n(3,642 ATMs)\n1,675 Gold Loan Points\nTotal Specialized Sport\nTotal Branches Total ATMs Total BC Points\nEmployees Employees Persons\n8,671 8,300 26,541 74,233 6,192 88 3 SAMBs & 28 ARBs\n138 MSME Loan Points\n2/32\n\n[Table]\n9M FY26 | Q4FY26 | FY26-27\n65 | 43 | 200\n\n[Table]\nTotal Branches | Total ATMs | Total BC Points\n8,671 | 8,",
+      "latest_metrics": {
+        "nim": 2.76,
+        "gnpa": 3.06,
+        "nnpa": 0.51,
+        "car": 16.49,
+        "roe": 17.09,
+        "provision_coverage": 95.13,
+        "guidance": [
+          "Branch expansion plan of 200 new branches for FY26-27",
+          "Consistent and sustained growth in RAM advances at 11.50% YoY",
+          "Credit to Deposit Ratio: Global 83.89%, Domestic 80.95%"
+        ],
+        "casa": 33.96,
+        "roa": 1.35,
+        "loan_growth": 7.13,
+        "deposit_growth": 3.36,
+        "slippage_ratio": 0.89,
+        "key_highlights": [
+          "GNPA improved by 79 bps YoY to 3.06%, NNPA improved by 31 bps YoY to 0.51%",
+          "RAM advances grew 11.50% YoY with Retail at 21.67%, MSME at 19.75%, Agriculture at -5.39%",
+          "PCR improved by 171 bps YoY to 95.13% with credit cost at 0.09%",
+          "CASA ratio improved 53 bps YoY to 33.96% (140 bps QoQ improvement)",
+          "Strong capital position with CRAR at 16.49% and CET-I at 13.94%"
+        ]
+      }
+    },
+    "pdf_metrics_extracted": true,
+    "management_guidance": [
+      "Branch expansion plan of 200 new branches for FY26-27",
+      "Consistent and sustained growth in RAM advances at 11.50% YoY",
+      "Credit to Deposit Ratio: Global 83.89%, Domestic 80.95%",
+      "by Rating Agencies\nCapital Adequacy\nDomestic\nin %\nRating Agency AT-1 Tier-II\n17.",
+      "upgraded during FY-26\n1.",
+      "Credit cost expected to remain in the range of 20-40 basis points even after ECL implementation, with minimal increase from current run-rate",
+      "Provisioning Coverage Ratio maintained at more than 95%, providing adequate buffer for asset quality management",
+      "INR 24,000-26,000 crores of sanctioned loans in pipeline for disbursement, supporting near-term loan growth momentum",
+      "Cost of funds and deposits showing steep reduction trajectory due to strategic reduction of INR 38,000-40,000 crores high-cost bulk deposits",
+      "Capital ratios and liquidity ratios are comfortable and well within regulatory requirements to support growth plans",
+      "Target 9-10% growth on both assets and liabilities going forward, with aspiration to exceed system-level growth quarter-on-quarter",
+      "Aim to increase RAM (Retail, Agriculture, MSME) portfolio from current 55% to 58% while reducing corporate exposure from 45%",
+      "Maintain CD ratio between 78.5-80% levels with focus on increasing CASA by 1-1.5% and retail term deposits",
+      "Target retail to bulk deposit mix of 75:25 and RAM to corporate lending ratio of 55:45 (moving to 58:42)",
+      "NIM maintained at 2.67% with confidence in protecting and potentially improving margins going forward"
+    ],
+    "key_highlights": [
+      "GNPA improved by 79 bps YoY to 3.06%, NNPA improved by 31 bps YoY to 0.51%",
+      "RAM advances grew 11.50% YoY with Retail at 21.67%, MSME at 19.75%, Agriculture at -5.39%",
+      "PCR improved by 171 bps YoY to 95.13% with credit cost at 0.09%",
+      "CASA ratio improved 53 bps YoY to 33.96% (140 bps QoQ improvement)",
+      "Strong capital position with CRAR at 16.49% and CET-I at 13.94%",
+      "5th Largest PSB in Business Mix with 8.7% share among PSBs",
+      "Global Business mix of \u20b922.10 Trillion (Advances: \u20b99.75 Trillion, Deposits: \u20b912.35 Trillion)",
+      "RAM advances grew 8.14% YoY to \u20b95.54 lakh crore",
+      "Asset quality improved significantly - GNPA improved by 107 bps YoY, PCR improved by 234 bps YoY to 95.13%",
+      "Strong capital position with CET-1 at 14.37%, improved by 49 bps YoY"
+    ],
+    "annual_report_financials": {
+      "reports_processed": 0,
+      "years": [],
+      "detailed_pnl": {},
+      "detailed_bs": {},
+      "latest_year": null
+    },
+    "transcript_insights": {
+      "transcripts_processed": 2,
+      "quarters": [
+        "Jan 2026",
+        "Nov 2025"
+      ],
+      "key_themes": [
+        "Portfolio optimization strategy focused on four pillars: shedding high-cost bulk deposits (~INR 38,000-40,000 crores), reducing treasury by INR 15,000 crores, eliminating IBPC portfolio (INR 20,000 crores), and converting low-yielding portfolio (INR 10,000 crores) to long-term loans",
+        "Strong asset quality improvement with GNPA and NNPA reduction, SMA2 at lowest level of INR 4,285 crores (above INR 5 crores), and 95% of corporate book rated BBB and above",
+        "Digital transformation and technology leadership - ranked 2nd in EASE agenda among PSBs, received 4 Technology Awards including Best Bank Tech Award, implementing AI and robotic process automation",
+        "RAM (Retail, Agriculture, MSME) segment showing robust growth: 11.50% overall, 21.67% in Retail, 19.75% in Agri, while maintaining quality focus in corporate book",
+        "Project MUSKAAN initiative for operational streamlining, ease of doing business, risk mitigation, and cost reduction through bottom-up approach and process improvements",
+        "Strategic shift from bulk deposits to retail deposits and CASA to protect margins, resulting in 21.85% Y-o-Y reduction in high-cost bulk deposits",
+        "Focus on sustainable growth with calibrated balance between top line expansion and bottom line strength, while maintaining asset quality",
+        "Portfolio rebalancing toward higher-yielding retail, agriculture, and MSME (RAM) segments from 55% to target 58%, reducing lower-yielding corporate exposure",
+        "Significant improvement in asset quality metrics with gross NPA declining 107 bps Y-o-Y to 3.29% and net NPA down 43 bps to 0.55%",
+        "Strong capital position with 17.07% capital adequacy and 14.37% CET-1 ratio, among the best in industry"
+      ],
+      "management_outlook": [
+        "Positive economic environment with India expected to achieve ~7.4% GDP growth in Goldilocks phase (high growth, low inflation), supported by regulatory measures including 125 bps repo rate cut and 100 bps CRR reduction",
+        "NIM protection strategy working effectively - maintained NIM at 2.76% (increased from September quarter) despite 125 bps rate cut, compared to 2.91% in December 2024",
+        "Confident about managing ECL transition with minimal impact - only INR 4,200-4,300 crores additional provision required on netting basis, expecting credit cost to remain in 20-40 bps range",
+        "Strong pipeline with INR 24,000-26,000 crores of sanctioned loans pending disbursement, indicating sustained momentum in loan origination",
+        "Bank crossed INR 10 lakh crores advances milestone for first time, achieved highest Return on Assets at 1.35% and highest RoE, with CASA ratio improving 140 bps quarter-over-quarter",
+        "Aspires to achieve 9-10% growth on both asset and liability sides going forward, targeting system-level or better growth quarter-on-quarter",
+        "Plans to maintain CD ratio between 78.5-80% and increase CASA by 1-1.5% coupled with retail term deposits rather than bulk deposits",
+        "Confident about protecting and improving NIMs going forward by shifting from treasury to loan book and reducing low-yielding corporate exposures",
+        "Expects convergence with industry growth rates to accelerate, with sequential quarterly growth matching or exceeding system levels",
+        "Projects full impact of bulk deposit reduction strategy to materialize in current and subsequent quarters"
+      ],
+      "analyst_concerns": [
+        "Other interest income elevated at INR 206 crores vs typical INR 100 crores in recent quarters - management clarified INR 198 crores is RIDF recovery",
+        "Expected run-rate impact of draft ECL (Expected Credit Loss) norms on ongoing credit costs beyond transition impact",
+        "Sustainability of 4% Q-o-Q loan growth given ongoing portfolio optimization and mixed changes within corporate book",
+        "Quantum of SMA2 accounts below INR 5 crores (management indicated ~INR 24,000-25,000 crores but promised exact numbers separately)",
+        "Deposit growth lagging at 3.36% vs advances growth of 7.13%, though management explained strategic reduction of high-cost bulk deposits",
+        "Bank's loan growth at 5% Y-o-Y significantly lags system growth of 11%, with questions about timeline to reach parity with industry",
+        "Mismatch between stated strategy and actual numbers - cost of deposits only down 5 bps despite bulk deposit cuts, while yield on advances fell 16 bps",
+        "Elevated standard asset provisioning of Rs. 880 crores in the quarter, with questions about nature (ECL, SMA, or prudential provisioning)",
+        "Net interest income registered quarter-on-quarter de-growth despite management's margin protection strategy",
+        "Concerns about bulky upgradation in the quarter and whether there was associated provisioning reversal from lumpy accounts"
+      ],
+      "guidance_statements": [
+        "Credit cost expected to remain in the range of 20-40 basis points even after ECL implementation, with minimal increase from current run-rate",
+        "Provisioning Coverage Ratio maintained at more than 95%, providing adequate buffer for asset quality management",
+        "INR 24,000-26,000 crores of sanctioned loans in pipeline for disbursement, supporting near-term loan growth momentum",
+        "Cost of funds and deposits showing steep reduction trajectory due to strategic reduction of INR 38,000-40,000 crores high-cost bulk deposits",
+        "Capital ratios and liquidity ratios are comfortable and well within regulatory requirements to support growth plans",
+        "Target 9-10% growth on both assets and liabilities going forward, with aspiration to exceed system-level growth quarter-on-quarter",
+        "Aim to increase RAM (Retail, Agriculture, MSME) portfolio from current 55% to 58% while reducing corporate exposure from 45%",
+        "Maintain CD ratio between 78.5-80% levels with focus on increasing CASA by 1-1.5% and retail term deposits",
+        "Target retail to bulk deposit mix of 75:25 and RAM to corporate lending ratio of 55:45 (moving to 58:42)",
+        "NIM maintained at 2.67% with confidence in protecting and potentially improving margins going forward"
+      ],
+      "raw_text_samples": {
+        "Jan 2026": "--- Page 1 ---\n\u0938\u0902\u0926\u0930\u094d \u092dRef.:\u0928\u093f.\u0938\u0947.\u0935\u093f.ISD/381/2025-26 \u0926\u0926\u093f \u0902\u0915 Date : 20.01.2026\n\u092c\u0940\u090f\u0938\u0908 \u091a\u093f\u091a\u092e\u091f\u0947\u0921 BSE Ltd. \u0928\u0947\u0936\u0928\u093f \u0938\u094d\u091f\u0949\u093f \u090f\u0915\u094d\u0938\u094d\u093f\u0947\u0902\u091c \u0911\u092b \u0907\u094b\u0902\u091a\u0921\u092f\u093e \u091a\u093f\u091a\u092e\u091f\u0947\u0921\n\u092c\u0940\u090f\u0938\u0908 \u091a\u093f\u0916\u0938\u094d\u091f\u094b\u0902\u0917 \u0938\u0947\u0902\u091f\u0930 BSE Listing Centre National Stock Exchange of India Ltd.\n\u0916\u093f\u092a \u093f\u094b\u0921 Scrip Code - 532 477 \u091a\u0928\u092a\u094d\u0938 NEAPS\n\u0916\u093f\u092a \u093f\u094b\u0921 Scrip Symbol-UNIONBANK-EQ\n\u091a\u0938\u0915\u094d\u092f\u094b\u0930\u0930\u091f\u0940 Security \u2013 UBI-AT/BB\n\u092e\u0939\u094b\u0926\u092f\u093e Madam/\u092e\u0939\u094b\u0926\u092f Sir,\n\u0935\u093f\u0937\u092f Subject: \u092a\u094b\u0938\u094d\u091f \u0905\u0935\u0928\u093f\u0902\u0917\u094d\u0938 \u0915\u0949\u0932 \u0915\u0947 \u092a\u094d\u0930\u0935\u093f\u0932\u0947\u0916 Transcript of Post Earnings Call\n\u092f\u0939 \u0938\u0942\u091a\u093f\u0924 \u091a\u093f\u092f\u093e \u091c\u093e\u0924\u093e \u0939\u0948 \u091a\u093f \u091a\u093f\u0938\u092e\u094d\u092c\u0930 31, 2025 \u093f\u094b This is to inform that transcript of Post\nEarnings call held on January 14, 2026, for\n\u0938\u092e\u093e\u092a\u094d\u0924 \u091a\u0924\u092e\u093e\u0939\u0940 \u093f\u0947 \u091a\u093f\u090f \u092c\u0948\u0902\u093f \u093f\u0947 \u0905\u093f\u0947\u0916\u093e\u092a\u0930\u0940\u091a\u093f\u0924\nReviewed Unaudited (Standalone and\n\u0938\u092e\u0940\u091a\u093f\u0924 (\u0938\u094d\u091f\u0948\u0902\u0921\u0905\u093f\u094b\u0928 \u0914\u0930 \u0938\u092e\u0947\u091a\u093f\u0924) \u091a\u093f\u0924\u094d\u0924\u0940\u092f \u092a\u0930\u0930\u0923\u093e\u092e\u094b \u094b\u0902\nConsolidated) Financial Results of the Bank\n\u093f\u0947 \u091a\u093f\u090f 14 \u091c\u0928\u093f\u0930\u0940 2026, \u093f\u094b \u0906\u092f\u094b\u091a\u091c\u0924 \u092a\u094b\u0938\u094d\u091f \u0905\u091a\u0928\u093f\u0902\u0917\nfor the quarter ended on December 31,2025\n\u093f\u0949\u093f \u093f\u0947 \u091f\u094d\u093e\u094b\u0902\u0938\u0915\u094d\u0930\u0940\u092a\u094d\u091f \u093f\u094b \u090f\u0924\u093f\u0926\u094d\u0935\u093e\u0930\u093e \u0938\u093f\u0947\u092c\u093f \u092a\u0940\u0921\u0940\u090f\u095e\nis submitted herewith as a PDF searchable\n\u0938\u094b\u0902\u093f\u0917\u094d\u0928\u093f \u093f\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 \u092a\u094d\u0930\u0938\u094d\u0924\u0941\u0924 \u091a\u093f\u092f\u093e \u0917\u092f\u093e \u0939\u0948. attachment.\nThe same is also being made available in the\n\u0907\u0938\u0947 \u092c\u0948\u0902\u093f \u093f\u0940 \u093f\u0947\u092c\u0938\u093e\u0907\u091f \u092a\u0930 \u091a\u0928\u092e\u094d\u0928\u091a\u093f\u0916\u0916\u0924 \u093f\u0947\u092c \u091a\u093f\u094b\u0902\u093f \u093f\u0947\nBank\u2019s website under the following web link:\n\u092e\u093e\u0927\u094d\u092f\u092e \u0938\u0947 \u092d\u0940 \u0909\u092a\u093f\u092c\u094d\u0927 \u093f\u0930\u093e\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948:\nhttps://www.unionbankofindia.co.in/en/co\nhttps://www.unionbankofindia.co.in/en/co\nmmon/financial-results\nmmon/financial-results\n\u092f\u0939 \u091c\u093e\u0928\u093f\u093e\u0930\u0940 \u0938\u0947\u092c\u0940 (\u0938\u0942\u093f\u0940\u092c\u0926\u094d\u0927\u0924\u093e \u093f\u093e\u091a\u092f\u0924\u094d\u0935 \u0914\u0930 This information is furnished in terms of\n\u092a\u094d\u0930\u093f\u091f\u0940\u093f\u0930\u0923 \u0906\u093f\u0936\u094d\u092f\u093f\u0924\u093e\u090f\u0901) \u091a\u093f\u091a\u0928\u092f\u092e, 2015 \u093f\u0940 Regulation 46(2)(oa) and Regulation 30 read\n\u0905\u0928\u0941\u0938\u0942\u093f\u0940 III, \u092d\u093e\u0917 \u090f, \u092a\u0948\u0930\u093e \u090f, 15 (\u092c\u0940) \u093f\u0947 \u0938\u093e\u0925 \u092a\u091a\u093f\u0924 with Schedule III, Part A, Para A, 15(b) of the\n\u091a\u093f\u091a\u0928\u092f\u092e 46(2)(\u0913\u090f) \u0914\u0930 \u091a\u093f\u091a\u0928\u092f\u092e 30 \u093f\u0947 \u0938\u094b\u0902\u093f\u092d\u092d \u092e\u0947\u0902 SEBI (Listing Obligations and Disclosure\n\u092a\u094d\u0930\u0938\u094d\u0924\u0941\u0924 \u093f\u0940 \u0917\u0908 \u0939\u0948. Requirements) Regulations, 2015.\n\u092d\u093f\u093f\u0940\u092f Yours faithfully,\n(Mangesh Mandrekar)\nCompany Secretary\nEncl.: As above\n\u092f\u0942\u0928\u093f\u092f\u093f \u092c\u0915\u0948\u0902 \u0911\u092b \u0907\u0902\u0921\u093f\u092f\u093e, \u0928\u093f\u0935\u0947\u0936\u0915 \u0938\u0947\u0935\u093e\u092f \u0947\u0902\u092a\u094d\u0930\u092d\u093e\u0917, \u092f\u0942\u0928\u093f\u092f\u093f \u092c\u0915\u0948\u0902 \u092d\u0935\u093f, 239, \u0935\u0935\u0927\u093e\u093f \u092d\u0935\u093f \u092e\u093e\u0917,\u0917 \u093f\u0930\u0940\u092e\u093f \u092a\u0949\u0907\u0902\u091f, \u092e \u0902\u092c\u0908- 400021.\nUnion Bank of India, Investor Services Division, Union Bank Bhavan,239,VidhanBhavan Marg, Nariman Point, Mumbai - 400021.\n\uf028: + 91 22 2289 6636/2289 6643,\uf02ainvestorservices@unionbankofindia.bank , website: www.unionbankofindia.co.in\n: Internal\n\n[Table]\n\u092c\u0940\u090f\u0938\u0908 \u091a\u093f\u091a\u092e\u091f\u0947\u0921 BSE Ltd.\n\u092c\u0940\u090f\u0938\u0908 \u091a\u093f\u0916\u0938\u094d\u091f\u094b\u0902\u0917 \u0938\u0947\u0902\u091f\u0930 BSE Listing Centre\n\u0916\u093f\u092a \u093f\u094b\u0921 Scrip Code - 532 477 | \u0928\u0947\u0936\u0928\u093f \u0938\u094d\u091f\u0949\u093f \u090f\u0915\u094d\u0938\u094d\u093f\u0947\u0902\u091c \u0911\u092b \u0907\u094b\u0902\u091a\u0921\u092f\u093e \u091a\u093f\u091a\u092e\u091f\u0947\u0921\nNational Stock Exchange of India Ltd.\n\u091a\u0928\u092a\u094d\u0938 NEAPS\n\u0916\u093f\u092a \u093f\u094b\u0921 Scrip Symbol-UNIONBANK-EQ\n\u091a\u0938\u0915\u094d\u092f\u094b\u0930\u0930\u091f\u0940 Security \u2013 UBI-AT/BB\n\n[Table]\n\u092f\u0939 \u0938\u0942\u091a\u093f\u0924 \u091a\u093f\u092f\u093e \u091c\u093e\u0924\u093e \u0939\u0948 \u091a\u093f \u091a\u093f\u0938\u092e\u094d\u092c\u0930 31, 2025 \u093f\u094b\n\u0938\u092e\u093e\u092a\u094d\u0924 \u091a\u0924\u092e\u093e\u0939\u0940 \u093f\u0947 \u091a\u093f\u090f \u092c\u0948\u0902\u093f \u093f\u0947 \u0905\u093f\u0947\u0916\u093e\u092a\u0930\u0940\u091a\u093f\u0924\n\u0938\u092e\u0940\u091a\u093f\u0924 (\u0938\u094d\u091f\u0948\u0902\u0921\u0905\u093f\u094b\u0928 \u0914\u0930 \u0938\u092e\u0947\u091a\u093f\u0924) \u091a\u093f\u0924\u094d\u0924\u0940\u092f \u092a\u0930\u0930\u0923\u093e\u092e\u094b \u094b\u0902\n\u093f\u0947 \u091a\u093f\u090f 14 \u091c\u0928\u093f\u0930\u0940 2026, \u093f\u094b \u0906\u092f\u094b\u091a\u091c\u0924 \u092a\u094b\u0938\u094d\u091f \u0905\u091a\u0928\u093f\u0902\u0917\n\u093f\u0949\u093f \u093f\u0947 \u091f\u094d\u093e\u094b\u0902\u0938\u0915\u094d\u0930\u0940\u092a\u094d\u091f \u093f\u094b \u090f\u0924\u093f\u0926\u094d\u0935\u093e\u0930\u093e \u0938\u093f\u0947\u092c\u093f \u092a\u0940\u0921\u0940\u090f\u095e\n\u0938\u094b\u0902\u093f\u0917\u094d\u0928\u093f \u093f\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 \u092a\u094d\u0930\u0938\u094d\u0924\u0941\u0924 \u091a\u093f\u092f\u093e \u0917\u092f\u093e \u0939\u0948.\n\u0907\u0938\u0947 \u092c\u0948\u0902\u093f \u093f\u0940 \u093f\u0947\u092c\u0938\u093e\u0907\u091f \u092a\u0930 \u091a\u0928\u092e\u094d\u0928\u091a\u093f\u0916\u0916\u0924 \u093f\u0947\u092c \u091a\u093f\u094b\u0902\u093f \u093f\u0947\n\u092e\u093e\u0927\u094d\u092f\u092e \u0938\u0947 \u092d\u0940 \u0909\u092a\u093f\u092c\u094d\u0927 \u093f\u0930\u093e\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948:\nhttps://www.unionbankofindia.co.in/en/co\nmmon/financial-results\n\u092f\u0939 \u091c\u093e\u0928\u093f\u093e\u0930\u0940 \u0938\u0947\u092c\u0940 (\u0938\u0942\u093f\u0940\u092c\u0926\u094d\u0927\u0924\u093e \u093f\u093e\u091a\u092f\u0924\u094d\u0935 \u0914\u0930\n\u092a\u094d\u0930\u093f\u091f\u0940\u093f\u0930\u0923 \u0906\u093f\u0936\u094d\u092f\u093f\u0924\u093e\u090f\u0901) \u091a\u093f\u091a\u0928\u092f\u092e, 2015 \u093f\u0940\n\u0905\u0928\u0941\u0938\u0942\u093f\u0940 III, \u092d\u093e\u0917 \u090f, \u092a\u0948\u0930\u093e \u090f, 15 (\u092c\u0940) \u093f\u0947 \u0938\u093e\u0925 \u092a\u091a\u093f\u0924\n\u091a\u093f\u091a\u0928\u092f\u092e 46(2)(\u0913\u090f) \u0914\u0930 \u091a\u093f\u091a\u0928\u092f\u092e 30 \u093f\u0947 \u0938\u094b\u0902\u093f\u092d\u092d \u092e\u0947\u0902\n\u092a\u094d\u0930\u0938\u094d\u0924\u0941\u0924 \u093f\u0940 \u0917\u0908 \u0939\u0948. | This is to inform that transcript ",
+        "Nov 2025": "--- Page 1 ---\n\u0938\u0902\u0926\u0930\u094d \u092dRef.:\u0928\u093f.\u0938\u0947.\u0935\u093f.ISD/269/2025-26 \u0926\u0926\u093f \u0915\u0902 Date : 06.11.2025\n\u092c\u0940\u090f\u0938\u0908 \u091a\u093f\u091a\u092e\u091f\u0947\u0921 BSE Ltd. \u0928\u0947\u0936\u0928\u093f \u0938\u094d\u091f\u0949\u093f \u090f\u0915\u094d\u0938\u094d\u093f\u0947\u0902\u091c \u0911\u092b \u0907\u0902\u091a\u0921\u092f\u093e \u091a\u093f\u091a\u092e\u091f\u0947\u0921\n\u092c\u0940\u090f\u0938\u0908 \u091a\u093f\u0916\u0938\u094d\u091f\u0902\u0917 \u0938\u0947\u0902\u091f\u0930 BSE Listing Centre National Stock Exchange of India Ltd.\n\u0916\u093f\u092a \u093f\u094b\u0921 Scrip Code - 532 477 \u091a\u0928\u092a\u094d\u0938 NEAPS\n\u0916\u093f\u092a \u093f\u094b\u0921 Scrip Symbol-UNIONBANK-EQ\n\u091a\u0938\u0915\u094d\u092f\u094b\u0930\u0930\u091f\u0940 Security \u2013 UBI-AT/BB\n\u092e\u0939\u094b\u0926\u092f\u093e Madam/\u092e\u0939\u094b\u0926\u092f Sir,\n\u0935\u093f\u0937\u092f Subject: \u092a\u094b\u0938\u094d\u091f \u0905\u0935\u0928\u093f\u0902\u0917\u094d\u0938 \u0915\u0949\u0932 \u0915\u0947 \u092a\u094d\u0930\u0935\u093f\u0932\u0947\u0916 Transcript of Post Earnings Call\n\u092f\u0939 \u0938\u0942\u091a\u093f\u0924 \u091a\u093f\u092f\u093e \u091c\u093e\u0924\u093e \u0939\u0948 \u091a\u093f \u091a\u0938\u0924\u0902\u092c\u0930 30, 2025 \u093f\u094b This is to inform that transcript of Post\nEarnings call held on October 30, 2025, for\n\u0938\u092e\u093e\u092a\u094d\u0924 \u091a\u0924\u092e\u093e\u0939\u0940 \u093f\u0947 \u091a\u093f\u090f \u092c\u0948\u0902\u093f \u093f\u0947 \u0905\u093f\u0947\u0916\u093e\u092a\u0930\u0940\u091a\u093f\u0924\nReviewed Unaudited (Standalone and\n\u0938\u092e\u0940\u091a\u093f\u0924 (\u0938\u094d\u091f\u0948\u0902\u0921\u0905\u093f\u094b\u0928 \u0914\u0930 \u0938\u092e\u0947\u091a\u093f\u0924) \u091a\u093f\u0924\u094d\u0924\u0940\u092f \u092a\u0930\u0930\u0923\u093e\u092e\u094b \u0902\nConsolidated) Financial Results of the Bank\n\u093f\u0947 \u091a\u093f\u090f 30 \u0905\u0915\u094d\u0924\u0942\u092c\u0930 2025, \u093f\u094b \u0906\u092f\u094b\u091a\u091c\u0924 \u092a\u094b\u0938\u094d\u091f \u0905\u091a\u0928\u093f\u0902\u0917\nfor the quarter ended on September 30,2025\n\u093f\u0949\u093f \u093f\u0947 \u091f\u094d\u093e\u0902\u0938\u0915\u094d\u0930\u0940\u092a\u094d\u091f \u093f\u094b \u090f\u0924\u0926\u0926\u094d\u0935\u093e\u0930\u093e \u0938\u093f\u0947\u092c\u093f \u092a\u0940\u0921\u0940\u090f\u095e\nis submitted herewith as a PDF searchable\n\u0938\u0902\u093f\u0917\u094d\u0928\u093f \u093f\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 \u092a\u094d\u0930\u0938\u094d\u0924\u0941\u0924 \u091a\u093f\u092f\u093e \u0917\u092f\u093e \u0939\u0948. attachment.\nThe same is also being made available in the\n\u0907\u0938\u0947 \u092c\u0948\u0902\u093f \u093f\u0940 \u093f\u0947\u092c\u0938\u093e\u0907\u091f \u092a\u0930 \u091a\u0928\u092e\u094d\u0928\u091a\u093f\u0916\u0916\u0924 \u093f\u0947\u092c \u091a\u093f\u0902\u093f \u093f\u0947\nBank\u2019s website under the following web link:\n\u092e\u093e\u0927\u094d\u092f\u092e \u0938\u0947 \u092d\u0940 \u0909\u092a\u093f\u092c\u094d\u0927 \u093f\u0930\u093e\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948:\nhttps://www.unionbankofindia.co.in/en/co\nhttps://www.unionbankofindia.co.in/en/co\nmmon/financial-results\nmmon/financial-results\n\u092f\u0939 \u091c\u093e\u0928\u093f\u093e\u0930\u0940 \u0938\u0947\u092c\u0940 (\u0938\u0942\u093f\u0940\u092c\u0926\u094d\u0927\u0924\u093e \u0926\u093e\u091a\u092f\u0924\u094d\u0935 \u0914\u0930 This information is furnished in terms of\n\u092a\u094d\u0930\u093f\u091f\u0940\u093f\u0930\u0923 \u0906\u093f\u0936\u094d\u092f\u093f\u0924\u093e\u090f\u0901) \u091a\u093f\u091a\u0928\u092f\u092e, 2015 \u093f\u0940 Regulation 46(2)(oa) and Regulation 30 read\n\u0905\u0928\u0941\u0938\u0942\u093f\u0940 III, \u092d\u093e\u0917 \u090f, \u092a\u0948\u0930\u093e \u090f, 15 (\u092c\u0940) \u093f\u0947 \u0938\u093e\u0925 \u092a\u091a\u093f\u0924 with Schedule III, Part A, Para A, 15(b) of the\n\u091a\u093f\u091a\u0928\u092f\u092e 46(2)(\u0913\u090f) \u0914\u0930 \u091a\u093f\u091a\u0928\u092f\u092e 30 \u093f\u0947 \u0938\u0902\u0926\u092d\u092d \u092e\u0947\u0902 SEBI (Listing Obligations and Disclosure\n\u092a\u094d\u0930\u0938\u094d\u0924\u0941\u0924 \u093f\u0940 \u0917\u0908 \u0939\u0948. Requirements) Regulations, 2015.\n\u092d\u093f\u0926\u0940\u092f Yours faithfully,\n(Mangesh Mandrekar)\nCompany Secretary\nEncl.: As above\n\u092f\u0942\u0928\u093f\u092f\u093f \u092c\u0915\u0948\u0902 \u0911\u092b \u0907\u0902\u0921\u093f\u092f\u093e, \u0928\u093f\u0935\u0947\u0936\u0915 \u0938\u0947\u0935\u093e\u092f \u0947\u0902\u092a\u094d\u0930\u092d\u093e\u0917, \u092f\u0942\u0928\u093f\u092f\u093f \u092c\u0915\u0948\u0902 \u092d\u0935\u093f, 239, \u0935\u0935\u0927\u093e\u093f \u092d\u0935\u093f \u092e\u093e\u0917,\u0917 \u093f\u0930\u0940\u092e\u093f \u092a\u0949\u0907\u0902\u091f, \u092e \u0902\u092c\u0908- 400021.\nUnion Bank of India, Investor Services Division, Union Bank Bhavan,239,VidhanBhavan Marg, Nariman Point, Mumbai - 400021.\n\uf028: + 91 22 2289 6636/2289 6643,\uf02ainvestorservices@unionbankofindia.bank , website: www.unionbankofindia.co.in\nClassification: Internal\n\n[Table]\n\u092c\u0940\u090f\u0938\u0908 \u091a\u093f\u091a\u092e\u091f\u0947\u0921 BSE Ltd.\n\u092c\u0940\u090f\u0938\u0908 \u091a\u093f\u0916\u0938\u094d\u091f\u0902\u0917 \u0938\u0947\u0902\u091f\u0930 BSE Listing Centre\n\u0916\u093f\u092a \u093f\u094b\u0921 Scrip Code - 532 477 | \u0928\u0947\u0936\u0928\u093f \u0938\u094d\u091f\u0949\u093f \u090f\u0915\u094d\u0938\u094d\u093f\u0947\u0902\u091c \u0911\u092b \u0907\u0902\u091a\u0921\u092f\u093e \u091a\u093f\u091a\u092e\u091f\u0947\u0921\nNational Stock Exchange of India Ltd.\n\u091a\u0928\u092a\u094d\u0938 NEAPS\n\u0916\u093f\u092a \u093f\u094b\u0921 Scrip Symbol-UNIONBANK-EQ\n\u091a\u0938\u0915\u094d\u092f\u094b\u0930\u0930\u091f\u0940 Security \u2013 UBI-AT/BB\n\n[Table]\n\u092f\u0939 \u0938\u0942\u091a\u093f\u0924 \u091a\u093f\u092f\u093e \u091c\u093e\u0924\u093e \u0939\u0948 \u091a\u093f \u091a\u0938\u0924\u0902\u092c\u0930 30, 2025 \u093f\u094b\n\u0938\u092e\u093e\u092a\u094d\u0924 \u091a\u0924\u092e\u093e\u0939\u0940 \u093f\u0947 \u091a\u093f\u090f \u092c\u0948\u0902\u093f \u093f\u0947 \u0905\u093f\u0947\u0916\u093e\u092a\u0930\u0940\u091a\u093f\u0924\n\u0938\u092e\u0940\u091a\u093f\u0924 (\u0938\u094d\u091f\u0948\u0902\u0921\u0905\u093f\u094b\u0928 \u0914\u0930 \u0938\u092e\u0947\u091a\u093f\u0924) \u091a\u093f\u0924\u094d\u0924\u0940\u092f \u092a\u0930\u0930\u0923\u093e\u092e\u094b \u0902\n\u093f\u0947 \u091a\u093f\u090f 30 \u0905\u0915\u094d\u0924\u0942\u092c\u0930 2025, \u093f\u094b \u0906\u092f\u094b\u091a\u091c\u0924 \u092a\u094b\u0938\u094d\u091f \u0905\u091a\u0928\u093f\u0902\u0917\n\u093f\u0949\u093f \u093f\u0947 \u091f\u094d\u093e\u0902\u0938\u0915\u094d\u0930\u0940\u092a\u094d\u091f \u093f\u094b \u090f\u0924\u0926\u0926\u094d\u0935\u093e\u0930\u093e \u0938\u093f\u0947\u092c\u093f \u092a\u0940\u0921\u0940\u090f\u095e\n\u0938\u0902\u093f\u0917\u094d\u0928\u093f \u093f\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 \u092a\u094d\u0930\u0938\u094d\u0924\u0941\u0924 \u091a\u093f\u092f\u093e \u0917\u092f\u093e \u0939\u0948.\n\u0907\u0938\u0947 \u092c\u0948\u0902\u093f \u093f\u0940 \u093f\u0947\u092c\u0938\u093e\u0907\u091f \u092a\u0930 \u091a\u0928\u092e\u094d\u0928\u091a\u093f\u0916\u0916\u0924 \u093f\u0947\u092c \u091a\u093f\u0902\u093f \u093f\u0947\n\u092e\u093e\u0927\u094d\u092f\u092e \u0938\u0947 \u092d\u0940 \u0909\u092a\u093f\u092c\u094d\u0927 \u093f\u0930\u093e\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948:\nhttps://www.unionbankofindia.co.in/en/co\nmmon/financial-results\n\u092f\u0939 \u091c\u093e\u0928\u093f\u093e\u0930\u0940 \u0938\u0947\u092c\u0940 (\u0938\u0942\u093f\u0940\u092c\u0926\u094d\u0927\u0924\u093e \u0926\u093e\u091a\u092f\u0924\u094d\u0935 \u0914\u0930\n\u092a\u094d\u0930\u093f\u091f\u0940\u093f\u0930\u0923 \u0906\u093f\u0936\u094d\u092f\u093f\u0924\u093e\u090f\u0901) \u091a\u093f\u091a\u0928\u092f\u092e, 2015 \u093f\u0940\n\u0905\u0928\u0941\u0938\u0942\u093f\u0940 III, \u092d\u093e\u0917 \u090f, \u092a\u0948\u0930\u093e \u090f, 15 (\u092c\u0940) \u093f\u0947 \u0938\u093e\u0925 \u092a\u091a\u093f\u0924\n\u091a\u093f\u091a\u0928\u092f\u092e 46(2)(\u0913\u090f) \u0914\u0930 \u091a\u093f\u091a\u0928\u092f\u092e 30 \u093f\u0947 \u0938\u0902\u0926\u092d\u092d \u092e\u0947\u0902\n\u092a\u094d\u0930\u0938\u094d\u0924\u0941\u0924 \u093f\u0940 \u0917\u0908 \u0939\u0948. | This is to inform that transcri"
+      }
+    },
+    "concall_themes": [
+      "Portfolio optimization strategy focused on four pillars: shedding high-cost bulk deposits (~INR 38,000-40,000 crores), reducing treasury by INR 15,000 crores, eliminating IBPC portfolio (INR 20,000 crores), and converting low-yielding portfolio (INR 10,000 crores) to long-term loans",
+      "Strong asset quality improvement with GNPA and NNPA reduction, SMA2 at lowest level of INR 4,285 crores (above INR 5 crores), and 95% of corporate book rated BBB and above",
+      "Digital transformation and technology leadership - ranked 2nd in EASE agenda among PSBs, received 4 Technology Awards including Best Bank Tech Award, implementing AI and robotic process automation",
+      "RAM (Retail, Agriculture, MSME) segment showing robust growth: 11.50% overall, 21.67% in Retail, 19.75% in Agri, while maintaining quality focus in corporate book",
+      "Project MUSKAAN initiative for operational streamlining, ease of doing business, risk mitigation, and cost reduction through bottom-up approach and process improvements",
+      "Strategic shift from bulk deposits to retail deposits and CASA to protect margins, resulting in 21.85% Y-o-Y reduction in high-cost bulk deposits",
+      "Focus on sustainable growth with calibrated balance between top line expansion and bottom line strength, while maintaining asset quality",
+      "Portfolio rebalancing toward higher-yielding retail, agriculture, and MSME (RAM) segments from 55% to target 58%, reducing lower-yielding corporate exposure",
+      "Significant improvement in asset quality metrics with gross NPA declining 107 bps Y-o-Y to 3.29% and net NPA down 43 bps to 0.55%",
+      "Strong capital position with 17.07% capital adequacy and 14.37% CET-1 ratio, among the best in industry"
+    ],
+    "analyst_concerns": [
+      "Other interest income elevated at INR 206 crores vs typical INR 100 crores in recent quarters - management clarified INR 198 crores is RIDF recovery",
+      "Expected run-rate impact of draft ECL (Expected Credit Loss) norms on ongoing credit costs beyond transition impact",
+      "Sustainability of 4% Q-o-Q loan growth given ongoing portfolio optimization and mixed changes within corporate book",
+      "Quantum of SMA2 accounts below INR 5 crores (management indicated ~INR 24,000-25,000 crores but promised exact numbers separately)",
+      "Deposit growth lagging at 3.36% vs advances growth of 7.13%, though management explained strategic reduction of high-cost bulk deposits",
+      "Bank's loan growth at 5% Y-o-Y significantly lags system growth of 11%, with questions about timeline to reach parity with industry",
+      "Mismatch between stated strategy and actual numbers - cost of deposits only down 5 bps despite bulk deposit cuts, while yield on advances fell 16 bps",
+      "Elevated standard asset provisioning of Rs. 880 crores in the quarter, with questions about nature (ECL, SMA, or prudential provisioning)",
+      "Net interest income registered quarter-on-quarter de-growth despite management's margin protection strategy",
+      "Concerns about bulky upgradation in the quarter and whether there was associated provisioning reversal from lumpy accounts"
+    ],
+    "management_outlook": [
+      "Positive economic environment with India expected to achieve ~7.4% GDP growth in Goldilocks phase (high growth, low inflation), supported by regulatory measures including 125 bps repo rate cut and 100 bps CRR reduction",
+      "NIM protection strategy working effectively - maintained NIM at 2.76% (increased from September quarter) despite 125 bps rate cut, compared to 2.91% in December 2024",
+      "Confident about managing ECL transition with minimal impact - only INR 4,200-4,300 crores additional provision required on netting basis, expecting credit cost to remain in 20-40 bps range",
+      "Strong pipeline with INR 24,000-26,000 crores of sanctioned loans pending disbursement, indicating sustained momentum in loan origination",
+      "Bank crossed INR 10 lakh crores advances milestone for first time, achieved highest Return on Assets at 1.35% and highest RoE, with CASA ratio improving 140 bps quarter-over-quarter",
+      "Aspires to achieve 9-10% growth on both asset and liability sides going forward, targeting system-level or better growth quarter-on-quarter",
+      "Plans to maintain CD ratio between 78.5-80% and increase CASA by 1-1.5% coupled with retail term deposits rather than bulk deposits",
+      "Confident about protecting and improving NIMs going forward by shifting from treasury to loan book and reducing low-yielding corporate exposures",
+      "Expects convergence with industry growth rates to accelerate, with sequential quarterly growth matching or exceeding system levels",
+      "Projects full impact of bulk deposit reduction strategy to materialize in current and subsequent quarters"
+    ]
+  },
+  "cached_at": "2026-02-22T13:24:27.617027+00:00",
+  "cache_version": "1.0"
+}
