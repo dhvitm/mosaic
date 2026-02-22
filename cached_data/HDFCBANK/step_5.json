@@ -1,0 +1,67 @@
+{
+  "ticker": "HDFCBANK",
+  "step_number": 5,
+  "data": {
+    "forecast_years": [
+      "FY26E",
+      "FY27E",
+      "FY28E",
+      "FY29E",
+      "FY30E"
+    ],
+    "assumptions": {
+      "loan_growth_rate": [
+        0.14,
+        0.14,
+        0.13,
+        0.13,
+        0.12
+      ],
+      "nim": [
+        0.041,
+        0.04,
+        0.039,
+        0.039,
+        0.038
+      ],
+      "casa_ratio": [
+        0.44,
+        0.45,
+        0.46,
+        0.47,
+        0.47
+      ],
+      "credit_cost": [
+        0.008,
+        0.008,
+        0.009,
+        0.009,
+        0.009
+      ],
+      "cost_to_income": [
+        0.4,
+        0.39,
+        0.39,
+        0.38,
+        0.38
+      ],
+      "roa": [
+        0.02,
+        0.021,
+        0.021,
+        0.022,
+        0.022
+      ],
+      "roe": [
+        0.165,
+        0.17,
+        0.175,
+        0.18,
+        0.18
+      ]
+    },
+    "rationale": "HDFC Bank post-merger is positioned as India's largest private bank with superior asset quality and franchise strength. Loan growth moderated from historic high teens to sustainable 12-14% as base effect normalizes. NIMs remain industry-leading at 3.8-4.1% supported by strong liability franchise and repricing benefits. CASA ratio improvement trajectory continues as merger synergies materialize and retail franchise deepens. Credit costs remain best-in-class at 0.8-0.9% reflecting conservative underwriting and seasoned portfolio. Cost-to-income improves to 38-40% through operating leverage and digitalization despite merger integration costs tapering. ROA of 2.0-2.2% and ROE of 16.5-18% reflect premium profitability metrics. Capital adequacy remains robust above 17-18% supporting growth without dilution."
+  },
+  "cached_at": "2026-02-22T10:17:10.006238+00:00",
+  "cache_version": "1.0"
+}

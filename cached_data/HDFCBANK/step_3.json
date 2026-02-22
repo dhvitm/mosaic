@@ -1,0 +1,12 @@
+{
+  "ticker": "HDFCBANK",
+  "step_number": 3,
+  "data": {
+    "quarterly_results": {},
+    "quarters": [],
+    "scraped_successfully": false,
+    "error": "'NoneType' object has no attribute 'new_page'"
+  },
+  "cached_at": "2026-02-22T10:17:00.764736+00:00",
+  "cache_version": "1.0"
+}

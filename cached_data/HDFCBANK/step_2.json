@@ -1,0 +1,14 @@
+{
+  "ticker": "HDFCBANK",
+  "step_number": 2,
+  "data": {
+    "annual_pnl": {},
+    "annual_bs": {},
+    "ratios": {},
+    "years": [],
+    "scraped_successfully": false,
+    "error": "'NoneType' object has no attribute 'new_page'"
+  },
+  "cached_at": "2026-02-22T10:17:00.763465+00:00",
+  "cache_version": "1.0"
+}
