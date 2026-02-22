@@ -105,7 +105,7 @@ class PipelineManager:
             
             # Mark job as completed
             await self.db.model_jobs.update_one(
-                {"job_id": job_id},
+                {"id": job_id},
                 {"$set": {
                     "status": "completed",
                     "current_step": 8,
