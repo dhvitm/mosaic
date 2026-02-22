@@ -6,6 +6,7 @@ from datetime import datetime, timezone, timedelta
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pathlib import Path
 import sys
+import os
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
 sys.path.append(str(Path(__file__).parent.parent))
@@ -20,6 +21,9 @@ from services.pdf_extractor import pdf_extractor
 
 logger = logging.getLogger(__name__)
 
+# Check if agentic mode is enabled
+AGENTIC_MODE = os.environ.get("MOSAIC_AGENTIC_MODE", "true").lower() == "true"
+
 class PipelineManager:
     def __init__(self, db: AsyncIOMotorDatabase):
         self.db = db
@@ -27,16 +31,114 @@ class PipelineManager:
         self.scraper = ScraperService()
         self.excel_gen = ExcelGenerator()
         self.pdf_extractor = pdf_extractor
+        
+        # Initialize agentic mode if enabled
+        if AGENTIC_MODE:
+            try:
+                from services.mosaic_agent import MosaicAgent
+                self.agent = MosaicAgent(self.scraper, self.pdf_extractor, self.excel_gen, db)
+                logger.info("Mosaic Agent initialized - agentic mode enabled")
+            except Exception as e:
+                logger.error(f"Failed to initialize Mosaic Agent: {e}")
+                self.agent = None
+        else:
+            self.agent = None
     
     async def run_pipeline(self, job_id: str, ticker: str):
         """
-        Run the complete 8-step pipeline for a ticker
+        Run the complete pipeline for a ticker.
+        Uses agentic mode if enabled, otherwise falls back to sequential pipeline.
         """
         try:
             logger.info(f"Starting pipeline for job {job_id}, ticker {ticker}")
             
-            # Set job_id for activity logging in ClaudeService
-            self.claude.set_job_id(job_id)
+            # Check if agentic mode is available and enabled
+            if AGENTIC_MODE and self.agent:
+                await self._run_agentic_pipeline(job_id, ticker)
+            else:
+                await self._run_sequential_pipeline(job_id, ticker)
+                
+        except Exception as e:
+            logger.error(f"Pipeline failed for job {job_id}: {str(e)}")
+            await self._handle_pipeline_error(job_id, str(e))
+            raise
+    
+    async def _run_agentic_pipeline(self, job_id: str, ticker: str):
+        """Run the agentic Claude loop to build the financial model"""
+        logger.info(f"Running AGENTIC pipeline for {ticker}")
+        
+        # Update job status
+        await self.db.model_jobs.update_one(
+            {"job_id": job_id},
+            {"$set": {
+                "status": "processing",
+                "current_step": 1,
+                "mode": "agentic",
+                "updated_at": datetime.now(timezone.utc)
+            }}
+        )
+        
+        # Broadcast start
+        await ws_manager.send_activity(
+            job_id, "info", 
+            f"🤖 Starting autonomous analysis of {ticker} using Mosaic Agent"
+        )
+        
+        # Run the agent
+        result = await self.agent.run_agent(ticker, job_id)
+        
+        if result.get("success"):
+            excel_path = result.get("excel_path")
+            reasoning = result.get("reasoning", "")
+            
+            # Build result data for storage
+            result_data = {
+                "company_metadata": {"ticker": ticker},
+                "reasoning": reasoning,
+                "tool_calls": result.get("tool_calls", []),
+                "iterations": result.get("iterations", 0),
+                "elapsed_seconds": result.get("elapsed_seconds", 0)
+            }
+            
+            # Try to extract valuation and thesis from the final result
+            # The agent stores these in the Excel model data
+            
+            # Mark job as completed
+            await self.db.model_jobs.update_one(
+                {"job_id": job_id},
+                {"$set": {
+                    "status": "completed",
+                    "current_step": 8,
+                    "excel_path": excel_path,
+                    "result": result_data,
+                    "reasoning": reasoning,
+                    "completed_at": datetime.now(timezone.utc),
+                    "updated_at": datetime.now(timezone.utc)
+                }}
+            )
+            
+            await ws_manager.send_job_update(job_id, {
+                "status": "completed",
+                "excel_path": excel_path,
+                "current_step": 8,
+                "reasoning": reasoning
+            })
+            
+            await ws_manager.send_activity(
+                job_id, "success",
+                f"✅ Financial model completed for {ticker}",
+                {"excel_path": excel_path}
+            )
+        else:
+            error_msg = result.get("error", "Unknown error")
+            await self._handle_pipeline_error(job_id, error_msg)
+    
+    async def _run_sequential_pipeline(self, job_id: str, ticker: str):
+        """Run the legacy sequential 8-step pipeline"""
+        logger.info(f"Running SEQUENTIAL pipeline for {ticker}")
+        
+        # Set job_id for activity logging in ClaudeService
+        self.claude.set_job_id(job_id)
             
             # Broadcast pipeline start
             await ws_manager.send_activity(job_id, "info", f"Starting analysis pipeline for {ticker}")
