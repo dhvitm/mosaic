@@ -45,8 +45,10 @@ export default function Processing() {
   const [job, setJob] = useState(null);
   const [error, setError] = useState("");
   const [retrying, setRetrying] = useState(false);
+  const [activityLog, setActivityLog] = useState([]);
   const wsRef = useRef(null);
   const reconnectTimeoutRef = useRef(null);
+  const activityLogRef = useRef(null);
 
   useEffect(() => {
     let mounted = true;
