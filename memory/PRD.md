@@ -55,11 +55,12 @@ Build a web app called "Mosaic" for investment professionals that takes an India
 - [x] **Step 5, 7, 8 Performance Optimization** - Reduced from ~50s to ~10s per step
 - [x] **Step 6: Excel Model Generation** - Full multi-sheet workbook with:
   - Cover sheet with recommendation summary
-  - Assumptions sheet with forecast data
+  - Assumptions sheet with actual forecast data from Claude AI
   - P&L and Balance Sheet templates
-  - Valuation sheet with RIV methodology
-  - Investment Thesis sheet
+  - Valuation sheet with RIV methodology data
+  - Investment Thesis sheet with full AI-generated analysis
   - Key Metrics summary
+  - **Fixed: Excel generation now runs AFTER valuation & thesis steps**
 - [x] **Cache Viewer Page** (`/cache` and `/cache/:ticker`) - View all cached pipeline data per ticker
 - [x] **Download Excel button** on Results page - Working download endpoint
 
