@@ -323,28 +323,47 @@ class ExcelGenerator:
                 ws.cell(row=row, column=1).font = Font(bold=True)
             
             # Store row reference for formulas
-            key = display_name.lower().replace(' ', '_').replace('/', '_')
+            key = display_name.lower().replace(' ', '_').replace('/', '_').replace('&', '_')
             self.pnl_rows[key] = row
             
             # Fill historical data
-            if screener_keys and annual_pnl:
-                for col_idx, year in enumerate(hist_years, start=2):
-                    year_data = annual_pnl.get(year, {})
-                    
-                    # Try each possible key
-                    value = None
-                    for key in screener_keys:
-                        if key in year_data:
-                            value = year_data[key]
-                            break
-                    
-                    cell = ws.cell(row=row, column=col_idx)
-                    if value is not None:
-                        cell.value = value
-                        cell.number_format = '#,##0.00'
-                    cell.border = THIN_BORDER
-                    cell.font = NUMBER_FONT
-                    cell.alignment = Alignment(horizontal='right')
+            if screener_keys:
+                if has_detailed and detailed_pnl:
+                    # Use detailed data from annual report (usually just latest year)
+                    for year, year_data in detailed_pnl.items():
+                        # Find matching column
+                        for col_idx, hist_year in enumerate(hist_years, start=2):
+                            if year in hist_year or hist_year in year:
+                                for key in screener_keys:
+                                    if key in year_data:
+                                        cell = ws.cell(row=row, column=col_idx)
+                                        cell.value = year_data[key]
+                                        cell.number_format = '#,##0.00'
+                                        cell.border = THIN_BORDER
+                                        cell.font = NUMBER_FONT
+                                        cell.alignment = Alignment(horizontal='right')
+                                        break
+                
+                # Also fill from Screener data (which covers more years)
+                if annual_pnl:
+                    for col_idx, year in enumerate(hist_years, start=2):
+                        year_data = annual_pnl.get(year, {})
+                        
+                        # Only fill if cell is empty
+                        cell = ws.cell(row=row, column=col_idx)
+                        if cell.value is None:
+                            value = None
+                            for key in screener_keys:
+                                if key in year_data:
+                                    value = year_data[key]
+                                    break
+                            
+                            if value is not None:
+                                cell.value = value
+                                cell.number_format = '#,##0.00'
+                            cell.border = THIN_BORDER
+                            cell.font = NUMBER_FONT
+                            cell.alignment = Alignment(horizontal='right')
             
             # Fill calculated fields for historical years
             elif display_name == 'Total Income' and annual_pnl:
