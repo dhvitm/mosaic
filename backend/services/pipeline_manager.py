@@ -6,6 +6,7 @@ from datetime import datetime, timezone, timedelta
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pathlib import Path
 import sys
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
 sys.path.append(str(Path(__file__).parent.parent))
 
@@ -14,6 +15,7 @@ from services.claude_service import ClaudeService
 from services.scraper_service import ScraperService
 from services.excel_generator import ExcelGenerator
 from services.websocket_manager import ws_manager
+from services.cache_service import CacheService
 
 logger = logging.getLogger(__name__)
 
