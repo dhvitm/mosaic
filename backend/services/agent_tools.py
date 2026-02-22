@@ -685,6 +685,8 @@ class ToolExecutor:
             
             # Check what data we have collected
             collected = self._collected_data
+            logger.info(f"Collected data keys: {list(collected.keys())}")
+            
             required = ["company_info", "valuation", "assumptions", "thesis"]
             missing = [k for k in required if k not in collected]
             
@@ -697,11 +699,15 @@ class ToolExecutor:
             
             # Get financials from collected data or cache
             financials = collected.get("financials", {})
-            if not financials:
+            logger.info(f"Financials from collected: {bool(financials)}, keys: {list(financials.keys()) if financials else []}")
+            
+            if not financials or not financials.get("annual_pnl"):
                 # Try to load from cache
-                cache_result = self._cache_read(ticker, "screener_financials")
+                cache_result = self._cache_read(self._current_ticker, "screener_financials")
+                logger.info(f"Cache result: cached={cache_result.get('cached')}")
                 if cache_result.get("cached"):
                     financials = cache_result.get("data", {})
+                    logger.info(f"Financials from cache: {list(financials.keys()) if financials else []}")
             
             # Get stock price
             stock_price = collected.get("stock_price", {})
