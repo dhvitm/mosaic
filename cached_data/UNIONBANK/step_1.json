@@ -1,0 +1,23 @@
+{
+  "ticker": "UNIONBANK",
+  "step_number": 1,
+  "data": {
+    "ticker": "UNIONBANK",
+    "full_name": "Union Bank of India",
+    "bse_code": "532477",
+    "nse_code": "UNIONBANK",
+    "sector": "Financial Services",
+    "industry": "Bank",
+    "knowledge_file": "banks.md",
+    "current_price": 193.98,
+    "market_cap": 148115.2004096,
+    "shares_outstanding": 788.5,
+    "fiscal_year_end": "March",
+    "face_value": 10.0,
+    "price_fetched_at": "2026-02-22T13:02:55.721020+00:00",
+    "book_value": 171.659,
+    "pe_ratio": 7.8186216
+  },
+  "cached_at": "2026-02-22T13:02:55.721552+00:00",
+  "cache_version": "1.0"
+}
