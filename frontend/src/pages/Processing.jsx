@@ -180,7 +180,25 @@ export default function Processing() {
     };
   }, [jobId, navigate]);
 
-  if (error) {
+  const handleRetry = async () => {
+    setRetrying(true);
+    try {
+      const response = await axios.post(`${API}/generate/retry/${jobId}`);
+      const newJobId = response.data.new_job_id;
+      const cachedSteps = response.data.cached_steps || [];
+      
+      console.log(`Retry will use ${cachedSteps.length} cached steps`);
+      
+      // Navigate to the new job
+      navigate(`/processing/${newJobId}`);
+    } catch (err) {
+      console.error("Retry failed:", err);
+      setError("Failed to retry job");
+      setRetrying(false);
+    }
+  };
+
+  if (error && job?.status === 'failed') {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
         <div className="max-w-md w-full glass-card p-8 rounded-lg text-center">
