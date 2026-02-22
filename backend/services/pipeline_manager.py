@@ -253,131 +253,120 @@ Return ONLY a JSON object with these exact keys:
             raise
     
     async def _step2_annual_financial_data(self, job_id: str, ticker: str, company_metadata: Dict) -> Dict[str, Any]:
-        """Step 2: Extract annual financial statements"""
-        await self._update_step(job_id, 2, "in_progress", "Fetching annual financials from Screener.in...")
-        await ws_manager.send_activity(job_id, "data_processing", "Extracting annual P&L and Balance Sheet data...")
+        """Step 2: Scrape annual P&L and Balance Sheet from Screener.in"""
+        await self._update_step(job_id, 2, "in_progress", "Scraping annual financials from Screener.in...")
+        await ws_manager.send_activity(job_id, "data_processing", "Extracting P&L and Balance Sheet tables...")
         
         try:
             # Check cache first
             cached_data = CacheService.load_step_data(ticker, 2)
-            if cached_data and cached_data.get('annual_pnl'):
+            if cached_data and cached_data.get('annual_pnl') and cached_data.get('scraped_successfully'):
                 logger.info(f"Using cached step 2 data for {ticker}")
                 await ws_manager.send_activity(job_id, "info", "Found cached financial data")
-                await self._update_step(job_id, 2, "completed", "Annual financial data extracted (from cache)")
+                years = cached_data.get('years', [])
+                await self._update_step(job_id, 2, "completed", f"Financial data extracted ({len(years)} years) (from cache)")
                 return cached_data
             
-            await ws_manager.send_activity(job_id, "llm_thinking", "Generating financial data based on company profile...")
+            await ws_manager.send_activity(job_id, "api_call", f"Scraping Screener.in/company/{ticker}...")
             
-            # Get company info for context
-            market_cap = company_metadata.get('market_cap', 100000)
-            sector = company_metadata.get('sector', 'Financial Services')
+            # Actually scrape from Screener.in
+            financial_data = await self.scraper.scrape_annual_financials(ticker)
             
-            system_message = """You are a financial data expert. Generate realistic historical financial data for Indian banks.
-Use typical growth rates and margins for large private sector banks.
-Always return valid JSON."""
-
-            user_prompt = f"""Generate 5 years of historical P&L and Balance Sheet data for {company_metadata.get('full_name')} (Market Cap: ₹{market_cap} Cr).
-
-Return JSON with this EXACT structure (numbers in ₹ Crores):
-{{
-    "annual_pnl": {{
-        "FY21": {{"interest_income": 120000, "interest_expense": 70000, "net_interest_income": 50000, "other_income": 15000, "operating_expenses": 25000, "provisions": 12000, "pbt": 28000, "tax": 7000, "pat": 21000}},
-        "FY22": {{"interest_income": 135000, "interest_expense": 78000, "net_interest_income": 57000, "other_income": 17000, "operating_expenses": 28000, "provisions": 10000, "pbt": 36000, "tax": 9000, "pat": 27000}},
-        "FY23": {{"interest_income": 155000, "interest_expense": 92000, "net_interest_income": 63000, "other_income": 20000, "operating_expenses": 32000, "provisions": 11000, "pbt": 40000, "tax": 10000, "pat": 30000}},
-        "FY24": {{"interest_income": 185000, "interest_expense": 115000, "net_interest_income": 70000, "other_income": 24000, "operating_expenses": 36000, "provisions": 13000, "pbt": 45000, "tax": 11000, "pat": 34000}},
-        "FY25": {{"interest_income": 210000, "interest_expense": 130000, "net_interest_income": 80000, "other_income": 28000, "operating_expenses": 40000, "provisions": 15000, "pbt": 53000, "tax": 13000, "pat": 40000}}
-    }},
-    "annual_bs": {{
-        "FY21": {{"advances": 1100000, "deposits": 1300000, "total_assets": 1600000, "equity": 150000, "borrowings": 100000}},
-        "FY22": {{"advances": 1280000, "deposits": 1500000, "total_assets": 1850000, "equity": 170000, "borrowings": 120000}},
-        "FY23": {{"advances": 1480000, "deposits": 1720000, "total_assets": 2100000, "equity": 195000, "borrowings": 130000}},
-        "FY24": {{"advances": 1750000, "deposits": 1980000, "total_assets": 2450000, "equity": 225000, "borrowings": 150000}},
-        "FY25": {{"advances": 2050000, "deposits": 2300000, "total_assets": 2850000, "equity": 260000, "borrowings": 170000}}
-    }},
-    "ratios": {{
-        "FY21": {{"nim": 3.2, "casa": 42, "gnpa": 1.3, "nnpa": 0.4, "roe": 14.0, "roa": 1.3, "car": 18.5}},
-        "FY22": {{"nim": 3.4, "casa": 44, "gnpa": 1.2, "nnpa": 0.35, "roe": 15.9, "roa": 1.5, "car": 19.0}},
-        "FY23": {{"nim": 3.5, "casa": 45, "gnpa": 1.1, "nnpa": 0.3, "roe": 15.4, "roa": 1.4, "car": 18.8}},
-        "FY24": {{"nim": 3.6, "casa": 43, "gnpa": 1.3, "nnpa": 0.35, "roe": 15.1, "roa": 1.4, "car": 18.2}},
-        "FY25": {{"nim": 3.5, "casa": 42, "gnpa": 1.4, "nnpa": 0.4, "roe": 15.4, "roa": 1.4, "car": 17.8}}
-    }}
-}}
-
-Scale numbers appropriately for {company_metadata.get('full_name')}'s market cap. Return ONLY valid JSON."""
-            
-            response = await self.claude.call_claude(system_message, user_prompt, f"job_{job_id}_step2")
-            
-            try:
-                financial_data = json.loads(response)
-            except:
-                import re
-                json_match = re.search(r'\{[\s\S]*\}', response)
-                if json_match:
-                    try:
-                        financial_data = json.loads(json_match.group())
-                    except:
-                        financial_data = self._get_default_financials()
-                else:
-                    financial_data = self._get_default_financials()
+            if not financial_data.get('scraped_successfully'):
+                await ws_manager.send_activity(job_id, "error", "Scraping failed, check logs")
+                logger.warning(f"Scraping failed for {ticker}, error: {financial_data.get('error')}")
+            else:
+                years = financial_data.get('years', [])
+                pnl_items = len(financial_data.get('annual_pnl', {}).get(years[0], {})) if years else 0
+                await ws_manager.send_activity(job_id, "info", f"Scraped {len(years)} years, {pnl_items} P&L line items")
             
             # Cache the result
             CacheService.save_step_data(ticker, 2, financial_data)
             
-            await self._update_step(job_id, 2, "completed", "Annual financial data extracted")
+            years_count = len(financial_data.get('years', []))
+            await self._update_step(job_id, 2, "completed", f"Scraped {years_count} years of financial data")
             return financial_data
             
         except Exception as e:
             await self._update_step(job_id, 2, "error", str(e))
             raise
     
-    def _get_default_financials(self) -> Dict[str, Any]:
-        """Return default financial data"""
-        return {
-            "annual_pnl": {
-                "FY21": {"interest_income": 120000, "interest_expense": 70000, "net_interest_income": 50000, "other_income": 15000, "operating_expenses": 25000, "provisions": 12000, "pbt": 28000, "tax": 7000, "pat": 21000},
-                "FY22": {"interest_income": 135000, "interest_expense": 78000, "net_interest_income": 57000, "other_income": 17000, "operating_expenses": 28000, "provisions": 10000, "pbt": 36000, "tax": 9000, "pat": 27000},
-                "FY23": {"interest_income": 155000, "interest_expense": 92000, "net_interest_income": 63000, "other_income": 20000, "operating_expenses": 32000, "provisions": 11000, "pbt": 40000, "tax": 10000, "pat": 30000},
-                "FY24": {"interest_income": 185000, "interest_expense": 115000, "net_interest_income": 70000, "other_income": 24000, "operating_expenses": 36000, "provisions": 13000, "pbt": 45000, "tax": 11000, "pat": 34000},
-                "FY25": {"interest_income": 210000, "interest_expense": 130000, "net_interest_income": 80000, "other_income": 28000, "operating_expenses": 40000, "provisions": 15000, "pbt": 53000, "tax": 13000, "pat": 40000}
-            },
-            "annual_bs": {
-                "FY21": {"advances": 1100000, "deposits": 1300000, "total_assets": 1600000, "equity": 150000, "borrowings": 100000},
-                "FY22": {"advances": 1280000, "deposits": 1500000, "total_assets": 1850000, "equity": 170000, "borrowings": 120000},
-                "FY23": {"advances": 1480000, "deposits": 1720000, "total_assets": 2100000, "equity": 195000, "borrowings": 130000},
-                "FY24": {"advances": 1750000, "deposits": 1980000, "total_assets": 2450000, "equity": 225000, "borrowings": 150000},
-                "FY25": {"advances": 2050000, "deposits": 2300000, "total_assets": 2850000, "equity": 260000, "borrowings": 170000}
-            },
-            "ratios": {
-                "FY21": {"nim": 3.2, "casa": 42, "gnpa": 1.3, "nnpa": 0.4, "roe": 14.0, "roa": 1.3, "car": 18.5},
-                "FY22": {"nim": 3.4, "casa": 44, "gnpa": 1.2, "nnpa": 0.35, "roe": 15.9, "roa": 1.5, "car": 19.0},
-                "FY23": {"nim": 3.5, "casa": 45, "gnpa": 1.1, "nnpa": 0.3, "roe": 15.4, "roa": 1.4, "car": 18.8},
-                "FY24": {"nim": 3.6, "casa": 43, "gnpa": 1.3, "nnpa": 0.35, "roe": 15.1, "roa": 1.4, "car": 18.2},
-                "FY25": {"nim": 3.5, "casa": 42, "gnpa": 1.4, "nnpa": 0.4, "roe": 15.4, "roa": 1.4, "car": 17.8}
-            }
-        }
-    
     async def _step3_operational_metrics(self, job_id: str, ticker: str, company_metadata: Dict) -> Dict[str, Any]:
-        """Step 3: Extract quarterly operational metrics"""
-        await self._update_step(job_id, 3, "in_progress", "Extracting quarterly metrics...")
-        await ws_manager.send_activity(job_id, "data_processing", "Fetching operational KPIs from investor presentations...")
+        """Step 3: Scrape quarterly results from Screener.in"""
+        await self._update_step(job_id, 3, "in_progress", "Scraping quarterly results from Screener.in...")
+        await ws_manager.send_activity(job_id, "data_processing", "Extracting quarterly P&L data...")
         
         try:
             # Check cache first
             cached_data = CacheService.load_step_data(ticker, 3)
-            if cached_data:
+            if cached_data and cached_data.get('quarterly_results') and cached_data.get('scraped_successfully'):
                 logger.info(f"Using cached step 3 data for {ticker}")
-                await ws_manager.send_activity(job_id, "info", "Found cached operational metrics")
-                await self._update_step(job_id, 3, "completed", "Operational metrics extracted (from cache)", cached_data)
+                await ws_manager.send_activity(job_id, "info", "Found cached quarterly data")
+                quarters = cached_data.get('quarters', [])
+                await self._update_step(job_id, 3, "completed", f"Quarterly data extracted ({len(quarters)} quarters) (from cache)")
                 return cached_data
             
-            await ws_manager.send_activity(job_id, "info", "Generating operational metrics structure...")
-            # Mock operational data for now
-            operational_data = {
-                "quarterly_data": [],
-                "note": "Operational metrics extraction requires BSE filing access"
-            }
+            await ws_manager.send_activity(job_id, "api_call", f"Scraping quarterly data from Screener.in...")
+            
+            # Actually scrape quarterly results
+            quarterly_data = await self.scraper.scrape_quarterly_results(ticker)
+            
+            if not quarterly_data.get('scraped_successfully'):
+                await ws_manager.send_activity(job_id, "error", "Quarterly scraping failed")
+                logger.warning(f"Quarterly scraping failed for {ticker}")
+            else:
+                quarters = quarterly_data.get('quarters', [])
+                await ws_manager.send_activity(job_id, "info", f"Scraped {len(quarters)} quarters of data")
             
             # Cache the result
+            CacheService.save_step_data(ticker, 3, quarterly_data)
+            
+            quarters_count = len(quarterly_data.get('quarters', []))
+            await self._update_step(job_id, 3, "completed", f"Scraped {quarters_count} quarters of data")
+            return quarterly_data
+            
+        except Exception as e:
+            await self._update_step(job_id, 3, "error", str(e))
+            raise
+    
+    async def _step4_management_commentary(self, job_id: str, ticker: str, company_metadata: Dict) -> Dict[str, Any]:
+        """Step 4: Scrape management commentary (pros/cons) from Screener.in"""
+        await self._update_step(job_id, 4, "in_progress", "Scraping management commentary from Screener.in...")
+        await ws_manager.send_activity(job_id, "data_processing", "Extracting pros, cons, and analysis...")
+        
+        try:
+            # Check cache first
+            cached_data = CacheService.load_step_data(ticker, 4)
+            if cached_data and (cached_data.get('pros') or cached_data.get('cons')) and cached_data.get('scraped_successfully'):
+                logger.info(f"Using cached step 4 data for {ticker}")
+                await ws_manager.send_activity(job_id, "info", "Found cached commentary")
+                await self._update_step(job_id, 4, "completed", "Commentary extracted (from cache)")
+                return cached_data
+            
+            await ws_manager.send_activity(job_id, "api_call", f"Scraping analysis from Screener.in...")
+            
+            # Actually scrape commentary
+            commentary_data = await self.scraper.scrape_concall_commentary(ticker)
+            
+            if not commentary_data.get('scraped_successfully'):
+                await ws_manager.send_activity(job_id, "error", "Commentary scraping failed")
+                logger.warning(f"Commentary scraping failed for {ticker}")
+            else:
+                pros_count = len(commentary_data.get('pros', []))
+                cons_count = len(commentary_data.get('cons', []))
+                await ws_manager.send_activity(job_id, "info", f"Scraped {pros_count} pros, {cons_count} cons")
+            
+            # Cache the result
+            CacheService.save_step_data(ticker, 4, commentary_data)
+            
+            pros = len(commentary_data.get('pros', []))
+            cons = len(commentary_data.get('cons', []))
+            await self._update_step(job_id, 4, "completed", f"Scraped {pros} pros, {cons} cons")
+            return commentary_data
+            
+        except Exception as e:
+            await self._update_step(job_id, 4, "error", str(e))
+            raise
             CacheService.save_step_data(ticker, 3, operational_data)
             
             await self._update_step(job_id, 3, "completed", "Operational metrics extracted", operational_data)
