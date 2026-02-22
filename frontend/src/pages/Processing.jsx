@@ -28,6 +28,7 @@ export default function Processing() {
   const navigate = useNavigate();
   const [job, setJob] = useState(null);
   const [error, setError] = useState("");
+  const [retrying, setRetrying] = useState(false);
   const wsRef = useRef(null);
   const reconnectTimeoutRef = useRef(null);
 
