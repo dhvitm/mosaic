@@ -213,7 +213,7 @@ class ExcelGenerator:
             ws.column_dimensions[get_column_letter(i)].width = 12
     
     def _create_pnl_sheet(self, data: Dict[str, Any]):
-        """Create P&L sheet"""
+        """Create P&L sheet with actual scraped data"""
         ws = self.wb.create_sheet("P&L")
         
         ws['A1'] = "PROFIT & LOSS STATEMENT"
@@ -222,49 +222,76 @@ class ExcelGenerator:
         ws['A2'] = "(₹ Crores)"
         ws['A2'].font = Font(size=10, italic=True, color="666666")
         
+        # Get actual P&L data from scraping
+        historical = data.get('historical_financials', {})
+        annual_pnl = historical.get('annual_pnl', {})
+        
+        # Get years from scraped data or use defaults
+        if annual_pnl:
+            years = sorted([y for y in annual_pnl.keys() if y != 'TTM'], key=lambda x: x)[-10:]
+        else:
+            years = self.years
+        
         # Headers
         ws['A4'] = "Line Item"
-        for i, year in enumerate(self.years, start=2):
+        for i, year in enumerate(years, start=2):
             ws.cell(row=4, column=i).value = year
-        self._apply_header_style(ws, 4, len(self.years) + 1)
+        self._apply_header_style(ws, 4, len(years) + 1)
         
-        # P&L line items for a bank
-        pnl_items = [
-            ("INCOME", True, None),
-            ("Interest Earned", False, None),
-            ("  Interest on Advances", False, None),
-            ("  Income on Investments", False, None),
-            ("  Other Interest Income", False, None),
-            ("Other Income", False, None),
-            ("Total Income", True, None),
-            ("", False, None),
-            ("EXPENDITURE", True, None),
-            ("Interest Expended", False, None),
-            ("Operating Expenses", False, None),
-            ("  Employee Cost", False, None),
-            ("  Other OpEx", False, None),
-            ("Provisions & Contingencies", False, None),
-            ("  NPA Provisions", False, None),
-            ("  Other Provisions", False, None),
-            ("Total Expenditure", True, None),
-            ("", False, None),
-            ("Profit Before Tax", True, None),
-            ("Tax Expense", False, None),
-            ("PAT", True, "00AA00"),  # Green color in hex
-        ]
+        # Map scraped line items to our standard format
+        line_item_mapping = {
+            'Revenue +': 'Total Income',
+            'Interest': 'Interest Expense', 
+            'Expenses +': 'Operating Expenses',
+            'Financing Profit': 'Net Interest Income',
+            'Other Income +': 'Other Income',
+            'Depreciation': 'Depreciation',
+            'Profit before tax': 'Profit Before Tax',
+            'Net Profit +': 'PAT',
+            'Tax %': 'Tax Rate (%)'
+        }
         
         row = 5
-        for item, is_bold, color in pnl_items:
-            cell = ws.cell(row=row, column=1)
-            cell.value = item
-            cell.border = THIN_BORDER
-            if is_bold:
-                cell.font = Font(bold=True, color=color if color else "000000")
-            row += 1
         
-        ws.column_dimensions['A'].width = 30
-        for i in range(2, len(self.years) + 2):
-            ws.column_dimensions[get_column_letter(i)].width = 12
+        # Get unique line items from data
+        if annual_pnl and years:
+            first_year_data = annual_pnl.get(years[0], {})
+            line_items = list(first_year_data.keys())
+            
+            for item in line_items:
+                # Write line item name
+                ws.cell(row=row, column=1).value = item
+                ws.cell(row=row, column=1).border = THIN_BORDER
+                
+                # Check if this is a key row
+                is_key = item in ['Revenue +', 'Net Profit +', 'Profit before tax', 'Financing Profit']
+                if is_key:
+                    ws.cell(row=row, column=1).font = Font(bold=True)
+                
+                # Write values for each year
+                for col_idx, year in enumerate(years, start=2):
+                    year_data = annual_pnl.get(year, {})
+                    value = year_data.get(item)
+                    
+                    cell = ws.cell(row=row, column=col_idx)
+                    if value is not None:
+                        cell.value = value
+                        cell.number_format = '#,##0.00'
+                    cell.border = THIN_BORDER
+                    cell.font = NUMBER_FONT
+                    cell.alignment = Alignment(horizontal='right')
+                    
+                    if is_key:
+                        cell.font = Font(bold=True, name="Consolas", size=10)
+                
+                row += 1
+        else:
+            # Fallback template
+            ws.cell(row=row, column=1).value = "No P&L data available"
+        
+        ws.column_dimensions['A'].width = 25
+        for i in range(2, len(years) + 2):
+            ws.column_dimensions[get_column_letter(i)].width = 14
     
     def _create_balance_sheet(self, data: Dict[str, Any]):
         """Create Balance Sheet"""
