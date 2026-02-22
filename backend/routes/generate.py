@@ -13,6 +13,7 @@ from models import ModelJob, ModelJobCreate
 from services.pipeline_manager import PipelineManager
 from services.scraper_service import ScraperService
 from services.websocket_manager import ws_manager
+from services.cache_service import CacheService
 from motor.motor_asyncio import AsyncIOMotorClient
 
 logger = logging.getLogger(__name__)
