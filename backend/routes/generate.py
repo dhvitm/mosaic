@@ -28,12 +28,30 @@ db = client[os.environ['DB_NAME']]
 @router.post("/", response_model=ModelJob)
 async def create_model_job(job_input: ModelJobCreate, background_tasks: BackgroundTasks):
     """
-    Create a new model generation job and start the pipeline
+    Create a new model generation job and start the pipeline.
+    Prevents duplicate jobs for the same ticker.
     """
     try:
+        ticker = job_input.ticker.upper()
+        
+        # Check if there's already a processing job for this ticker
+        existing_job = await db.model_jobs.find_one(
+            {"ticker": ticker, "status": "processing"},
+            {"_id": 0}
+        )
+        
+        if existing_job:
+            logger.info(f"Found existing processing job for {ticker}: {existing_job['id']}")
+            # Convert timestamps
+            if isinstance(existing_job.get('created_at'), str):
+                existing_job['created_at'] = datetime.fromisoformat(existing_job['created_at'])
+            if isinstance(existing_job.get('updated_at'), str):
+                existing_job['updated_at'] = datetime.fromisoformat(existing_job['updated_at'])
+            return existing_job
+        
         # Create job
         job = ModelJob(
-            ticker=job_input.ticker.upper(),
+            ticker=ticker,
             status="pending",
             steps=[]
         )
@@ -49,7 +67,7 @@ async def create_model_job(job_input: ModelJobCreate, background_tasks: Backgrou
         pipeline = PipelineManager(db)
         background_tasks.add_task(pipeline.run_pipeline, job.id, job.ticker)
         
-        logger.info(f"Created job {job.id} for ticker {job.ticker}")
+        logger.info(f"Created job {job.id} for ticker {ticker}")
         return job
         
     except Exception as e:
