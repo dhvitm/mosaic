@@ -1,0 +1,17 @@
+{
+  "ticker": "UNIONBANK",
+  "step_number": 6,
+  "data": {
+    "cost_of_equity": 13.0,
+    "terminal_growth": 4.0,
+    "fair_value": 215.5,
+    "target_price": 215.5,
+    "current_price": 193.98,
+    "upside_percent": 11.1,
+    "recommendation": "BUY",
+    "methodology": "RIV",
+    "rationale": "Union Bank shows attractive valuation with ROE of 17.5% exceeding cost of equity of 13%, generating positive residual income. The stock trades at 10% discount to intrinsic value, offering moderate upside in a recovering PSU banking cycle."
+  },
+  "cached_at": "2026-02-22T13:24:42.169356+00:00",
+  "cache_version": "1.0"
+}
