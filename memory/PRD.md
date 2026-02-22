@@ -46,12 +46,16 @@ Build a web app called "Mosaic" for investment professionals that takes an India
 - [x] Full-stack application scaffolding (React + FastAPI)
 - [x] 8-step async pipeline in `pipeline_manager.py`
 - [x] WebSocket real-time progress updates
-- [x] File-based caching for step outputs
+- [x] File-based caching for step outputs (all 8 steps)
 - [x] Jobs dashboard (view all jobs, status, progress)
 - [x] Retry functionality for failed jobs
 - [x] Abort job functionality (backend + frontend)
 - [x] **Real-Time Activity Log** - Live display of API calls, LLM thinking, and data processing
 - [x] Claude AI integration for reasoning steps
+- [x] **Step 5, 7, 8 Performance Optimization** - Reduced from ~50s to ~10s per step by:
+  - Using focused system messages instead of full 15KB knowledge file
+  - Providing example JSON structures for better response parsing
+  - Adding caching for valuation and thesis steps
 
 ### In Progress
 - None
