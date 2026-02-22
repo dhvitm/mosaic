@@ -414,7 +414,7 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
             elapsed = time.time() - start_time
             
             # Log tool calls to database
-            if self.db:
+            if self.db is not None:
                 await self._log_tool_calls_to_db(job_id, self._tool_calls_log)
             
             await ws_manager.send_activity(
