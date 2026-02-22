@@ -253,23 +253,22 @@ class ExcelGenerator:
         self._apply_header_style(ws, 4, 1, len(all_years) + 1)
         
         # P&L structure matching ACTUAL Screener.in keys for banks
-        # Screener keys: Revenue +, Interest, Expenses +, Other Income +, Depreciation, Profit before tax, Tax %, Net Profit +
+        # Banks have simpler P&L: Revenue +, Interest, Expenses +, Other Income +, Depreciation, Profit before tax, Tax %, Net Profit +
         pnl_items = [
-            ('Revenue / Interest Earned', ['Revenue +', 'Interest Earned', 'Revenue']),
-            ('Interest', ['Interest', 'Interest Income']),
+            ('Revenue / Interest Earned', ['Revenue +', 'Interest Earned', 'Revenue', 'Sales +']),
+            ('Interest Income', ['Interest', 'Interest Income']),
             ('Other Income', ['Other Income +', 'Other Income']),
             ('Total Income', None),  # Calculated = sum of above
             ('', None),  # Spacer
             ('Operating Expenses', ['Expenses +', 'Operating Expenses', 'Expenses']),
-            ('Interest Expended', ['Interest Expended', 'Finance Costs']),
             ('Depreciation', ['Depreciation', 'Depreciation and Amortisation']),
-            ('Provisions', ['Provisions +', 'Provisions & Contingencies']),
             ('Total Expenses', None),  # Calculated
             ('', None),  # Spacer
             ('Profit Before Tax', ['Profit before tax', 'PBT']),
             ('Tax', ['Tax %', 'Tax']),
             ('Net Profit', ['Net Profit +', 'Net Profit', 'PAT']),
             ('EPS (Rs.)', ['EPS in Rs', 'EPS']),
+            ('Dividend Payout (%)', ['Dividend Payout %']),
         ]
         
         row = 5
