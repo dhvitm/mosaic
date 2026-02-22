@@ -490,9 +490,13 @@ Return JSON.
                                       valuation: Dict) -> Dict[str, Any]:
         """Step 8: Generate investment thesis"""
         await self._update_step(job_id, 8, "in_progress", "Writing investment thesis...")
+        await ws_manager.send_activity(job_id, "llm_thinking", "Claude AI writing professional investment note...")
         
         try:
+            await ws_manager.send_activity(job_id, "data_processing", "Compiling key findings and recommendations...")
             knowledge_file = self.claude.load_knowledge_file(company_metadata.get('knowledge_file', 'generic.md'))
+            
+            await ws_manager.send_activity(job_id, "llm_thinking", "Structuring investment thesis with risks and catalysts...")
             
             system_message = f"{knowledge_file}\n\nYou are a senior equity research analyst writing an investment note."
             
