@@ -98,7 +98,15 @@ export default function Landing() {
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
         
         {/* Navigation */}
-        <div className="absolute top-8 right-8">
+        <div className="absolute top-8 right-8 flex items-center gap-3">
+          <Link
+            to="/cache"
+            className="px-4 py-2 bg-slate-800/50 hover:bg-slate-700/50 backdrop-blur-sm border border-slate-700 text-white rounded-lg transition-colors flex items-center gap-2"
+            data-testid="view-cache-button"
+          >
+            <Database className="w-4 h-4" />
+            Cache
+          </Link>
           <button
             onClick={() => navigate("/jobs")}
             className="px-4 py-2 bg-slate-800/50 hover:bg-slate-700/50 backdrop-blur-sm border border-slate-700 text-white rounded-lg transition-colors flex items-center gap-2"
