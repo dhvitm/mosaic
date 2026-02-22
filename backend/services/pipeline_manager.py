@@ -570,48 +570,103 @@ Return ONLY the JSON object, no other text."""
     async def _step7_valuation(self, job_id: str, company_metadata: Dict, assumptions: Dict) -> Dict[str, Any]:
         """Step 7: Run valuation"""
         await self._update_step(job_id, 7, "in_progress", "Running valuation...")
-        await ws_manager.send_activity(job_id, "llm_thinking", "Claude AI calculating intrinsic value using RIV methodology...")
+        await ws_manager.send_activity(job_id, "llm_thinking", "Claude AI calculating intrinsic value...")
+        
+        ticker = company_metadata.get('ticker', 'UNKNOWN')
         
         try:
-            await ws_manager.send_activity(job_id, "data_processing", "Loading valuation parameters from knowledge base...")
-            knowledge_file = self.claude.load_knowledge_file(company_metadata.get('knowledge_file', 'generic.md'))
+            # Check cache first
+            cached_data = CacheService.load_step_data(ticker, 7)
+            if cached_data:
+                logger.info(f"Using cached step 7 data for {ticker}")
+                await ws_manager.send_activity(job_id, "info", "Found cached valuation data")
+                await self._update_step(job_id, 7, "completed", "Valuation complete (from cache)")
+                return cached_data
             
-            await ws_manager.send_activity(job_id, "llm_thinking", "Determining cost of equity and terminal growth rate...")
+            await ws_manager.send_activity(job_id, "data_processing", "Calculating cost of equity and target price...")
             
-            system_message = f"{knowledge_file}\n\nYou are a quantitative analyst performing valuation."
+            # Get sector type
+            sector = company_metadata.get('sector', 'Unknown').lower()
+            is_bank = 'bank' in sector or 'financial' in sector
+            current_price = company_metadata.get('current_price', 100)
             
-            user_prompt = f"""
-Perform valuation for {company_metadata.get('full_name')} using RIV methodology.
+            # Focused system message (NOT the full knowledge file)
+            system_message = """You are a quantitative equity analyst specializing in Indian markets.
+You perform stock valuations using the Residual Income Valuation (RIV) method.
 
-Generate:
-- Cost of equity (assume beta=1.0, Rf=7%, ERP=6%)
-- Terminal growth rate
-- Target price
-- Upside/downside %
-- Recommendation (Buy/Hold/Sell)
+Key inputs:
+- Risk-free rate (Rf): 7% (10-year G-Sec yield)
+- Equity Risk Premium (ERP): 6%
+- Beta: Use 1.0 for large-cap banks, 1.2 for mid-cap
 
-Return JSON.
-"""
+Output a concise JSON with valuation results. Always return valid JSON."""
+
+            # Concise user prompt with actual data
+            roe_assumption = assumptions.get('assumptions', {}).get('roe', [0.15])[0] if isinstance(assumptions.get('assumptions', {}).get('roe'), list) else 0.15
             
+            user_prompt = f"""Perform RIV valuation for {company_metadata.get('full_name')}:
+
+Company Data:
+- Current Price: ₹{current_price}
+- Market Cap: ₹{company_metadata.get('market_cap', 0)} Cr
+- Sector: {company_metadata.get('sector', 'Unknown')}
+- ROE Assumption: {roe_assumption:.1%}
+
+Calculate and return JSON:
+{{
+    "cost_of_equity": 13.0,
+    "terminal_growth": 4.0,
+    "fair_value": 0,
+    "target_price": 0,
+    "current_price": {current_price},
+    "upside_percent": 0,
+    "recommendation": "BUY/HOLD/SELL",
+    "methodology": "RIV",
+    "rationale": "Brief 1-2 sentence rationale"
+}}
+
+Adjust fair_value/target_price based on realistic assumptions for Indian {company_metadata.get('sector', 'financial')} sector.
+Return ONLY the JSON."""
+            
+            await ws_manager.send_activity(job_id, "api_call", "Calling Claude API for valuation...")
             response = await self.claude.call_claude(system_message, user_prompt, f"job_{job_id}_step7")
             
             try:
                 valuation = json.loads(response)
             except:
-                valuation = {
-                    "recommendation": "HOLD",
-                    "target_price": company_metadata.get('current_price', 100),
-                    "upside": "0%",
-                    "cost_of_equity": 13.0,
-                    "terminal_growth": 3.0
-                }
+                import re
+                json_match = re.search(r'\{[\s\S]*\}', response)
+                if json_match:
+                    try:
+                        valuation = json.loads(json_match.group())
+                    except:
+                        valuation = self._get_default_valuation(current_price)
+                else:
+                    valuation = self._get_default_valuation(current_price)
             
-            await self._update_step(job_id, 7, "completed", "Valuation complete")
+            # Cache the result
+            CacheService.save_step_data(ticker, 7, valuation)
+            
+            await self._update_step(job_id, 7, "completed", f"Valuation complete: {valuation.get('recommendation', 'N/A')}")
             return valuation
             
         except Exception as e:
             await self._update_step(job_id, 7, "error", str(e))
             raise
+    
+    def _get_default_valuation(self, current_price: float) -> Dict[str, Any]:
+        """Return default valuation if parsing fails"""
+        return {
+            "cost_of_equity": 13.0,
+            "terminal_growth": 4.0,
+            "fair_value": current_price * 1.1,
+            "target_price": current_price * 1.1,
+            "current_price": current_price,
+            "upside_percent": 10.0,
+            "recommendation": "HOLD",
+            "methodology": "RIV",
+            "rationale": "Default valuation - insufficient data for precise estimate"
+        }
     
     async def _step8_thesis_generation(self, job_id: str, company_metadata: Dict,
                                       historical_financials: Dict, assumptions: Dict,
