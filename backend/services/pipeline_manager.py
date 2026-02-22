@@ -378,28 +378,107 @@ Return JSON with:
                 await self._update_step(job_id, 5, "completed", "Forecast assumptions generated (from cache)")
                 return cached_data
             
-            await ws_manager.send_activity(job_id, "data_processing", "Loading sector knowledge base for assumptions...")
-            knowledge_file = self.claude.load_knowledge_file(company_metadata.get('knowledge_file', 'generic.md'))
+            await ws_manager.send_activity(job_id, "data_processing", "Preparing data context for assumption generation...")
             
-            await ws_manager.send_activity(job_id, "llm_thinking", "Analyzing historical trends and management guidance...")
+            # Get sector type from metadata
+            sector = company_metadata.get('sector', 'Unknown').lower()
+            is_bank = 'bank' in sector or 'financial' in sector
             
-            system_message = f"{knowledge_file}\n\nYou are a senior equity research analyst building forecast assumptions."
-            
-            user_prompt = f"""
-Generate forecast assumptions for {company_metadata.get('full_name')} for FY26-FY30.
+            # Build a FOCUSED system message (not the entire knowledge file)
+            if is_bank:
+                system_message = """You are a senior equity research analyst specializing in Indian banks.
+You generate realistic 5-year forecast assumptions based on historical data and industry norms.
 
-Based on the sector knowledge file, create assumptions for all required parameters.
-For a bank, this includes: loan growth, NIM, CASA ratio, credit cost, ROA, ROE, etc.
+Key metrics to forecast for banks:
+- Loan Growth Rate (typically 1-1.5x GDP growth for large banks)
+- NIM (Net Interest Margin) - typically 3-4.5% for private banks
+- CASA Ratio - higher is better, 40-50% typical
+- Cost of Deposits - linked to repo rate
+- Credit Cost - 0.5-2% depending on asset quality
+- Cost-to-Income Ratio - 40-50% for efficient banks
+- ROA - 1-2% for well-run banks
+- ROE - 12-18% typical
+- Capital Adequacy - minimum 11.5% per RBI
 
-Return JSON with assumptions for each parameter for each forecast year.
+Always return valid JSON."""
+            else:
+                system_message = """You are a senior equity research analyst.
+You generate realistic 5-year forecast assumptions based on historical data and industry norms.
+
+Key metrics to forecast:
+- Revenue Growth Rate
+- EBITDA Margin
+- Depreciation as % of Gross Block
+- Tax Rate
+- Working Capital Days
+- Capex as % of Revenue
+- ROE and ROCE
+
+Always return valid JSON."""
+
+            # Build context from available data
+            await ws_manager.send_activity(job_id, "data_processing", "Analyzing historical trends...")
+            
+            data_context = f"""
+Company: {company_metadata.get('full_name', ticker)}
+Ticker: {ticker}
+Sector: {company_metadata.get('sector', 'Unknown')}
+Industry: {company_metadata.get('industry', 'Unknown')}
+Current Price: ₹{company_metadata.get('current_price', 'N/A')}
+Market Cap: ₹{company_metadata.get('market_cap', 'N/A')} Cr
 """
+
+            # Add historical financials summary if available
+            if historical_financials and historical_financials.get('annual_pnl'):
+                data_context += "\nHistorical Financial Data Available: Yes"
+            else:
+                data_context += "\nHistorical Financial Data Available: Limited"
+
+            # Add management guidance if available  
+            if management_commentary and management_commentary.get('guidance'):
+                data_context += f"\nManagement Guidance: {management_commentary.get('guidance', [])}"
+            
+            await ws_manager.send_activity(job_id, "api_call", "Calling Claude API for assumptions generation...")
+            
+            user_prompt = f"""{data_context}
+
+Generate forecast assumptions for FY26E through FY30E (5 years).
+
+Return a JSON object with this exact structure:
+{{
+    "forecast_years": ["FY26E", "FY27E", "FY28E", "FY29E", "FY30E"],
+    "assumptions": {{
+        {"\"loan_growth_rate\": [0.15, 0.14, 0.13, 0.12, 0.11]," if is_bank else "\"revenue_growth_rate\": [0.12, 0.11, 0.10, 0.09, 0.08],"}
+        {"\"nim\": [0.038, 0.037, 0.036, 0.035, 0.035]," if is_bank else "\"ebitda_margin\": [0.18, 0.19, 0.20, 0.20, 0.21],"}
+        {"\"casa_ratio\": [0.45, 0.46, 0.47, 0.48, 0.48]," if is_bank else "\"tax_rate\": [0.25, 0.25, 0.25, 0.25, 0.25],"}
+        {"\"credit_cost\": [0.012, 0.011, 0.010, 0.010, 0.009]," if is_bank else "\"capex_pct_revenue\": [0.05, 0.05, 0.04, 0.04, 0.04],"}
+        {"\"cost_to_income\": [0.45, 0.44, 0.43, 0.42, 0.41]," if is_bank else "\"working_capital_days\": [45, 44, 43, 42, 41],"}
+        {"\"roa\": [0.015, 0.016, 0.017, 0.017, 0.018]," if is_bank else "\"depreciation_rate\": [0.10, 0.10, 0.10, 0.10, 0.10],"}
+        "roe": [0.15, 0.155, 0.16, 0.165, 0.17]
+    }},
+    "rationale": "Brief explanation of key assumptions"
+}}
+
+Adjust the numbers based on the company's historical performance and sector outlook.
+Return ONLY the JSON object, no other text."""
             
             response = await self.claude.call_claude(system_message, user_prompt, f"job_{job_id}_step5")
+            
+            await ws_manager.send_activity(job_id, "data_processing", "Parsing assumptions response...")
             
             try:
                 assumptions = json.loads(response)
             except:
-                assumptions = {"forecast_years": ["FY26E", "FY27E", "FY28E", "FY29E", "FY30E"]}
+                # Try to extract JSON from response
+                import re
+                json_match = re.search(r'\{[\s\S]*\}', response)
+                if json_match:
+                    try:
+                        assumptions = json.loads(json_match.group())
+                    except:
+                        assumptions = self._get_default_assumptions(is_bank)
+                else:
+                    assumptions = self._get_default_assumptions(is_bank)
             
             # Cache the result
             CacheService.save_step_data(ticker, 5, assumptions)
@@ -410,6 +489,37 @@ Return JSON with assumptions for each parameter for each forecast year.
         except Exception as e:
             await self._update_step(job_id, 5, "error", str(e))
             raise
+    
+    def _get_default_assumptions(self, is_bank: bool) -> Dict[str, Any]:
+        """Return default assumptions if parsing fails"""
+        if is_bank:
+            return {
+                "forecast_years": ["FY26E", "FY27E", "FY28E", "FY29E", "FY30E"],
+                "assumptions": {
+                    "loan_growth_rate": [0.15, 0.14, 0.13, 0.12, 0.11],
+                    "nim": [0.038, 0.037, 0.036, 0.035, 0.035],
+                    "casa_ratio": [0.45, 0.46, 0.47, 0.48, 0.48],
+                    "credit_cost": [0.012, 0.011, 0.010, 0.010, 0.009],
+                    "cost_to_income": [0.45, 0.44, 0.43, 0.42, 0.41],
+                    "roa": [0.015, 0.016, 0.017, 0.017, 0.018],
+                    "roe": [0.15, 0.155, 0.16, 0.165, 0.17]
+                },
+                "rationale": "Default assumptions for Indian private sector bank"
+            }
+        else:
+            return {
+                "forecast_years": ["FY26E", "FY27E", "FY28E", "FY29E", "FY30E"],
+                "assumptions": {
+                    "revenue_growth_rate": [0.12, 0.11, 0.10, 0.09, 0.08],
+                    "ebitda_margin": [0.18, 0.19, 0.20, 0.20, 0.21],
+                    "tax_rate": [0.25, 0.25, 0.25, 0.25, 0.25],
+                    "capex_pct_revenue": [0.05, 0.05, 0.04, 0.04, 0.04],
+                    "working_capital_days": [45, 44, 43, 42, 41],
+                    "depreciation_rate": [0.10, 0.10, 0.10, 0.10, 0.10],
+                    "roe": [0.15, 0.155, 0.16, 0.165, 0.17]
+                },
+                "rationale": "Default assumptions for Indian company"
+            }
     
     async def _step6_excel_generation(self, job_id: str, company_metadata: Dict,
                                      historical_financials: Dict, operational_data: Dict,
