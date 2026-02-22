@@ -73,6 +73,17 @@ export default function JobsList() {
     }
   };
 
+  const handleAbort = async (e, jobId) => {
+    e.stopPropagation();
+    try {
+      await axios.post(`${API}/generate/abort/${jobId}`);
+      // Refresh job list
+      fetchJobs(true);
+    } catch (err) {
+      console.error("Abort failed:", err);
+    }
+  };
+
   if (loading) {
     return (
       <div className="glass-card p-6 rounded-lg">
