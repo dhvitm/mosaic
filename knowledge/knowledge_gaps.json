@@ -10,5 +10,11 @@
     "missing_topic": "IT services specific benchmarks: attrition rates, utilization rates, pricing trends, offshore/onsite mix, vertical-specific growth rates, and key operating metrics for Indian IT services companies",
     "flagged_by": "TCS",
     "timestamp": "2026-02-22T14:11:11.035050+00:00"
+  },
+  {
+    "sector": "banks",
+    "missing_topic": "Unable to retrieve historical financials from Screener.in for SBIN - will use publicly available data and sector benchmarks for PSU banks to build assumptions",
+    "flagged_by": "SBIN",
+    "timestamp": "2026-02-22T14:30:07.774110+00:00"
   }
 ]
