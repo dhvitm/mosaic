@@ -677,8 +677,8 @@ Return ONLY the JSON."""
     
     async def _step7_thesis_generation(self, job_id: str, company_metadata: Dict,
                                       historical_financials: Dict, assumptions: Dict,
-                                      valuation: Dict) -> Dict[str, Any]:
-        """Step 7: Generate investment thesis"""
+                                      valuation: Dict, management_commentary: Dict = None) -> Dict[str, Any]:
+        """Step 7: Generate investment thesis using all collected data including investor presentations"""
         await self._update_step(job_id, 7, "in_progress", "Writing investment thesis...")
         await ws_manager.send_activity(job_id, "llm_thinking", "Claude AI writing investment note...")
         
@@ -693,35 +693,62 @@ Return ONLY the JSON."""
                 await self._update_step(job_id, 7, "completed", "Investment thesis generated (from cache)")
                 return cached_data
             
-            await ws_manager.send_activity(job_id, "data_processing", "Compiling key findings...")
+            await ws_manager.send_activity(job_id, "data_processing", "Compiling key findings from financials and investor presentations...")
             
             # Focused system message
             system_message = """You are a senior equity research analyst at a top investment bank.
 Write concise, professional investment notes in the style of institutional research.
-Use bullet points for key metrics. Be direct and actionable."""
+Use bullet points for key metrics. Be direct and actionable.
+Incorporate insights from investor presentations when available."""
 
             # Build concise prompt with available data
             target_price = valuation.get('target_price', valuation.get('fair_value', 0))
             recommendation = valuation.get('recommendation', 'HOLD')
             upside = valuation.get('upside_percent', 0)
             
+            # Extract key info from management commentary
+            pros = management_commentary.get('pros', []) if management_commentary else []
+            cons = management_commentary.get('cons', []) if management_commentary else []
+            presentations = management_commentary.get('bse_presentations', []) if management_commentary else []
+            
+            # Build context from presentations
+            presentation_context = ""
+            if presentations:
+                pres_quarters = [p.get('quarter', 'N/A') for p in presentations[:5] if p.get('quarter')]
+                if pres_quarters:
+                    presentation_context = f"\nINVESTOR PRESENTATIONS AVAILABLE: {', '.join(pres_quarters)}"
+                    presentation_context += "\n(Note: PPT links available for detailed operational metrics and management guidance)"
+            
+            # Build strengths/risks context
+            strengths_text = ""
+            if pros:
+                strengths_text = "\nSTRENGTHS (from Screener.in):\n" + "\n".join([f"- {p}" for p in pros[:4]])
+            
+            risks_text = ""
+            if cons:
+                risks_text = "\nRISKS (from Screener.in):\n" + "\n".join([f"- {c}" for c in cons[:4]])
+            
             user_prompt = f"""Write a brief investment thesis for {company_metadata.get('full_name')} ({ticker}).
 
 KEY DATA:
-- Current Price: ₹{company_metadata.get('current_price', 0)}
-- Target Price: ₹{target_price}
+- Current Price: ₹{company_metadata.get('current_price', 0):,.2f}
+- Target Price: ₹{target_price:,.0f}
 - Recommendation: {recommendation}
-- Upside: {upside}%
+- Upside: {upside:.1f}%
 - Sector: {company_metadata.get('sector', 'N/A')}
-- Market Cap: ₹{company_metadata.get('market_cap', 0)} Cr
+- Market Cap: ₹{company_metadata.get('market_cap', 0):,.0f} Cr
+{presentation_context}
+{strengths_text}
+{risks_text}
 
 Write 4-6 short paragraphs covering:
-1. RECOMMENDATION SUMMARY (1-2 sentences)
-2. INVESTMENT CASE (3-4 bullet points)
-3. KEY RISKS (2-3 bullet points)
-4. VALUATION (brief methodology note)
+1. RECOMMENDATION SUMMARY (1-2 sentences with price targets)
+2. INVESTMENT CASE (3-4 bullet points on why to invest)
+3. KEY RISKS (2-3 bullet points on what could go wrong)
+4. VALUATION (brief note on methodology and fair value)
 
-Keep total length under 400 words. Professional tone, no marketing language."""
+Keep total length under 500 words. Professional tone, no marketing language.
+Reference the company's strengths and risks in your analysis."""
             
             await ws_manager.send_activity(job_id, "api_call", "Calling Claude API for thesis generation...")
             response = await self.claude.call_claude(system_message, user_prompt, f"job_{job_id}_step8")
@@ -731,7 +758,8 @@ Keep total length under 400 words. Professional tone, no marketing language."""
                 "summary": f"{recommendation} with target price of ₹{target_price}",
                 "recommendation": recommendation,
                 "target_price": target_price,
-                "upside": upside
+                "upside": upside,
+                "presentations_referenced": len(presentations)
             }
             
             # Cache the result
