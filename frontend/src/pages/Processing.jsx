@@ -396,6 +396,87 @@ export default function Processing() {
         </div>
       </div>
 
+      {/* Activity Log Panel */}
+      <div className="max-w-6xl mx-auto mt-6">
+        <div className="glass-card p-6 rounded-lg">
+          <div className="flex items-center gap-3 mb-4">
+            <Terminal className="w-5 h-5 text-indigo-400" />
+            <h2 className="text-lg font-semibold text-white">Live Activity Log</h2>
+            <div className="flex items-center gap-1.5 ml-auto">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-xs text-slate-500">Streaming</span>
+            </div>
+          </div>
+          
+          <div 
+            ref={activityLogRef}
+            className="h-64 overflow-y-auto bg-slate-900/50 rounded-lg p-4 font-mono text-sm space-y-2"
+            data-testid="activity-log"
+          >
+            {activityLog.length === 0 ? (
+              <div className="text-slate-500 text-center py-8">
+                <Cpu className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                <p>Waiting for activity...</p>
+              </div>
+            ) : (
+              activityLog.map((entry) => {
+                const ActivityIcon = ACTIVITY_ICONS[entry.activity_type] || Info;
+                const colorClass = ACTIVITY_COLORS[entry.activity_type] || "text-slate-400";
+                const time = new Date(entry.timestamp).toLocaleTimeString();
+                
+                return (
+                  <div 
+                    key={entry.id} 
+                    className="flex items-start gap-3 py-1.5 border-b border-slate-800/50 last:border-0"
+                  >
+                    <ActivityIcon className={`w-4 h-4 flex-shrink-0 mt-0.5 ${colorClass}`} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-slate-300 break-words">{entry.message}</p>
+                      {entry.details?.prompt_preview && (
+                        <p className="text-xs text-slate-500 mt-1 truncate">
+                          Prompt: {entry.details.prompt_preview}
+                        </p>
+                      )}
+                      {entry.details?.response_preview && (
+                        <p className="text-xs text-slate-500 mt-1 truncate">
+                          Response: {entry.details.response_preview}
+                        </p>
+                      )}
+                      {entry.details?.elapsed_seconds && (
+                        <span className="text-xs text-slate-600">
+                          ({entry.details.elapsed_seconds}s)
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-xs text-slate-600 flex-shrink-0">{time}</span>
+                  </div>
+                );
+              })
+            )}
+          </div>
+          
+          {/* Activity Legend */}
+          <div className="mt-4 flex flex-wrap gap-4 text-xs">
+            <div className="flex items-center gap-1.5">
+              <Zap className="w-3 h-3 text-amber-400" />
+              <span className="text-slate-500">API Call</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Cpu className="w-3 h-3 text-purple-400" />
+              <span className="text-slate-500">AI Thinking</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Database className="w-3 h-3 text-blue-400" />
+              <span className="text-slate-500">Data Processing</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Info className="w-3 h-3 text-slate-400" />
+              <span className="text-slate-500">Info</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Footer Message */}
       {job.status === 'processing' && (
         <div className="max-w-6xl mx-auto mt-6 text-center">
