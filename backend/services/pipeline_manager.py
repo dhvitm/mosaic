@@ -143,6 +143,17 @@ class PipelineManager:
         await self._update_step(job_id, 1, "in_progress", f"Identifying {ticker}...")
         
         try:
+            # Check cache first
+            cached_data = CacheService.load_step_data(ticker, 1)
+            if cached_data:
+                logger.info(f"Using cached step 1 data for {ticker}")
+                await self._update_step(
+                    job_id, 1, "completed",
+                    f"Identified: {cached_data.get('full_name')} - {cached_data.get('sector')} (from cache)",
+                    cached_data
+                )
+                return cached_data
+            
             # Scrape Screener.in
             screener_data = await self.scraper.scrape_screener(ticker)
             
@@ -212,6 +223,9 @@ Return ONLY a JSON object with these exact keys:
                         "fiscal_year_end": "March",
                         "face_value": 10.0
                     }
+            
+            # Cache the result
+            CacheService.save_step_data(ticker, 1, metadata)
             
             await self._update_step(
                 job_id, 1, "completed",
