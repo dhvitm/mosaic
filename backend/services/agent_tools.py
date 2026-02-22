@@ -377,20 +377,21 @@ class ToolExecutor:
             return {"success": False, "error": str(e)}
     
     async def _get_document_links(self, ticker: str) -> Dict[str, Any]:
-        """Get document links from Screener.in"""
+        """Get document links from Screener.in and BSE"""
         try:
-            docs = await self.scraper.scrape_screener_documents(ticker)
+            docs = await self.scraper.scrape_investor_documents(ticker)
             return {
                 "success": True,
                 "ticker": ticker,
-                "investor_presentations": docs.get("bse_presentations", [])[:5],
+                "investor_presentations": docs.get("investor_presentations", [])[:5],
                 "annual_reports": docs.get("annual_reports", [])[:3],
-                "concall_transcripts": docs.get("transcripts", [])[:4],
-                "total_documents": len(docs.get("bse_presentations", [])) + 
+                "concall_transcripts": docs.get("concall_transcripts", [])[:4],
+                "total_documents": len(docs.get("investor_presentations", [])) + 
                                    len(docs.get("annual_reports", [])) + 
-                                   len(docs.get("transcripts", []))
+                                   len(docs.get("concall_transcripts", []))
             }
         except Exception as e:
+            logger.error(f"Failed to get document links for {ticker}: {str(e)}")
             return {"success": False, "error": str(e)}
     
     async def _get_peer_comparison(self, ticker: str) -> Dict[str, Any]:
