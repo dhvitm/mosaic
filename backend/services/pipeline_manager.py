@@ -367,16 +367,21 @@ Return JSON with:
                                            management_commentary: Dict) -> Dict[str, Any]:
         """Step 5: Generate forecast assumptions using Claude"""
         await self._update_step(job_id, 5, "in_progress", "Generating forecast assumptions...")
+        await ws_manager.send_activity(job_id, "llm_thinking", "Claude AI building 5-year forecast model assumptions...")
         
         try:
             # Check cache first
             cached_data = CacheService.load_step_data(ticker, 5)
             if cached_data:
                 logger.info(f"Using cached step 5 data for {ticker}")
+                await ws_manager.send_activity(job_id, "info", "Found cached forecast assumptions")
                 await self._update_step(job_id, 5, "completed", "Forecast assumptions generated (from cache)")
                 return cached_data
             
+            await ws_manager.send_activity(job_id, "data_processing", "Loading sector knowledge base for assumptions...")
             knowledge_file = self.claude.load_knowledge_file(company_metadata.get('knowledge_file', 'generic.md'))
+            
+            await ws_manager.send_activity(job_id, "llm_thinking", "Analyzing historical trends and management guidance...")
             
             system_message = f"{knowledge_file}\n\nYou are a senior equity research analyst building forecast assumptions."
             
