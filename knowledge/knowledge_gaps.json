@@ -22,5 +22,11 @@
     "missing_topic": "HDFCBANK detailed historical financials from Screener - scraper returned error. Need manual data or alternative source for 12-year P&L and balance sheet data",
     "flagged_by": "HDFCBANK",
     "timestamp": "2026-02-22T14:34:05.061324+00:00"
+  },
+  {
+    "sector": "banks",
+    "missing_topic": "Complete historical P&L and Balance Sheet data for HDFC Bank due to scraper limitation - need to construct based on book value, market cap, and sector benchmarks",
+    "flagged_by": "HDFCBANK",
+    "timestamp": "2026-02-22T14:51:51.119684+00:00"
   }
 ]
