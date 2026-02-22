@@ -147,12 +147,14 @@ class PipelineManager:
     async def _step1_company_identification(self, job_id: str, ticker: str) -> Dict[str, Any]:
         """Step 1: Identify company and determine sector"""
         await self._update_step(job_id, 1, "in_progress", f"Identifying {ticker}...")
+        await ws_manager.send_activity(job_id, "data_processing", f"Looking up {ticker} in financial databases...")
         
         try:
             # Check cache first
             cached_data = CacheService.load_step_data(ticker, 1)
             if cached_data:
                 logger.info(f"Using cached step 1 data for {ticker}")
+                await ws_manager.send_activity(job_id, "info", "Found cached company data, skipping API call")
                 await self._update_step(
                     job_id, 1, "completed",
                     f"Identified: {cached_data.get('full_name')} - {cached_data.get('sector')} (from cache)",
@@ -161,12 +163,16 @@ class PipelineManager:
                 return cached_data
             
             # Scrape Screener.in
+            await ws_manager.send_activity(job_id, "data_processing", "Scraping Screener.in for company data...")
             screener_data = await self.scraper.scrape_screener(ticker)
             
             if not screener_data.get('scraped_successfully'):
                 raise Exception(f"Could not find ticker {ticker} on Screener.in")
             
+            await ws_manager.send_activity(job_id, "info", f"Found company: {screener_data.get('company_name', ticker)}")
+            
             # Use Claude to extract metadata
+            await ws_manager.send_activity(job_id, "llm_thinking", "Analyzing company data with Claude AI...")
             knowledge_file = self.claude.load_knowledge_file("banks.md")
             
             system_message = f"{knowledge_file}\n\nYou are a financial research assistant analyzing Indian companies."
