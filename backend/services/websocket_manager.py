@@ -114,6 +114,21 @@ class ConnectionManager:
         }
         
         await self.broadcast_to_job(job_id, update)
+    
+    async def send_job_update(self, job_id: str, update_data: dict):
+        """Send a general job update with any data"""
+        update = {
+            'type': 'job_update',
+            'job_id': job_id,
+            **update_data,
+            'timestamp': datetime.now(timezone.utc).isoformat()
+        }
+        
+        await self.broadcast_to_job(job_id, update)
+    
+    async def broadcast(self, job_id: str, message: dict):
+        """Alias for broadcast_to_job for convenience"""
+        await self.broadcast_to_job(job_id, message)
 
 # Global WebSocket manager instance
 ws_manager = ConnectionManager()
