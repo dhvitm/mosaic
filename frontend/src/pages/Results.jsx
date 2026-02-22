@@ -13,6 +13,7 @@ export default function Results() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
+  const [retrying, setRetrying] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
