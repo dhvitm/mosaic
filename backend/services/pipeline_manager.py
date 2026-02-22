@@ -139,39 +139,39 @@ class PipelineManager:
         
         # Set job_id for activity logging in ClaudeService
         self.claude.set_job_id(job_id)
-            
-            # Broadcast pipeline start
-            await ws_manager.send_activity(job_id, "info", f"Starting analysis pipeline for {ticker}")
-            
-            # Initialize job steps
-            await self._init_job_steps(job_id)
-            
-            # Step 1: Company Identification
-            company_metadata = await self._step1_company_identification(job_id, ticker)
-            
-            # Step 2: Annual Financial Data
-            historical_financials = await self._step2_annual_financial_data(job_id, ticker, company_metadata)
-            
-            # Step 3: Operational Metrics
-            operational_data = await self._step3_operational_metrics(job_id, ticker, company_metadata)
-            
-            # Step 4: Management Commentary
-            management_commentary = await self._step4_management_commentary(job_id, ticker, company_metadata)
-            
-            # Step 5: Assumptions Generation
-            assumptions = await self._step5_assumptions_generation(
-                job_id, ticker, company_metadata, historical_financials,
-                operational_data, management_commentary
-            )
-            
-            # Step 6: Valuation (moved before Excel)
-            valuation = await self._step6_valuation(job_id, company_metadata, assumptions)
-            
-            # Step 7: Thesis Generation (moved before Excel) - now includes presentations data
-            thesis = await self._step7_thesis_generation(
-                job_id, company_metadata, historical_financials,
-                assumptions, valuation, management_commentary
-            )
+        
+        # Broadcast pipeline start
+        await ws_manager.send_activity(job_id, "info", f"Starting analysis pipeline for {ticker}")
+        
+        # Initialize job steps
+        await self._init_job_steps(job_id)
+        
+        # Step 1: Company Identification
+        company_metadata = await self._step1_company_identification(job_id, ticker)
+        
+        # Step 2: Annual Financial Data
+        historical_financials = await self._step2_annual_financial_data(job_id, ticker, company_metadata)
+        
+        # Step 3: Operational Metrics
+        operational_data = await self._step3_operational_metrics(job_id, ticker, company_metadata)
+        
+        # Step 4: Management Commentary
+        management_commentary = await self._step4_management_commentary(job_id, ticker, company_metadata)
+        
+        # Step 5: Assumptions Generation
+        assumptions = await self._step5_assumptions_generation(
+            job_id, ticker, company_metadata, historical_financials,
+            operational_data, management_commentary
+        )
+        
+        # Step 6: Valuation (moved before Excel)
+        valuation = await self._step6_valuation(job_id, company_metadata, assumptions)
+        
+        # Step 7: Thesis Generation (moved before Excel) - now includes presentations data
+        thesis = await self._step7_thesis_generation(
+            job_id, company_metadata, historical_financials,
+            assumptions, valuation, management_commentary
+        )
             
             # Step 8: Excel Model Generation (now last, with all data)
             excel_path = await self._step8_excel_generation(
