@@ -3,19 +3,20 @@
 ## Product Overview
 Mosaic is a professional-grade financial model generator for Indian stock market analysis. It takes an NSE/BSE ticker as input and produces:
 1. A fully-linked Excel financial model (.xlsx) with historical data and 5-year projections
-2. A detailed AI-generated investment thesis
+2. A detailed AI-generated investment thesis with actual metrics from investor presentations
 
 ## Core Requirements
 - **Input:** Single NSE/BSE stock ticker
 - **Output:** 
-  - Excel model with P&L, Balance Sheet, ROE Tree, Valuation, and forecasts
-  - Investment thesis with recommendation (BUY/HOLD/SELL) and target price
+  - Excel model with P&L, Balance Sheet, ROE Tree, Valuation (all formula-driven)
+  - Investment thesis with recommendation and target price, citing actual metrics
 
 ## Technical Architecture
 
 ### Backend (FastAPI)
 - **Pipeline Manager:** 8-step async pipeline
 - **Scraper Service:** Playwright-based scraping from Screener.in
+- **PDF Extractor:** Downloads and parses investor presentation PDFs
 - **Claude AI Integration:** For assumptions, valuation, and thesis generation
 - **Excel Generator:** openpyxl-based model with formulas
 - **Cache Service:** Local file caching for step results
@@ -35,11 +36,14 @@ Mosaic is a professional-grade financial model generator for Indian stock market
 1. **Company Identification:** Scrape company metadata from Screener.in
 2. **Annual Financials:** Scrape P&L and Balance Sheet (12 years)
 3. **Quarterly Results:** Scrape quarterly data (12 quarters)
-4. **Management Commentary:** Scrape pros/cons, peers, investor presentations from Screener.in Documents
-5. **Assumptions Generation:** Claude AI generates forecast assumptions
-6. **Valuation:** RIV model, peer comparisons, target price
-7. **Thesis Generation:** Claude AI writes investment note (uses presentations data)
-8. **Excel Generation:** Build mechanically-linked model with formulas
+4. **Management Commentary + PDF Extraction:** 
+   - Scrape pros/cons, peers from Screener.in
+   - Download 3 investor presentation PDFs
+   - Extract key metrics (NIM, CASA, GNPA, ROE, etc.) using AI
+5. **Assumptions Generation:** Claude AI generates forecasts using PDF-extracted metrics
+6. **Valuation:** RIV model linked to projected financials
+7. **Thesis Generation:** Claude AI writes thesis using actual metrics from PDFs
+8. **Excel Generation:** Build mechanically-linked model
 
 ## What's Been Implemented (Feb 22, 2026)
 
@@ -53,18 +57,38 @@ Mosaic is a professional-grade financial model generator for Indian stock market
 - [x] Excel download functionality
 
 ### Latest Enhancements (This Session)
-- [x] **Excel with Mechanical Linking:** All calculations use formulas (e.g., PBT = Total Income - Total Expenses)
-- [x] **5-Year Projections:** FY26E-FY30E columns with growth formulas linked to Assumptions sheet
-- [x] **ROE Tree (DuPont Analysis):** New sheet decomposing ROE into NPM × Asset Turnover × Equity Multiplier
-- [x] **Cross-sheet References:** ROE Tree links to P&L and Balance Sheet for real mechanical linking
-- [x] **Screener.in Documents Scraping:** Scrapes PPT links, transcripts, annual reports from Documents section
-- [x] **Investor Presentations Used in Thesis:** Thesis generation now incorporates presentation quarters and Screener pros/cons
-- [x] **Formula-Driven Valuation:** Complete RIV model with:
-  - Net Profit linked to P&L projections (`='P&L'!G19`)
+
+#### 1. PDF Extraction from Investor Presentations
+- Downloads up to 3 quarterly investor presentation PDFs
+- Extracts key banking metrics using AI:
+  - NIM (Net Interest Margin): 3.35%
+  - CASA Ratio: 34%
+  - GNPA: 1.24%
+  - NNPA: 0.4%
+  - ROE: 13.9%
+  - ROA: 1.92%
+  - CAR: 19.9%
+  - Cost-to-Income: 39.2%
+  - Loan Growth: 11.9%
+  - Deposit Growth: 11.6%
+- Extracts management guidance statements
+- Extracts 14+ operational highlights with actual numbers
+
+#### 2. Formula-Driven Valuation Sheet
+- Complete RIV model with formulas:
+  - Net Profit linked to P&L (`='P&L'!G19`)
   - Equity linked to Balance Sheet (`='Balance Sheet'!G8`)
-  - Residual Income calculation from projected PAT
-  - Terminal Value formula using growth assumptions
-  - Fair Value per Share = Total Equity Value / Shares
+  - Residual Income = PAT - Required Return
+  - Terminal Value with growth formula
+  - Fair Value = (Book Value + Sum PV of RI + Terminal Value) / Shares
+
+#### 3. ROE Tree (DuPont Analysis)
+- ROE = NPM × Asset Turnover × Equity Multiplier
+- Cross-sheet references to P&L and Balance Sheet
+
+#### 4. 5-Year Projections (FY26E-FY30E)
+- All P&L and BS items with growth formulas
+- Linked to editable Assumptions sheet
 
 ### Excel Model Structure (10 Sheets)
 1. **Cover** - Company summary and recommendation
@@ -78,18 +102,22 @@ Mosaic is a professional-grade financial model generator for Indian stock market
 9. **Peer Comparison** - Sector peer metrics
 10. **Thesis** - Full investment note
 
-### Excel Formula Examples
-- `Total Income = Revenue + Interest + Other Income`
-- `PBT = Total Income - Total Expenses`
-- `Net Profit = PBT - Tax`
-- `ROE = PAT / Average Equity` (in ROE Tree)
-- `Residual Income = Net Profit - Required Return` (in Valuation)
-- `Fair Value = (Book Value + Sum of PV of RI + Terminal Value) / Shares`
-
-### Data Sources Used
-- **Screener.in:** Company info, P&L, Balance Sheet, Quarterly, Ratios, Pros/Cons, Peers
-- **Screener.in Documents:** Investor Presentations (15+ PPTs), Transcripts, Annual Reports
-- **Claude AI:** Assumptions generation, Valuation reasoning, Thesis writing
+### Data Flow
+```
+Screener.in → P&L, BS, Quarterly, Pros/Cons, Peers
+    ↓
+Screener Documents → PPT Links (15+)
+    ↓
+PDF Download → Extract Text (pdfplumber)
+    ↓
+Claude AI → Extract Metrics (NIM, CASA, GNPA, etc.)
+    ↓
+Step 5 → Use metrics for Assumptions
+    ↓
+Step 7 → Use metrics in Thesis (with actual numbers)
+    ↓
+Excel → All formulas linked, projections included
+```
 
 ## API Endpoints
 - `POST /api/generate/` - Create new job
@@ -105,9 +133,9 @@ Mosaic is a professional-grade financial model generator for Indian stock market
 ## Remaining Tasks (Backlog)
 
 ### P1 - High Priority
-- [ ] Parse and extract key metrics from PPT PDFs (currently only collecting links)
-- [ ] Summarize concall transcripts using AI
+- [ ] Parse concall transcripts (currently have links but not parsing)
 - [ ] Add more sector-specific knowledge files (Cement, IT, Pharma)
+- [ ] Handle non-PDF presentation formats
 
 ### P2 - Medium Priority
 - [ ] Admin page for editing .md knowledge files
@@ -124,10 +152,12 @@ Mosaic is a professional-grade financial model generator for Indian stock market
 - **Backend:** FastAPI, Motor (async MongoDB), Uvicorn
 - **AI:** Claude claude-sonnet-4-5 via Emergent LLM Key
 - **Scraping:** Playwright for dynamic content
+- **PDF Parsing:** pdfplumber
 - **Excel:** openpyxl
 
 ## Key Files
-- `backend/services/excel_generator.py` - Excel model generation with formulas
+- `backend/services/pdf_extractor.py` - **NEW** PDF download and metric extraction
+- `backend/services/excel_generator.py` - Excel model with formula-driven valuation
 - `backend/services/scraper_service.py` - Web scraping from Screener.in
 - `backend/services/pipeline_manager.py` - Pipeline orchestration
 - `backend/services/claude_service.py` - AI integration
