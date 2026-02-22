@@ -401,11 +401,14 @@ class ToolExecutor:
                 "quarters_available": list(quarterly.keys())
             }
             
+            logger.info(f"Scraped financials for {ticker}: pnl_years={list(annual_pnl.keys())}")
+            
             # Auto-cache the result for Excel generation
             self._cache_write(ticker, "screener_financials", result)
             
             # Also store in collected_data for immediate use
             self._collected_data["financials"] = result
+            logger.info(f"Stored financials in _collected_data, keys now: {list(self._collected_data.keys())}")
             
             return result
         except Exception as e:
