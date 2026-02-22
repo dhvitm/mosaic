@@ -646,9 +646,9 @@ Return ONLY the JSON."""
                     valuation = self._get_default_valuation(current_price)
             
             # Cache the result
-            CacheService.save_step_data(ticker, 7, valuation)
+            CacheService.save_step_data(ticker, 6, valuation)
             
-            await self._update_step(job_id, 7, "completed", f"Valuation complete: {valuation.get('recommendation', 'N/A')}")
+            await self._update_step(job_id, 6, "completed", f"Valuation complete: {valuation.get('recommendation', 'N/A')}")
             return valuation
             
         except Exception as e:
