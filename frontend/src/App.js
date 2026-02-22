@@ -6,6 +6,7 @@ import Processing from "./pages/Processing";
 import Results from "./pages/Results";
 import Admin from "./pages/Admin";
 import Jobs from "./pages/Jobs";
+import CacheViewer from "./pages/CacheViewer";
 import { Toaster } from "@/components/ui/sonner";
 
 function App() {
@@ -18,6 +19,8 @@ function App() {
           <Route path="/results/:jobId" element={<Results />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/jobs" element={<Jobs />} />
+          <Route path="/cache" element={<CacheViewer />} />
+          <Route path="/cache/:ticker" element={<CacheViewer />} />
         </Routes>
       </BrowserRouter>
       <Toaster />
