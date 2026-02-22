@@ -45,6 +45,9 @@ MAX_TOOL_RESULT_LENGTH = 2000  # Max chars per tool result in context
 MAX_MESSAGES_BEFORE_SUMMARY = 15  # Summarize context after this many messages
 MAX_RECENT_YEARS = 5  # Only keep recent 5 years of financial data
 
+# Rate limiting / gateway relief settings
+DELAY_BETWEEN_LLM_CALLS = 10  # Seconds to wait between LLM calls to avoid rate limits
+
 # System prompt for the Mosaic agent
 MOSAIC_SYSTEM_PROMPT = """You are Mosaic, an autonomous financial analyst specializing in Indian equities.
 
