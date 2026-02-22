@@ -91,8 +91,13 @@ Build a web app called "Mosaic" for investment professionals that takes an India
 - `POST /api/generate` - Create new job
 - `GET /api/generate/jobs` - List all jobs
 - `GET /api/generate/progress/{job_id}` - Get job progress
+- `GET /api/generate/result/{job_id}` - Get completed job result
+- `GET /api/generate/download/{job_id}` - Download Excel model
 - `POST /api/generate/retry/{job_id}` - Retry failed job
 - `POST /api/generate/abort/{job_id}` - Abort running job
+- `GET /api/generate/cache/{ticker}` - Get detailed cache data for ticker
+- `DELETE /api/generate/cache/{ticker}` - Clear cache for ticker
+- `GET /api/generate/cached-tickers` - List all cached tickers
 - `WS /api/generate/ws/{job_id}` - WebSocket for real-time updates
 
 ## Database Schema
