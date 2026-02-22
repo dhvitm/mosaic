@@ -1,0 +1,67 @@
+{
+  "ticker": "FEDERALBNK",
+  "step_number": 5,
+  "data": {
+    "forecast_years": [
+      "FY26E",
+      "FY27E",
+      "FY28E",
+      "FY29E",
+      "FY30E"
+    ],
+    "assumptions": {
+      "loan_growth_rate": [
+        0.14,
+        0.15,
+        0.14,
+        0.13,
+        0.12
+      ],
+      "nim": [
+        0.0325,
+        0.033,
+        0.0335,
+        0.034,
+        0.034
+      ],
+      "casa_ratio": [
+        0.45,
+        0.46,
+        0.47,
+        0.475,
+        0.48
+      ],
+      "credit_cost": [
+        0.0053,
+        0.005,
+        0.0048,
+        0.0045,
+        0.0045
+      ],
+      "cost_to_income": [
+        0.53,
+        0.515,
+        0.5,
+        0.49,
+        0.48
+      ],
+      "roa": [
+        0.012,
+        0.013,
+        0.014,
+        0.0145,
+        0.015
+      ],
+      "roe": [
+        0.125,
+        0.135,
+        0.145,
+        0.15,
+        0.155
+      ]
+    },
+    "rationale": "Federal Bank is positioned for steady improvement from current levels. Loan growth forecasted at 14-15% near-term (above Q3's 9% but below deposit growth of 15%), normalizing to 12% by FY30E as base expands. NIM expansion path from current 3.18% to 3.40% driven by CASA improvement (44.4% to 48%) and favorable liability mix, despite rate cycle headwinds in FY26E. Credit costs improving sharply from management's revised 52-53bps guidance for FY26E toward normalized 45bps by FY30E, reflecting decadal-best asset quality (GNPA 1.72%, NNPA 0.42%, PCR 75%). Cost-to-income gradually improves from current 53.9% to 48% through operating leverage and digital initiatives, though pace is measured given calibrated branch expansion. ROA progression from current 1.15% to 1.50% and ROE from 11.68% to 15.5% reflects combined benefit of NIM expansion, lower credit costs, and improved efficiency, while maintaining strong capital adequacy (current CAR 15.2%). Conservative trajectory accounts for competitive pressures in retail banking and regulatory environment."
+  },
+  "cached_at": "2026-02-22T12:48:45.467296+00:00",
+  "cache_version": "1.0"
+}
