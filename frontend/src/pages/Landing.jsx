@@ -97,6 +97,20 @@ export default function Landing() {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
         
+        {/* Navigation */}
+        <div className="absolute top-8 right-8">
+          <button
+            onClick={() => navigate("/jobs")}
+            className="px-4 py-2 bg-slate-800/50 hover:bg-slate-700/50 backdrop-blur-sm border border-slate-700 text-white rounded-lg transition-colors flex items-center gap-2"
+            data-testid="view-jobs-button"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            View All Jobs
+          </button>
+        </div>
+
         {/* Main Content */}
         <div className="max-w-4xl mx-auto text-center space-y-8">
           {/* Logo/Title */}
