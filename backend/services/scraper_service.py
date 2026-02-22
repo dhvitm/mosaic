@@ -278,9 +278,8 @@ class ScraperService:
             logger.info(f"Scraping annual financials for {ticker}")
             
             try:
-                await page.goto(url, wait_until='domcontentloaded', timeout=30000)
-                await page.wait_for_selector('section#profit-loss', timeout=15000)
-                await asyncio.sleep(2)
+                await page.goto(url, wait_until='networkidle', timeout=30000)
+                await asyncio.sleep(2)  # Wait for JS rendering
                 
                 content = await page.content()
                 soup = BeautifulSoup(content, 'html.parser')
