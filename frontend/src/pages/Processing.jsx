@@ -111,6 +111,27 @@ export default function Processing() {
             console.log('WebSocket connection confirmed');
             break;
 
+          case 'activity_log':
+            // Add to activity log
+            setActivityLog((prev) => {
+              const newLog = [...prev, {
+                id: Date.now(),
+                activity_type: message.activity_type,
+                message: message.message,
+                details: message.details || {},
+                timestamp: message.timestamp || new Date().toISOString()
+              }];
+              // Keep only last 50 entries
+              return newLog.slice(-50);
+            });
+            // Auto-scroll activity log
+            setTimeout(() => {
+              if (activityLogRef.current) {
+                activityLogRef.current.scrollTop = activityLogRef.current.scrollHeight;
+              }
+            }, 100);
+            break;
+
           case 'step_update':
             setJob((prevJob) => {
               if (!prevJob) return prevJob;
