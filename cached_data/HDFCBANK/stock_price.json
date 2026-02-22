@@ -2,15 +2,12 @@
   "ticker": "HDFCBANK",
   "key": "stock_price",
   "data": {
-    "success": true,
-    "ticker": "HDFCBANK",
     "current_price": 911.85,
-    "market_cap": 1403156.168704,
-    "market_cap_cr": 1403156.168704,
-    "pe_ratio": 20.367434,
-    "book_value": 367.081,
-    "source": "yahoo_finance",
-    "fetched_at": "2026-02-22T16:01:27.079313+00:00"
+    "market_cap_cr": 1403156.17,
+    "pe_ratio": 20.37,
+    "book_value": 367.08,
+    "pb_ratio": 2.48,
+    "date": "2026-02-22"
   },
-  "cached_at": "2026-02-22T16:01:27.079574+00:00"
+  "cached_at": "2026-02-22T16:05:13.312086+00:00"
 }
