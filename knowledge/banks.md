@@ -505,6 +505,7 @@ P/E is secondary. DDM is used as a cross-check for high-dividend banks.
 - Quarter-end window dressing common for CD and CASA ratios
 
 ## Observed Data (Auto-updated by Mosaic)
+- HDFCBANK FY26: HDFC Bank FY25: Post-merger with HDFC Ltd, emerged as India's 3rd largest bank. Target NIM 3.4-3.6%, CASA ratio 40-42%, Credit cost 0.4-0.6%, ROE 16-17%, C/I ratio 42-45%. P/B trading at 2.5x with 20.4x P/E. (source: Annual Report FY25, added: 2026-02-22)
 - HDFCBANK FY26: Best-in-class private bank valuation (Feb 2026): RIV methodology with ROE 17.5%, COE 12%, terminal growth 10% justifies P/B of 2.86x. Premium banks with ROE >17% and GNPA <1.5% trade at 2.5-3.0x P/B range. (source: Valuation Analysis Feb 2026, added: 2026-02-22)
 - HDFCBANK FY26: HDFC Bank post-merger (July 2023): NIM ~3.45%, CASA 43%, Credit Cost 0.45-0.55%, ROE 17-18%, GNPA 1.25%, Cost-to-Income 43-44%. Trading at 2.5x P/B, 20.4x P/E. Merger integration creating temporary NIM pressure but long-term franchise strength intact. (source: FY25 Annual Report and model assumptions, added: 2026-02-22)
 - HDFCBANK FY26: Premium private bank valuation Feb 2026: HDFC Bank at 2.5x P/B and 20x P/E, ICICI Bank at ~2.8x P/B, Axis Bank at ~1.9x P/B, Kotak Bank at ~2.6x P/B. Best-in-class banks with ROE >17% and GNPA <1.5% command 2.5-3.0x P/B (source: Market data as of Feb 22, 2026, added: 2026-02-22)
