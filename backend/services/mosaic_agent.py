@@ -35,8 +35,9 @@ logger = logging.getLogger(__name__)
 # Emergent LLM Gateway URL
 EMERGENT_PROXY_URL = "https://integrations.emergentagent.com/llm"
 
-# Model configuration - use fast model for tool calls, full model for final analysis
-FAST_MODEL = "claude-3-5-haiku-20241022"  # Fast model for tool selection
+# Model configuration - use the available Sonnet model
+# Haiku isn't available via Emergent gateway, so we use Sonnet with reduced tokens
+FAST_MODEL = "claude-sonnet-4-5-20250929"  # Same model, but with lower tokens for speed
 FULL_MODEL = "claude-sonnet-4-5-20250929"  # Full model for complex reasoning
 
 # Context optimization settings
