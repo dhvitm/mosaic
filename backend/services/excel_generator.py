@@ -227,13 +227,13 @@ class ExcelGenerator:
             ws.column_dimensions[get_column_letter(i)].width = 12
     
     def _create_pnl_with_formulas(self, data: Dict[str, Any]):
-        """Create P&L with mechanical linking formulas and projections"""
+        """Create P&L with mechanical linking formulas and projections - using actual Screener keys"""
         ws = self.wb.create_sheet("P&L")
         
         ws['A1'] = "PROFIT & LOSS STATEMENT"
         ws['A1'].font = TITLE_FONT
         
-        ws['A2'] = "(Rs. Crores) | Green cells = Forecast with formulas linked to Assumptions"
+        ws['A2'] = "(Rs. Crores) | Green cells = Forecast with formulas"
         ws['A2'].font = Font(size=10, italic=True, color="666666")
         
         # Get historical data
@@ -252,32 +252,192 @@ class ExcelGenerator:
                 cell.fill = FORECAST_FILL
         self._apply_header_style(ws, 4, 1, len(all_years) + 1)
         
-        # Define P&L structure with formulas
-        # We'll create a proper P&L with calculated fields
-        pnl_structure = [
-            ('Revenue +', 'revenue', True),
-            ('Interest', 'interest_income', True),
-            ('Other Income +', 'other_income', True),
-            ('Total Income', 'total_income', False),  # Calculated
-            ('', '', False),  # Spacer
-            ('Operating Expenses', 'opex', True),
-            ('Employee Cost', 'employee_cost', True),
-            ('Interest Expense', 'interest_expense', True),
-            ('Depreciation', 'depreciation', True),
-            ('Other Expenses', 'other_expenses', True),
-            ('Total Expenses', 'total_expenses', False),  # Calculated
-            ('', '', False),  # Spacer
-            ('Profit before tax', 'pbt', False),  # Calculated
-            ('Tax %', 'tax', False),  # Calculated
-            ('Net Profit +', 'pat', False),  # Calculated
+        # P&L structure matching ACTUAL Screener.in keys for banks
+        # Screener keys: Revenue +, Interest, Expenses +, Other Income +, Depreciation, Profit before tax, Tax %, Net Profit +
+        pnl_items = [
+            ('Revenue / Interest Earned', ['Revenue +', 'Interest Earned', 'Revenue']),
+            ('Interest', ['Interest', 'Interest Income']),
+            ('Other Income', ['Other Income +', 'Other Income']),
+            ('Total Income', None),  # Calculated = sum of above
+            ('', None),  # Spacer
+            ('Operating Expenses', ['Expenses +', 'Operating Expenses', 'Expenses']),
+            ('Interest Expended', ['Interest Expended', 'Finance Costs']),
+            ('Depreciation', ['Depreciation', 'Depreciation and Amortisation']),
+            ('Provisions', ['Provisions +', 'Provisions & Contingencies']),
+            ('Total Expenses', None),  # Calculated
+            ('', None),  # Spacer
+            ('Profit Before Tax', ['Profit before tax', 'PBT']),
+            ('Tax', ['Tax %', 'Tax']),
+            ('Net Profit', ['Net Profit +', 'Net Profit', 'PAT']),
+            ('EPS (Rs.)', ['EPS in Rs', 'EPS']),
         ]
         
         row = 5
-        hist_col_end = len(hist_years) + 1
         forecast_col_start = len(hist_years) + 2
-        
-        # Track row numbers for formulas
         self.pnl_rows = {}
+        
+        for display_name, screener_keys in pnl_items:
+            if not display_name:  # Spacer row
+                row += 1
+                continue
+            
+            ws.cell(row=row, column=1).value = display_name
+            ws.cell(row=row, column=1).border = THIN_BORDER
+            
+            # Bold key items
+            if 'Total' in display_name or 'Net Profit' in display_name or 'Profit Before' in display_name:
+                ws.cell(row=row, column=1).font = Font(bold=True)
+            
+            # Store row reference for formulas
+            key = display_name.lower().replace(' ', '_').replace('/', '_')
+            self.pnl_rows[key] = row
+            
+            # Fill historical data
+            if screener_keys and annual_pnl:
+                for col_idx, year in enumerate(hist_years, start=2):
+                    year_data = annual_pnl.get(year, {})
+                    
+                    # Try each possible key
+                    value = None
+                    for key in screener_keys:
+                        if key in year_data:
+                            value = year_data[key]
+                            break
+                    
+                    cell = ws.cell(row=row, column=col_idx)
+                    if value is not None:
+                        cell.value = value
+                        cell.number_format = '#,##0.00'
+                    cell.border = THIN_BORDER
+                    cell.font = NUMBER_FONT
+                    cell.alignment = Alignment(horizontal='right')
+            
+            # Fill calculated fields for historical years
+            elif display_name == 'Total Income' and annual_pnl:
+                rev_row = self.pnl_rows.get('revenue___interest_earned', row-3)
+                int_row = self.pnl_rows.get('interest', row-2)
+                oth_row = self.pnl_rows.get('other_income', row-1)
+                
+                for col_idx, year in enumerate(hist_years, start=2):
+                    col = get_column_letter(col_idx)
+                    cell = ws.cell(row=row, column=col_idx)
+                    cell.value = f"={col}{rev_row}+{col}{int_row}+{col}{oth_row}"
+                    cell.number_format = '#,##0.00'
+                    cell.border = THIN_BORDER
+                    cell.font = Font(bold=True)
+            
+            elif display_name == 'Total Expenses' and annual_pnl:
+                opex_row = self.pnl_rows.get('operating_expenses', row-4)
+                int_exp_row = self.pnl_rows.get('interest_expended', row-3)
+                dep_row = self.pnl_rows.get('depreciation', row-2)
+                prov_row = self.pnl_rows.get('provisions', row-1)
+                
+                for col_idx, year in enumerate(hist_years, start=2):
+                    col = get_column_letter(col_idx)
+                    cell = ws.cell(row=row, column=col_idx)
+                    cell.value = f"={col}{opex_row}+{col}{int_exp_row}+{col}{dep_row}+{col}{prov_row}"
+                    cell.number_format = '#,##0.00'
+                    cell.border = THIN_BORDER
+                    cell.font = Font(bold=True)
+            
+            # Add formulas for forecast columns
+            for fc_idx, fc_year in enumerate(self.forecast_years):
+                col_idx = forecast_col_start + fc_idx
+                cell = ws.cell(row=row, column=col_idx)
+                prev_col = get_column_letter(col_idx - 1)
+                curr_col = get_column_letter(col_idx)
+                
+                if display_name == 'Revenue / Interest Earned':
+                    growth_ref = self.assumption_refs.get('revenue_growth_rate', {}).get(fc_year)
+                    if growth_ref:
+                        cell.value = f"={prev_col}{row}*(1+{growth_ref}/100)"
+                    else:
+                        cell.value = f"={prev_col}{row}*1.12"
+                        
+                elif display_name == 'Interest':
+                    cell.value = f"={prev_col}{row}*1.10"
+                    
+                elif display_name == 'Other Income':
+                    cell.value = f"={prev_col}{row}*1.08"
+                    
+                elif display_name == 'Total Income':
+                    rev_row = self.pnl_rows.get('revenue___interest_earned')
+                    int_row = self.pnl_rows.get('interest')
+                    oth_row = self.pnl_rows.get('other_income')
+                    cell.value = f"={curr_col}{rev_row}+{curr_col}{int_row}+{curr_col}{oth_row}"
+                    cell.font = Font(bold=True)
+                    
+                elif display_name == 'Operating Expenses':
+                    cell.value = f"={prev_col}{row}*1.10"
+                    
+                elif display_name == 'Interest Expended':
+                    cell.value = f"={prev_col}{row}*1.08"
+                    
+                elif display_name == 'Depreciation':
+                    cell.value = f"={prev_col}{row}*1.05"
+                    
+                elif display_name == 'Provisions':
+                    cell.value = f"={prev_col}{row}*1.05"
+                    
+                elif display_name == 'Total Expenses':
+                    opex_row = self.pnl_rows.get('operating_expenses')
+                    int_exp_row = self.pnl_rows.get('interest_expended')
+                    dep_row = self.pnl_rows.get('depreciation')
+                    prov_row = self.pnl_rows.get('provisions')
+                    cell.value = f"={curr_col}{opex_row}+{curr_col}{int_exp_row}+{curr_col}{dep_row}+{curr_col}{prov_row}"
+                    cell.font = Font(bold=True)
+                    
+                elif display_name == 'Profit Before Tax':
+                    inc_row = self.pnl_rows.get('total_income')
+                    exp_row = self.pnl_rows.get('total_expenses')
+                    cell.value = f"={curr_col}{inc_row}-{curr_col}{exp_row}"
+                    cell.font = Font(bold=True)
+                    
+                elif display_name == 'Tax':
+                    pbt_row = self.pnl_rows.get('profit_before_tax')
+                    tax_ref = self.assumption_refs.get('tax_rate', {}).get(fc_year)
+                    if tax_ref:
+                        cell.value = f"={curr_col}{pbt_row}*{tax_ref}/100"
+                    else:
+                        cell.value = f"={curr_col}{pbt_row}*0.25"
+                        
+                elif display_name == 'Net Profit':
+                    pbt_row = self.pnl_rows.get('profit_before_tax')
+                    tax_row = self.pnl_rows.get('tax')
+                    cell.value = f"={curr_col}{pbt_row}-{curr_col}{tax_row}"
+                    cell.font = Font(bold=True)
+                    
+                elif display_name == 'EPS (Rs.)':
+                    pat_row = self.pnl_rows.get('net_profit')
+                    # Assume shares constant
+                    cell.value = f"={prev_col}{row}*1.10"
+                
+                cell.number_format = '#,##0.00'
+                cell.border = THIN_BORDER
+                cell.fill = FORECAST_FILL
+                cell.alignment = Alignment(horizontal='right')
+            
+            row += 1
+        
+        # Add growth rate row
+        row += 1
+        ws.cell(row=row, column=1).value = "Net Profit Growth (%)"
+        ws.cell(row=row, column=1).font = Font(bold=True, italic=True)
+        pat_row = self.pnl_rows.get('net_profit')
+        if pat_row:
+            for col_idx in range(3, len(all_years) + 2):
+                cell = ws.cell(row=row, column=col_idx)
+                prev_col = get_column_letter(col_idx - 1)
+                curr_col = get_column_letter(col_idx)
+                cell.value = f"=IF({prev_col}{pat_row}=0,0,({curr_col}{pat_row}/{prev_col}{pat_row}-1)*100)"
+                cell.number_format = '0.0'
+                cell.border = THIN_BORDER
+                if col_idx >= forecast_col_start:
+                    cell.fill = FORECAST_FILL
+        
+        ws.column_dimensions['A'].width = 28
+        for i in range(2, len(all_years) + 2):
+            ws.column_dimensions[get_column_letter(i)].width = 14
         
         # First pass: populate historical data and store row numbers
         for item_name, item_key, is_input in pnl_structure:
