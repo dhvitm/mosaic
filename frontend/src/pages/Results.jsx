@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Download, TrendingUp, TrendingDown, Minus, ScrollText, SlidersHorizontal, Grid3X3, Loader2 } from "lucide-react";
+import { Download, TrendingUp, TrendingDown, Minus, ScrollText, SlidersHorizontal, Grid3X3, Loader2, Brain, ChevronDown, ChevronUp } from "lucide-react";
 import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -15,6 +15,7 @@ export default function Results() {
   const [downloading, setDownloading] = useState(false);
   const [retrying, setRetrying] = useState(false);
   const [error, setError] = useState("");
+  const [showReasoning, setShowReasoning] = useState(false);
 
   useEffect(() => {
     const fetchResult = async () => {
