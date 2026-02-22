@@ -729,13 +729,13 @@ Keep total length under 400 words. Professional tone, no marketing language."""
             }
             
             # Cache the result
-            CacheService.save_step_data(ticker, 8, thesis)
+            CacheService.save_step_data(ticker, 7, thesis)
             
-            await self._update_step(job_id, 8, "completed", f"Thesis: {recommendation} - TP ₹{target_price}")
+            await self._update_step(job_id, 7, "completed", f"Thesis: {recommendation} - TP ₹{target_price}")
             return thesis
             
         except Exception as e:
-            await self._update_step(job_id, 8, "error", str(e))
+            await self._update_step(job_id, 7, "error", str(e))
             raise
     
     async def _complete_job(self, job_id: str, excel_path: str, result: Dict[str, Any]):
