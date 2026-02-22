@@ -85,7 +85,7 @@ class ExcelGenerator:
         thesis = data.get('thesis', {})
         
         # Title
-        ws['A1'] = f"FINANCIAL MODEL"
+        ws['A1'] = "FINANCIAL MODEL"
         ws['A1'].font = Font(size=24, bold=True, color="1F4E79")
         
         ws['A2'] = company_name
