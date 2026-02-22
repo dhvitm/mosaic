@@ -388,8 +388,16 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
                         tool_duration = time.time() - tool_start
                         
                         # Track Excel path
-                        if tool_name == "write_excel_model" and result.get("success"):
+                        if tool_name == "generate_excel_model" and result.get("success"):
                             excel_path = result.get("file_path")
+                        
+                        # Sync collected data to tool executor for generate_excel_model
+                        if tool_name in ["get_screener_financials", "get_stock_price", "get_peer_comparison"]:
+                            self.tool_executor.store_collected_data(
+                                "financials" if tool_name == "get_screener_financials" else
+                                "stock_price" if tool_name == "get_stock_price" else "peers",
+                                result
+                            )
                         
                         # Log tool call
                         tool_log = {
