@@ -283,6 +283,44 @@ export default function Results() {
           <TabsContent value="valuation">
             <div className="glass-card p-8 rounded-lg">
               <h2 className="text-2xl font-bold text-white mb-6">Valuation Summary</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                {/* Current Price Card */}
+                <div className="border border-slate-700 rounded-lg p-6 text-center">
+                  <div className="text-sm text-slate-400 mb-2">Current Market Price</div>
+                  <div className="text-3xl font-bold font-mono text-white">
+                    ₹{(valuation.current_price || metadata.current_price || 0).toFixed(2)}
+                  </div>
+                </div>
+                
+                {/* Target Price Card */}
+                <div className="border border-indigo-600 rounded-lg p-6 text-center bg-indigo-600/10">
+                  <div className="text-sm text-indigo-300 mb-2">Target Price</div>
+                  <div className="text-3xl font-bold font-mono text-indigo-400">
+                    ₹{(valuation.target_price || valuation.fair_value || 0).toFixed(0)}
+                  </div>
+                </div>
+                
+                {/* Upside Card */}
+                <div className={`border rounded-lg p-6 text-center ${
+                  (valuation.upside_percent || 0) > 0 
+                    ? 'border-green-600 bg-green-600/10' 
+                    : (valuation.upside_percent || 0) < 0 
+                    ? 'border-red-600 bg-red-600/10' 
+                    : 'border-slate-700'
+                }`}>
+                  <div className="text-sm text-slate-400 mb-2">Upside / Downside</div>
+                  <div className={`text-3xl font-bold font-mono ${
+                    (valuation.upside_percent || 0) > 0 
+                      ? 'text-green-400' 
+                      : (valuation.upside_percent || 0) < 0 
+                      ? 'text-red-400' 
+                      : 'text-white'
+                  }`}>
+                    {(valuation.upside_percent || 0) > 0 ? '+' : ''}{(valuation.upside_percent || 0).toFixed(1)}%
+                  </div>
+                </div>
+              </div>
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="border border-slate-700 rounded-lg p-6">
                   <h3 className="text-lg font-semibold text-white mb-4">Residual Income Valuation</h3>
@@ -296,18 +334,17 @@ export default function Results() {
                       <span className="text-white">{valuation.terminal_growth || 3.0}%</span>
                     </div>
                     <div className="flex justify-between border-t border-slate-700 pt-3 mt-3">
-                      <span className="text-white font-semibold">Target Price</span>
-                      <span className="text-indigo-400 font-semibold">₹{valuation.target_price || 0}</span>
+                      <span className="text-white font-semibold">Fair Value</span>
+                      <span className="text-indigo-400 font-semibold">₹{(valuation.fair_value || valuation.target_price || 0).toFixed(0)}</span>
                     </div>
                   </div>
                 </div>
                 
                 <div className="border border-slate-700 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-white mb-4">Methodology</h3>
+                  <h3 className="text-lg font-semibold text-white mb-4">Valuation Rationale</h3>
                   <p className="text-sm text-slate-400 leading-relaxed">
-                    Residual Income Valuation (RIV) is the primary methodology for banks as they cannot produce 
-                    free cash flow in the traditional sense. The model values the bank based on excess returns 
-                    (ROE above cost of equity) over forecast period.
+                    {valuation.rationale || 
+                      "Residual Income Valuation (RIV) is the primary methodology for banks as they cannot produce free cash flow in the traditional sense. The model values the bank based on excess returns (ROE above cost of equity) over forecast period."}
                   </p>
                 </div>
               </div>
