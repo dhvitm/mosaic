@@ -3,11 +3,17 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 import logging
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception
 
 ROOT_DIR = Path(__file__).parent.parent
 load_dotenv(ROOT_DIR / '.env')
 
 logger = logging.getLogger(__name__)
+
+def is_retryable_error(exception):
+    """Check if the error is retryable (502, 503, 504, timeout)"""
+    error_str = str(exception).lower()
+    return any(code in error_str for code in ['502', '503', '504', 'timeout', 'badgateway', 'service unavailable'])
 
 class ClaudeService:
     def __init__(self):
