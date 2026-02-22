@@ -623,52 +623,6 @@ class ExcelGenerator:
             ws.column_dimensions[get_column_letter(i)].width = 14
     
     def _create_roe_tree_sheet(self, data: Dict[str, Any]):
-                    oth_row = self.bs_rows.get('other_liabilities')
-                    if borr_row and oth_row:
-                        cell.value = f"={curr_col}{borr_row}+{curr_col}{oth_row}"
-                    else:
-                        cell.value = f"={prev_col}{row}*1.07"
-                    cell.font = Font(bold=True)
-                    
-                elif item_key == 'fixed_assets':
-                    cell.value = f"={prev_col}{row}*1.05"
-                    
-                elif item_key == 'investments':
-                    cell.value = f"={prev_col}{row}*1.10"
-                    
-                elif item_key == 'advances':
-                    # Advances grow with loan growth
-                    growth_ref = self.assumption_refs.get('loan_growth_rate', {}).get(fc_year)
-                    if growth_ref:
-                        cell.value = f"={prev_col}{row}*(1+{growth_ref}/100)"
-                    else:
-                        cell.value = f"={prev_col}{row}*1.12"
-                        
-                elif item_key == 'other_assets':
-                    cell.value = f"={prev_col}{row}*1.05"
-                    
-                elif item_key == 'total_assets':
-                    # Total Assets = Equity + Liabilities (should equal asset sum)
-                    eq_row = self.bs_rows.get('total_equity')
-                    liab_row = self.bs_rows.get('total_liabilities')
-                    if eq_row and liab_row:
-                        cell.value = f"={curr_col}{eq_row}+{curr_col}{liab_row}"
-                    else:
-                        cell.value = f"={prev_col}{row}*1.08"
-                    cell.font = Font(bold=True)
-                
-                cell.number_format = '#,##0.00'
-                cell.border = THIN_BORDER
-                cell.fill = FORECAST_FILL
-                cell.alignment = Alignment(horizontal='right')
-            
-            row += 1
-        
-        ws.column_dimensions['A'].width = 25
-        for i in range(2, len(all_years) + 2):
-            ws.column_dimensions[get_column_letter(i)].width = 14
-    
-    def _create_roe_tree_sheet(self, data: Dict[str, Any]):
         """Create ROE Decomposition Tree (DuPont Analysis)"""
         ws = self.wb.create_sheet("ROE Tree")
         
