@@ -399,6 +399,64 @@ export default function Results() {
         </Tabs>
       </div>
 
+      {/* AI Reasoning Panel - Collapsible */}
+      {result?.reasoning && (
+        <div className="max-w-7xl mx-auto mt-8">
+          <button
+            onClick={() => setShowReasoning(!showReasoning)}
+            className="w-full glass-card p-4 rounded-lg flex items-center justify-between hover:bg-slate-800/50 transition-colors"
+            data-testid="reasoning-toggle"
+          >
+            <div className="flex items-center gap-3">
+              <Brain className="w-5 h-5 text-purple-400" />
+              <span className="text-white font-medium">AI Reasoning & Analysis</span>
+              <span className="text-xs text-slate-500 px-2 py-1 bg-slate-800 rounded">
+                {result.tool_calls?.length || 0} tool calls
+              </span>
+            </div>
+            {showReasoning ? (
+              <ChevronUp className="w-5 h-5 text-slate-400" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-slate-400" />
+            )}
+          </button>
+          
+          {showReasoning && (
+            <div className="glass-card mt-2 p-6 rounded-lg" data-testid="reasoning-panel">
+              <h3 className="text-lg font-semibold text-white mb-4">Agent Reasoning</h3>
+              <div className="prose prose-invert prose-sm max-w-none">
+                <pre className="whitespace-pre-wrap text-sm text-slate-300 bg-slate-900 p-4 rounded-lg overflow-x-auto font-mono leading-relaxed">
+                  {result.reasoning}
+                </pre>
+              </div>
+              
+              {result.tool_calls && result.tool_calls.length > 0 && (
+                <div className="mt-6">
+                  <h4 className="text-md font-semibold text-white mb-3">Tool Calls Log</h4>
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                    {result.tool_calls.map((call, idx) => (
+                      <div 
+                        key={idx} 
+                        className={`text-xs p-2 rounded ${
+                          call.result_success ? 'bg-green-900/20 border border-green-800' : 'bg-red-900/20 border border-red-800'
+                        }`}
+                      >
+                        <span className="text-slate-400">#{idx + 1}</span>
+                        <span className="ml-2 text-white font-mono">{call.tool}</span>
+                        <span className={`ml-2 ${call.result_success ? 'text-green-400' : 'text-red-400'}`}>
+                          {call.result_success ? '✓' : '✗'}
+                        </span>
+                        <span className="ml-2 text-slate-500">{call.duration_seconds}s</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Footer */}
       <div className="max-w-7xl mx-auto mt-8 text-center">
         <p className="text-xs text-slate-500">
