@@ -577,11 +577,11 @@ Return ONLY the JSON object, no other text."""
         
         try:
             # Check cache first
-            cached_data = CacheService.load_step_data(ticker, 7)
+            cached_data = CacheService.load_step_data(ticker, 6)
             if cached_data:
-                logger.info(f"Using cached step 7 data for {ticker}")
+                logger.info(f"Using cached step 6 data for {ticker}")
                 await ws_manager.send_activity(job_id, "info", "Found cached valuation data")
-                await self._update_step(job_id, 7, "completed", "Valuation complete (from cache)")
+                await self._update_step(job_id, 6, "completed", "Valuation complete (from cache)")
                 return cached_data
             
             await ws_manager.send_activity(job_id, "data_processing", "Calculating cost of equity and target price...")
