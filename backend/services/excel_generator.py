@@ -737,6 +737,10 @@ class ExcelGenerator:
                         cell.value = f"={prev_col}{row}*(1+{growth_ref}/100)"
                     else:
                         cell.value = f"={prev_col}{row}*1.12"
+                
+                elif display_name == 'CASA Deposits':
+                    # CASA grows slightly faster
+                    cell.value = f"={prev_col}{row}*1.14"
                         
                 elif display_name == 'Borrowings':
                     cell.value = f"={prev_col}{row}*1.08"
@@ -752,6 +756,9 @@ class ExcelGenerator:
                     oth_row = self.bs_rows.get('other_liabilities')
                     cell.value = f"={curr_col}{te_row}+{curr_col}{dep_row}+{curr_col}{borr_row}+{curr_col}{oth_row}"
                     cell.font = Font(bold=True)
+                
+                elif display_name == 'Cash & Bank Balances':
+                    cell.value = f"={prev_col}{row}*1.08"
                     
                 elif display_name == 'Fixed Assets':
                     cell.value = f"={prev_col}{row}*1.05"
