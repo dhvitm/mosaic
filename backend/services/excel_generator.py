@@ -351,7 +351,7 @@ class ExcelGenerator:
                     else:
                         cell.value = f"={prev_col}{row}*1.12"
                         
-                elif display_name == 'Interest':
+                elif display_name == 'Interest Income':
                     cell.value = f"={prev_col}{row}*1.10"
                     
                 elif display_name == 'Other Income':
@@ -359,7 +359,7 @@ class ExcelGenerator:
                     
                 elif display_name == 'Total Income':
                     rev_row = self.pnl_rows.get('revenue___interest_earned')
-                    int_row = self.pnl_rows.get('interest')
+                    int_row = self.pnl_rows.get('interest_income')
                     oth_row = self.pnl_rows.get('other_income')
                     cell.value = f"={curr_col}{rev_row}+{curr_col}{int_row}+{curr_col}{oth_row}"
                     cell.font = Font(bold=True)
@@ -367,21 +367,13 @@ class ExcelGenerator:
                 elif display_name == 'Operating Expenses':
                     cell.value = f"={prev_col}{row}*1.10"
                     
-                elif display_name == 'Interest Expended':
-                    cell.value = f"={prev_col}{row}*1.08"
-                    
                 elif display_name == 'Depreciation':
-                    cell.value = f"={prev_col}{row}*1.05"
-                    
-                elif display_name == 'Provisions':
                     cell.value = f"={prev_col}{row}*1.05"
                     
                 elif display_name == 'Total Expenses':
                     opex_row = self.pnl_rows.get('operating_expenses')
-                    int_exp_row = self.pnl_rows.get('interest_expended')
                     dep_row = self.pnl_rows.get('depreciation')
-                    prov_row = self.pnl_rows.get('provisions')
-                    cell.value = f"={curr_col}{opex_row}+{curr_col}{int_exp_row}+{curr_col}{dep_row}+{curr_col}{prov_row}"
+                    cell.value = f"={curr_col}{opex_row}+{curr_col}{dep_row}"
                     cell.font = Font(bold=True)
                     
                 elif display_name == 'Profit Before Tax':
@@ -406,8 +398,11 @@ class ExcelGenerator:
                     
                 elif display_name == 'EPS (Rs.)':
                     pat_row = self.pnl_rows.get('net_profit')
-                    # Assume shares constant
-                    cell.value = f"={prev_col}{row}*1.10"
+                    # EPS growth with PAT
+                    cell.value = f"={prev_col}{row}*({curr_col}{pat_row}/{prev_col}{pat_row})"
+                    
+                elif display_name == 'Dividend Payout (%)':
+                    cell.value = f"={prev_col}{row}"  # Keep constant
                 
                 cell.number_format = '#,##0.00'
                 cell.border = THIN_BORDER
