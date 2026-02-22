@@ -172,27 +172,40 @@ class PipelineManager:
             job_id, company_metadata, historical_financials,
             assumptions, valuation, management_commentary
         )
-            
-            # Step 8: Excel Model Generation (now last, with all data)
-            excel_path = await self._step8_excel_generation(
-                job_id, ticker, company_metadata, historical_financials,
-                operational_data, management_commentary, assumptions, valuation, thesis
-            )
-            
-            # Mark job as completed
-            await self._complete_job(job_id, excel_path, {
-                'company_metadata': company_metadata,
-                'valuation': valuation,
-                'thesis': thesis,
-                'assumptions': assumptions
-            })
-            
-            logger.info(f"Pipeline completed successfully for job {job_id}")
-            
-        except Exception as e:
-            logger.error(f"Pipeline failed for job {job_id}: {str(e)}")
-            await self._fail_job(job_id, str(e))
-            raise
+        
+        # Step 8: Excel Model Generation (now last, with all data)
+        excel_path = await self._step8_excel_generation(
+            job_id, ticker, company_metadata, historical_financials,
+            operational_data, management_commentary, assumptions, valuation, thesis
+        )
+        
+        # Mark job as completed
+        await self._complete_job(job_id, excel_path, {
+            'company_metadata': company_metadata,
+            'valuation': valuation,
+            'thesis': thesis,
+            'assumptions': assumptions
+        })
+        
+        logger.info(f"Pipeline completed successfully for job {job_id}")
+    
+    async def _handle_pipeline_error(self, job_id: str, error_message: str):
+        """Handle pipeline error"""
+        await self.db.model_jobs.update_one(
+            {"job_id": job_id},
+            {"$set": {
+                "status": "failed",
+                "error_message": error_message,
+                "updated_at": datetime.now(timezone.utc)
+            }}
+        )
+        
+        await ws_manager.send_job_update(job_id, {
+            "status": "failed",
+            "error_message": error_message
+        })
+        
+        await ws_manager.send_activity(job_id, "error", f"Pipeline failed: {error_message[:200]}")
     
     async def _init_job_steps(self, job_id: str):
         """Initialize the 8 pipeline steps"""
