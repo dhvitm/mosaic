@@ -2,7 +2,7 @@
 Mosaic Agent Service
 
 This module implements the agentic Claude loop that autonomously builds
-financial models using the tool-use API.
+financial models using the tool-use API via LiteLLM and Emergent's LLM gateway.
 """
 
 import json
@@ -13,10 +13,11 @@ from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 from pathlib import Path
 import logging
-import anthropic
+import litellm
 
 from services.agent_tools import (
     MOSAIC_TOOLS, 
+    MOSAIC_TOOLS_OPENAI_FORMAT,
     ToolExecutor, 
     get_tool_label, 
     get_cache_summary
@@ -24,6 +25,9 @@ from services.agent_tools import (
 from services.websocket_manager import ws_manager
 
 logger = logging.getLogger(__name__)
+
+# Emergent LLM Gateway URL
+EMERGENT_PROXY_URL = "https://integrations.emergentagent.com/llm"
 
 # System prompt for the Mosaic agent
 MOSAIC_SYSTEM_PROMPT = """You are Mosaic, an autonomous financial analyst specializing in Indian equities.
@@ -68,24 +72,39 @@ After completing all tasks, provide a final summary of your analysis including:
 
 
 class MosaicAgent:
-    """Agentic Claude service for autonomous financial model building"""
+    """Agentic Claude service for autonomous financial model building using LiteLLM"""
     
     def __init__(self, scraper_service, pdf_extractor, excel_generator, db=None):
         self.api_key = os.environ.get('EMERGENT_LLM_KEY')
         if not self.api_key:
             raise ValueError("EMERGENT_LLM_KEY not found in environment")
         
-        # Initialize Anthropic client with Emergent proxy
-        self.client = anthropic.Anthropic(
-            api_key=self.api_key,
-            base_url="https://emergent-production-llm-gateway.onrender.com"
-        )
+        # Model to use (Claude Sonnet 4.5 via Emergent gateway)
+        self.model = "claude-sonnet-4-5-20250929"
         
         self.tool_executor = ToolExecutor(scraper_service, pdf_extractor, excel_generator)
         self.db = db
         self._current_job_id = None
         self._current_ticker = None
         self._tool_calls_log = []
+    
+    def _call_llm_with_tools(self, messages: List[Dict], tools: List[Dict]) -> Dict:
+        """
+        Call LiteLLM with tools support via Emergent's LLM gateway.
+        
+        Returns the raw response from litellm.completion()
+        """
+        response = litellm.completion(
+            model=self.model,
+            messages=messages,
+            tools=tools,
+            tool_choice="auto",
+            api_key=self.api_key,
+            api_base=EMERGENT_PROXY_URL,
+            custom_llm_provider="openai",
+            max_tokens=8096,
+        )
+        return response
     
     async def run_agent(self, ticker: str, job_id: str) -> Dict[str, Any]:
         """
