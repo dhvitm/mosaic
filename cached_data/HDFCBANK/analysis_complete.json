@@ -1,0 +1,16 @@
+{
+  "ticker": "HDFCBANK",
+  "key": "analysis_complete",
+  "data": {
+    "date": "2026-02-22",
+    "model_generated": true,
+    "recommendation": "BUY",
+    "target_price": 1050,
+    "current_price": 911.85,
+    "upside": 15.2,
+    "valuation_method": "RIV",
+    "fair_pb": 2.86,
+    "current_pb": 2.48
+  },
+  "cached_at": "2026-02-22T16:34:50.095379+00:00"
+}
