@@ -915,49 +915,318 @@ class ExcelGenerator:
             ws.column_dimensions[get_column_letter(i)].width = 12
     
     def _create_valuation_sheet(self, data: Dict[str, Any]):
-        """Create Valuation sheet with RIV model"""
+        """Create Valuation sheet with RIV model - FORMULA DRIVEN linked to projections"""
         ws = self.wb.create_sheet("Valuation")
         
         valuation = data.get('valuation', {})
         metadata = data.get('company_metadata', {})
         
-        ws['A1'] = "VALUATION"
+        ws['A1'] = "VALUATION MODEL"
         ws['A1'].font = TITLE_FONT
         
-        # RIV Section
-        ws['A3'] = "RESIDUAL INCOME VALUATION (RIV)"
-        ws['A3'].font = SECTION_FONT
+        ws['A2'] = "Residual Income Valuation (RIV) - All values linked to projected financials"
+        ws['A2'].font = Font(size=10, italic=True, color="666666")
         
-        ws['A5'] = "Parameter"
-        ws['B5'] = "Value"
-        ws['C5'] = "Formula/Note"
-        self._apply_header_style(ws, 5, 1, 3)
+        # Store valuation row references
+        val_rows = {}
         
-        riv_params = [
-            ("Risk-Free Rate (Rf)", "7.0%", "10-year G-Sec yield"),
-            ("Equity Risk Premium", "6.0%", "India market premium"),
-            ("Beta", "1.0", "Large-cap bank assumption"),
-            ("Cost of Equity (Ke)", f"{valuation.get('cost_of_equity', 13.0):.1f}%", "=Rf + Beta*ERP"),
-            ("Terminal Growth (g)", f"{valuation.get('terminal_growth', 4.0):.1f}%", "Long-term GDP growth"),
-            ("", "", ""),
-            ("Current Book Value", f"Rs.{metadata.get('book_value', 0):,.0f}", "From Screener"),
-            ("Sustainable ROE", "15%", "From assumptions"),
-            ("", "", ""),
-            ("Fair Value per Share", f"Rs.{valuation.get('fair_value', valuation.get('target_price', 0)):,.0f}", "=BV + RI/(Ke-g)"),
-            ("Current Market Price", f"Rs.{metadata.get('current_price', 0):,.2f}", "Live price"),
-            ("Target Price", f"Rs.{valuation.get('target_price', 0):,.0f}", "12-month target"),
-            ("Upside/Downside", f"{valuation.get('upside_percent', 0):.1f}%", "=(TP-CMP)/CMP"),
-        ]
+        # ===== SECTION 1: INPUT ASSUMPTIONS =====
+        ws['A4'] = "VALUATION INPUTS"
+        ws['A4'].font = SECTION_FONT
         
-        row = 6
-        for label, value, note in riv_params:
-            ws.cell(row=row, column=1).value = label
-            ws.cell(row=row, column=1).border = THIN_BORDER
-            ws.cell(row=row, column=2).value = value
-            ws.cell(row=row, column=2).border = THIN_BORDER
-            ws.cell(row=row, column=2).alignment = Alignment(horizontal='right')
-            ws.cell(row=row, column=3).value = note
-            ws.cell(row=row, column=3).font = Font(size=9, italic=True, color="666666")
+        ws['A6'] = "Parameter"
+        ws['B6'] = "Value"
+        ws['C6'] = "Note"
+        self._apply_header_style(ws, 6, 1, 3)
+        
+        row = 7
+        
+        # Risk-free rate
+        ws.cell(row=row, column=1).value = "Risk-Free Rate (Rf)"
+        ws.cell(row=row, column=2).value = 0.07
+        ws.cell(row=row, column=2).number_format = '0.0%'
+        ws.cell(row=row, column=2).fill = ASSUMPTION_FILL
+        ws.cell(row=row, column=3).value = "10-year G-Sec yield"
+        val_rows['rf'] = row
+        row += 1
+        
+        # Equity risk premium
+        ws.cell(row=row, column=1).value = "Equity Risk Premium"
+        ws.cell(row=row, column=2).value = 0.06
+        ws.cell(row=row, column=2).number_format = '0.0%'
+        ws.cell(row=row, column=2).fill = ASSUMPTION_FILL
+        ws.cell(row=row, column=3).value = "India market premium"
+        val_rows['erp'] = row
+        row += 1
+        
+        # Beta
+        ws.cell(row=row, column=1).value = "Beta"
+        ws.cell(row=row, column=2).value = 1.0
+        ws.cell(row=row, column=2).number_format = '0.00'
+        ws.cell(row=row, column=2).fill = ASSUMPTION_FILL
+        ws.cell(row=row, column=3).value = "Company beta"
+        val_rows['beta'] = row
+        row += 1
+        
+        # Cost of equity (FORMULA)
+        ws.cell(row=row, column=1).value = "Cost of Equity (Ke)"
+        ws.cell(row=row, column=2).value = f"=B{val_rows['rf']}+B{val_rows['beta']}*B{val_rows['erp']}"
+        ws.cell(row=row, column=2).number_format = '0.0%'
+        ws.cell(row=row, column=2).font = Font(bold=True)
+        ws.cell(row=row, column=3).value = "=Rf + Beta × ERP"
+        val_rows['ke'] = row
+        row += 1
+        
+        # Terminal growth
+        ws.cell(row=row, column=1).value = "Terminal Growth (g)"
+        ws.cell(row=row, column=2).value = 0.04
+        ws.cell(row=row, column=2).number_format = '0.0%'
+        ws.cell(row=row, column=2).fill = ASSUMPTION_FILL
+        ws.cell(row=row, column=3).value = "Long-term GDP growth"
+        val_rows['g'] = row
+        row += 1
+        
+        # Shares outstanding
+        shares = metadata.get('shares_outstanding', 1538)  # In crores
+        ws.cell(row=row, column=1).value = "Shares Outstanding (Cr)"
+        ws.cell(row=row, column=2).value = shares
+        ws.cell(row=row, column=2).number_format = '#,##0.00'
+        ws.cell(row=row, column=2).fill = ASSUMPTION_FILL
+        val_rows['shares'] = row
+        row += 2
+        
+        # ===== SECTION 2: PROJECTED FINANCIALS (Linked to P&L and BS) =====
+        ws.cell(row=row, column=1).value = "PROJECTED FINANCIALS"
+        ws.cell(row=row, column=1).font = SECTION_FONT
+        row += 2
+        
+        # Headers for projection years
+        ws.cell(row=row, column=1).value = "Metric"
+        hist_years = self._get_historical_years(data)
+        last_hist_col = len(hist_years) + 1
+        
+        # We'll use forecast years for valuation
+        for i, year in enumerate(self.forecast_years, start=2):
+            ws.cell(row=row, column=i).value = year
+            ws.cell(row=row, column=i).fill = FORECAST_FILL
+        self._apply_header_style(ws, row, 1, len(self.forecast_years) + 1)
+        row += 1
+        header_row = row - 1
+        
+        # Net Profit (linked to P&L)
+        ws.cell(row=row, column=1).value = "Net Profit (Rs. Cr)"
+        pat_row = self.pnl_rows.get('pat')
+        for i, year in enumerate(self.forecast_years, start=2):
+            col_letter = get_column_letter(last_hist_col + i - 1)  # Map to P&L columns
+            if pat_row:
+                ws.cell(row=row, column=i).value = f"='P&L'!{col_letter}{pat_row}"
+            ws.cell(row=row, column=i).number_format = '#,##0'
+            ws.cell(row=row, column=i).fill = FORECAST_FILL
+        val_rows['pat'] = row
+        row += 1
+        
+        # Book Value / Equity (linked to Balance Sheet)
+        ws.cell(row=row, column=1).value = "Shareholders' Equity (Rs. Cr)"
+        eq_row = self.bs_rows.get('total_equity')
+        for i, year in enumerate(self.forecast_years, start=2):
+            col_letter = get_column_letter(last_hist_col + i - 1)
+            if eq_row:
+                ws.cell(row=row, column=i).value = f"='Balance Sheet'!{col_letter}{eq_row}"
+            ws.cell(row=row, column=i).number_format = '#,##0'
+            ws.cell(row=row, column=i).fill = FORECAST_FILL
+        val_rows['equity'] = row
+        row += 1
+        
+        # Opening Equity (previous year)
+        ws.cell(row=row, column=1).value = "Opening Equity (Rs. Cr)"
+        for i, year in enumerate(self.forecast_years, start=2):
+            if i == 2:
+                # First forecast year - use last historical
+                if eq_row:
+                    ws.cell(row=row, column=i).value = f"='Balance Sheet'!{get_column_letter(last_hist_col)}{eq_row}"
+            else:
+                # Previous year's closing equity
+                prev_col = get_column_letter(i - 1)
+                ws.cell(row=row, column=i).value = f"={prev_col}{val_rows['equity']}"
+            ws.cell(row=row, column=i).number_format = '#,##0'
+            ws.cell(row=row, column=i).fill = FORECAST_FILL
+        val_rows['opening_equity'] = row
+        row += 1
+        
+        # Average Equity
+        ws.cell(row=row, column=1).value = "Average Equity (Rs. Cr)"
+        for i in range(2, len(self.forecast_years) + 2):
+            col = get_column_letter(i)
+            ws.cell(row=row, column=i).value = f"=({col}{val_rows['equity']}+{col}{val_rows['opening_equity']})/2"
+            ws.cell(row=row, column=i).number_format = '#,##0'
+            ws.cell(row=row, column=i).fill = FORECAST_FILL
+        val_rows['avg_equity'] = row
+        row += 1
+        
+        # ROE (calculated)
+        ws.cell(row=row, column=1).value = "ROE (%)"
+        ws.cell(row=row, column=1).font = Font(bold=True)
+        for i in range(2, len(self.forecast_years) + 2):
+            col = get_column_letter(i)
+            ws.cell(row=row, column=i).value = f"=IF({col}{val_rows['avg_equity']}=0,0,{col}{val_rows['pat']}/{col}{val_rows['avg_equity']})"
+            ws.cell(row=row, column=i).number_format = '0.0%'
+            ws.cell(row=row, column=i).font = Font(bold=True)
+            ws.cell(row=row, column=i).fill = FORECAST_FILL
+        val_rows['roe'] = row
+        row += 2
+        
+        # ===== SECTION 3: RESIDUAL INCOME CALCULATION =====
+        ws.cell(row=row, column=1).value = "RESIDUAL INCOME CALCULATION"
+        ws.cell(row=row, column=1).font = SECTION_FONT
+        row += 2
+        
+        # Headers again
+        ws.cell(row=row, column=1).value = "Component"
+        for i, year in enumerate(self.forecast_years, start=2):
+            ws.cell(row=row, column=i).value = year
+            ws.cell(row=row, column=i).fill = FORECAST_FILL
+        self._apply_header_style(ws, row, 1, len(self.forecast_years) + 1)
+        row += 1
+        
+        # Required Return = Opening Equity × Cost of Equity
+        ws.cell(row=row, column=1).value = "Required Return (Rs. Cr)"
+        for i in range(2, len(self.forecast_years) + 2):
+            col = get_column_letter(i)
+            ws.cell(row=row, column=i).value = f"={col}{val_rows['opening_equity']}*$B${val_rows['ke']}"
+            ws.cell(row=row, column=i).number_format = '#,##0'
+            ws.cell(row=row, column=i).fill = FORECAST_FILL
+        val_rows['required_return'] = row
+        row += 1
+        
+        # Residual Income = Net Profit - Required Return
+        ws.cell(row=row, column=1).value = "Residual Income (Rs. Cr)"
+        ws.cell(row=row, column=1).font = Font(bold=True)
+        for i in range(2, len(self.forecast_years) + 2):
+            col = get_column_letter(i)
+            ws.cell(row=row, column=i).value = f"={col}{val_rows['pat']}-{col}{val_rows['required_return']}"
+            ws.cell(row=row, column=i).number_format = '#,##0'
+            ws.cell(row=row, column=i).font = Font(bold=True)
+            ws.cell(row=row, column=i).fill = FORECAST_FILL
+        val_rows['residual_income'] = row
+        row += 1
+        
+        # Discount Factor
+        ws.cell(row=row, column=1).value = "Discount Factor"
+        for i, year_idx in enumerate(range(len(self.forecast_years)), start=2):
+            ws.cell(row=row, column=i).value = f"=1/(1+$B${val_rows['ke']})^{year_idx + 1}"
+            ws.cell(row=row, column=i).number_format = '0.000'
+            ws.cell(row=row, column=i).fill = FORECAST_FILL
+        val_rows['discount_factor'] = row
+        row += 1
+        
+        # PV of Residual Income
+        ws.cell(row=row, column=1).value = "PV of Residual Income (Rs. Cr)"
+        for i in range(2, len(self.forecast_years) + 2):
+            col = get_column_letter(i)
+            ws.cell(row=row, column=i).value = f"={col}{val_rows['residual_income']}*{col}{val_rows['discount_factor']}"
+            ws.cell(row=row, column=i).number_format = '#,##0'
+            ws.cell(row=row, column=i).fill = FORECAST_FILL
+        val_rows['pv_ri'] = row
+        row += 2
+        
+        # ===== SECTION 4: VALUATION SUMMARY =====
+        ws.cell(row=row, column=1).value = "VALUATION SUMMARY"
+        ws.cell(row=row, column=1).font = SECTION_FONT
+        row += 2
+        
+        # Current Book Value (from last historical)
+        ws.cell(row=row, column=1).value = "Current Book Value (Rs. Cr)"
+        if eq_row:
+            ws.cell(row=row, column=2).value = f"='Balance Sheet'!{get_column_letter(last_hist_col)}{eq_row}"
+        else:
+            ws.cell(row=row, column=2).value = metadata.get('book_value', 0) * shares
+        ws.cell(row=row, column=2).number_format = '#,##0'
+        val_rows['current_bv'] = row
+        row += 1
+        
+        # Sum of PV of Residual Income
+        ws.cell(row=row, column=1).value = "Sum of PV of RI (Rs. Cr)"
+        pv_cols = [get_column_letter(i) for i in range(2, len(self.forecast_years) + 2)]
+        pv_sum_formula = "+".join([f"{col}{val_rows['pv_ri']}" for col in pv_cols])
+        ws.cell(row=row, column=2).value = f"={pv_sum_formula}"
+        ws.cell(row=row, column=2).number_format = '#,##0'
+        val_rows['sum_pv_ri'] = row
+        row += 1
+        
+        # Terminal Value
+        last_ri_col = get_column_letter(len(self.forecast_years) + 1)
+        ws.cell(row=row, column=1).value = "Terminal Value (Rs. Cr)"
+        ws.cell(row=row, column=2).value = f"={last_ri_col}{val_rows['residual_income']}*(1+$B${val_rows['g']})/($B${val_rows['ke']}-$B${val_rows['g']})*{last_ri_col}{val_rows['discount_factor']}"
+        ws.cell(row=row, column=2).number_format = '#,##0'
+        val_rows['terminal_value'] = row
+        row += 1
+        
+        # Total Equity Value
+        ws.cell(row=row, column=1).value = "Total Equity Value (Rs. Cr)"
+        ws.cell(row=row, column=1).font = Font(bold=True)
+        ws.cell(row=row, column=2).value = f"=B{val_rows['current_bv']}+B{val_rows['sum_pv_ri']}+B{val_rows['terminal_value']}"
+        ws.cell(row=row, column=2).number_format = '#,##0'
+        ws.cell(row=row, column=2).font = Font(bold=True)
+        val_rows['total_equity_value'] = row
+        row += 2
+        
+        # ===== PER SHARE VALUES =====
+        ws.cell(row=row, column=1).value = "PER SHARE VALUATION"
+        ws.cell(row=row, column=1).font = SECTION_FONT
+        row += 2
+        
+        # Fair Value per Share
+        ws.cell(row=row, column=1).value = "Fair Value per Share (Rs.)"
+        ws.cell(row=row, column=1).font = Font(bold=True, size=12)
+        ws.cell(row=row, column=2).value = f"=B{val_rows['total_equity_value']}/B{val_rows['shares']}"
+        ws.cell(row=row, column=2).number_format = '#,##0'
+        ws.cell(row=row, column=2).font = Font(bold=True, size=14, color="1F4E79")
+        val_rows['fair_value'] = row
+        row += 1
+        
+        # Current Market Price
+        cmp = metadata.get('current_price', 0)
+        ws.cell(row=row, column=1).value = "Current Market Price (Rs.)"
+        ws.cell(row=row, column=2).value = cmp
+        ws.cell(row=row, column=2).number_format = '#,##0.00'
+        val_rows['cmp'] = row
+        row += 1
+        
+        # Upside/Downside
+        ws.cell(row=row, column=1).value = "Upside / Downside (%)"
+        ws.cell(row=row, column=1).font = Font(bold=True)
+        ws.cell(row=row, column=2).value = f"=(B{val_rows['fair_value']}-B{val_rows['cmp']})/B{val_rows['cmp']}"
+        ws.cell(row=row, column=2).number_format = '0.0%'
+        ws.cell(row=row, column=2).font = Font(bold=True)
+        val_rows['upside'] = row
+        row += 2
+        
+        # Recommendation
+        ws.cell(row=row, column=1).value = "RECOMMENDATION"
+        ws.cell(row=row, column=1).font = SECTION_FONT
+        row += 1
+        
+        rec = valuation.get('recommendation', 'HOLD')
+        rec_color = "00AA00" if rec == "BUY" else "CC0000" if rec == "SELL" else "FF9900"
+        ws.cell(row=row, column=1).value = rec
+        ws.cell(row=row, column=1).font = Font(size=24, bold=True, color=rec_color)
+        row += 2
+        
+        ws.cell(row=row, column=1).value = valuation.get('rationale', 'Based on RIV valuation model')
+        ws.cell(row=row, column=1).alignment = Alignment(wrap_text=True)
+        ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=6)
+        
+        # Apply borders to all data cells
+        for r in range(6, row):
+            for c in range(1, 4):
+                ws.cell(row=r, column=c).border = THIN_BORDER
+        
+        ws.column_dimensions['A'].width = 30
+        ws.column_dimensions['B'].width = 18
+        ws.column_dimensions['C'].width = 15
+        ws.column_dimensions['D'].width = 15
+        ws.column_dimensions['E'].width = 15
+        ws.column_dimensions['F'].width = 15
             
             if label in ["Fair Value per Share", "Target Price", "Upside/Downside"]:
                 ws.cell(row=row, column=1).font = Font(bold=True)
