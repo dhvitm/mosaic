@@ -367,44 +367,6 @@ Return ONLY a JSON object with these exact keys:
         except Exception as e:
             await self._update_step(job_id, 4, "error", str(e))
             raise
-            CacheService.save_step_data(ticker, 3, operational_data)
-            
-            await self._update_step(job_id, 3, "completed", "Operational metrics extracted", operational_data)
-            return operational_data
-            
-        except Exception as e:
-            await self._update_step(job_id, 3, "warning", "Could not extract all operational metrics")
-            return {"quarterly_data": []}
-    
-    async def _step4_management_commentary(self, job_id: str, ticker: str, company_metadata: Dict) -> Dict[str, Any]:
-        """Step 4: Extract management guidance from concalls"""
-        await self._update_step(job_id, 4, "in_progress", "Processing concall transcripts...")
-        await ws_manager.send_activity(job_id, "data_processing", "Analyzing management guidance from earnings calls...")
-        
-        try:
-            # Check cache first
-            cached_data = CacheService.load_step_data(ticker, 4)
-            if cached_data:
-                logger.info(f"Using cached step 4 data for {ticker}")
-                await ws_manager.send_activity(job_id, "info", "Found cached management commentary")
-                await self._update_step(job_id, 4, "completed", "Management commentary processed (from cache)")
-                return cached_data
-            
-            await ws_manager.send_activity(job_id, "info", "Structuring management guidance data...")
-            commentary = {
-                "guidance": [],
-                "note": "Concall transcript extraction requires additional data sources"
-            }
-            
-            # Cache the result
-            CacheService.save_step_data(ticker, 4, commentary)
-            
-            await self._update_step(job_id, 4, "completed", "Management commentary processed")
-            return commentary
-            
-        except Exception as e:
-            await self._update_step(job_id, 4, "warning", "Limited management commentary available")
-            return {"guidance": []}
     
     async def _step5_assumptions_generation(self, job_id: str, ticker: str, company_metadata: Dict,
                                            historical_financials: Dict, operational_data: Dict,
