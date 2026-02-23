@@ -226,10 +226,55 @@ export default function Results() {
           <TabsContent value="thesis">
             <div className="glass-card p-8 rounded-lg">
               <h2 className="text-2xl font-bold text-white mb-6">Investment Thesis</h2>
-              <div className="prose prose-invert prose-slate max-w-none">
-                <pre className="whitespace-pre-wrap font-sans text-slate-300 leading-relaxed">
-                  {thesis.full_text || "Thesis is being generated..."}
-                </pre>
+              <div className="prose prose-invert prose-slate max-w-none space-y-6">
+                {/* Summary */}
+                {thesis.summary && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-indigo-400 mb-2">Summary</h3>
+                    <p className="text-slate-300 leading-relaxed">{thesis.summary}</p>
+                  </div>
+                )}
+                
+                {/* Bull Case */}
+                {thesis.bull_case && thesis.bull_case.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-green-400 mb-2">Bull Case</h3>
+                    <ul className="list-disc list-inside space-y-1">
+                      {thesis.bull_case.map((point, i) => (
+                        <li key={i} className="text-slate-300">{point}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {/* Bear Case */}
+                {thesis.bear_case && thesis.bear_case.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-red-400 mb-2">Bear Case</h3>
+                    <ul className="list-disc list-inside space-y-1">
+                      {thesis.bear_case.map((point, i) => (
+                        <li key={i} className="text-slate-300">{point}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {/* Catalysts */}
+                {thesis.catalysts && thesis.catalysts.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-amber-400 mb-2">Key Catalysts</h3>
+                    <ul className="list-disc list-inside space-y-1">
+                      {thesis.catalysts.map((point, i) => (
+                        <li key={i} className="text-slate-300">{point}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {/* Fallback if no thesis data */}
+                {!thesis.summary && !thesis.bull_case && !thesis.bear_case && (
+                  <p className="text-slate-400 italic">Thesis details will appear here once analysis is complete.</p>
+                )}
               </div>
             </div>
           </TabsContent>
