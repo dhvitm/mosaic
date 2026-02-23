@@ -44,17 +44,19 @@ class ExcelGenerator:
             ticker = data.get('company_metadata', {}).get('ticker', 'UNKNOWN')
             company_name = data.get('company_metadata', {}).get('full_name', 'Unknown Company')
             
-            # Create sheets in order - Assumptions first for formula references
+            # Create sheets in order - only create sheets that have data
             self._create_cover_sheet(company_name, ticker, data)
-            self._create_assumptions_sheet(data)  # Must be first for formula refs
             self._create_pnl_with_formulas(data)
             self._create_balance_sheet_with_formulas(data)
-            self._create_roe_tree_sheet(data)  # NEW: ROE decomposition
+            self._create_roe_tree_sheet(data)
             self._create_quarterly_sheet(data)
             self._create_ratios_sheet(data)
             self._create_valuation_sheet(data)
-            self._create_peer_comparison_sheet(data)
             self._create_thesis_sheet(data)
+            
+            # Only create these if they have meaningful data
+            if data.get('peer_comparison') and len(data.get('peer_comparison', [])) > 0:
+                self._create_peer_comparison_sheet(data)
             
             # Save file
             import os

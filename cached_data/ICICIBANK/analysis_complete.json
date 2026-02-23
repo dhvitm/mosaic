@@ -1,0 +1,14 @@
+{
+  "ticker": "ICICIBANK",
+  "key": "analysis_complete",
+  "data": {
+    "analysis_date": "2026-02-23",
+    "recommendation": "BUY",
+    "target_price": 1520,
+    "current_price": 1397.4,
+    "upside_percent": 8.8,
+    "fair_value_pb": 3.0,
+    "model_file": "ICICIBANK_model_20260223_0845.xlsx"
+  },
+  "cached_at": "2026-02-23T08:45:41.983012+00:00"
+}
