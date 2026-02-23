@@ -1,11 +1,48 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Banknote, TrendingUp, FileSpreadsheet, Sparkles, Database, Settings } from "lucide-react";
+import { 
+  TrendingUp, FileSpreadsheet, Sparkles, Database, Settings, 
+  Search, BarChart3, FileText, Brain, BookOpen, AlertCircle,
+  Save, Zap, ChevronRight, ArrowUpRight
+} from "lucide-react";
 import axios from "axios";
-import JobsList from "../components/JobsList";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
+
+// Tool definitions for the tools section
+const MOSAIC_TOOLS = [
+  {
+    name: "Financial Scraper",
+    icon: Database,
+    description: "Extracts P&L, Balance Sheet, and quarterly data from Screener.in"
+  },
+  {
+    name: "Market Data",
+    icon: TrendingUp,
+    description: "Real-time stock prices, P/E, P/B, and market cap via Yahoo Finance"
+  },
+  {
+    name: "PDF Parser",
+    icon: FileText,
+    description: "Reads investor presentations, annual reports, and concall transcripts"
+  },
+  {
+    name: "Sector Knowledge",
+    icon: BookOpen,
+    description: "Domain expertise for banking metrics (NIM, CASA, GNPA) and sector benchmarks"
+  },
+  {
+    name: "AI Analysis",
+    icon: Brain,
+    description: "Claude AI performs valuation, generates thesis, and forecasts assumptions"
+  },
+  {
+    name: "Excel Generator",
+    icon: FileSpreadsheet,
+    description: "Creates formula-linked 10-sheet workbook with P&L, BS, ROE Tree, Valuation"
+  }
+];
 
 export default function Landing() {
   const [ticker, setTicker] = useState("");
@@ -13,7 +50,21 @@ export default function Landing() {
   const [validating, setValidating] = useState(false);
   const [error, setError] = useState("");
   const [isValid, setIsValid] = useState(null);
+  const [recentJobs, setRecentJobs] = useState([]);
   const navigate = useNavigate();
+
+  // Fetch recent jobs
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await axios.get(`${API}/generate/jobs/`);
+        setRecentJobs(response.data.slice(0, 5));
+      } catch (err) {
+        console.error("Failed to fetch jobs:", err);
+      }
+    };
+    fetchJobs();
+  }, []);
 
   // Debounced ticker validation
   useEffect(() => {
@@ -33,7 +84,6 @@ export default function Landing() {
           setError("");
         }
       } catch (err) {
-        // If validation fails, allow proceeding
         setIsValid(true);
         setError("");
       } finally {
@@ -75,161 +125,236 @@ export default function Landing() {
     }
   };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'completed': return 'text-emerald-400';
+      case 'failed': return 'text-red-400';
+      case 'processing': return 'text-amber-400';
+      default: return 'text-slate-400';
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-slate-950 relative overflow-hidden">
-      {/* Animated Background Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.03)_1px,transparent_1px)] bg-[size:50px_50px] animate-[grid_20s_linear_infinite]"></div>
-      
-      {/* Radial Gradient */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-radial from-indigo-500/20 via-transparent to-transparent blur-3xl"></div>
-      
-      {/* Hero Background Image */}
-      <div 
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage: 'url(https://images.pexels.com/photos/16553906/pexels-photo-16553906.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'brightness(0.3)'
-        }}
-      ></div>
-
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
-        
-        {/* Navigation */}
-        <div className="absolute top-8 right-8 flex items-center gap-3">
-          <Link
-            to="/admin"
-            className="px-4 py-2 bg-slate-800/50 hover:bg-slate-700/50 backdrop-blur-sm border border-slate-700 text-white rounded-lg transition-colors flex items-center gap-2"
-            data-testid="admin-button"
-          >
-            <Settings className="w-4 h-4" />
-            Admin
-          </Link>
-          <Link
-            to="/cache"
-            className="px-4 py-2 bg-slate-800/50 hover:bg-slate-700/50 backdrop-blur-sm border border-slate-700 text-white rounded-lg transition-colors flex items-center gap-2"
-            data-testid="view-cache-button"
-          >
-            <Database className="w-4 h-4" />
-            Cache
-          </Link>
-          <button
-            onClick={() => navigate("/jobs")}
-            className="px-4 py-2 bg-slate-800/50 hover:bg-slate-700/50 backdrop-blur-sm border border-slate-700 text-white rounded-lg transition-colors flex items-center gap-2"
-            data-testid="view-jobs-button"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            </svg>
-            View All Jobs
-          </button>
-        </div>
-
-        {/* Main Content */}
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          {/* Logo/Title */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <Sparkles className="w-10 h-10 text-indigo-400" />
-              <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-white">
-                Mosaic
-              </h1>
+    <div className="min-h-screen bg-[#0a0e17]">
+      {/* Top Navigation Bar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0e17]/80 backdrop-blur-xl border-b border-slate-800/50">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg flex items-center justify-center">
+              <BarChart3 className="w-5 h-5 text-white" />
             </div>
-            <p className="text-xl md:text-2xl text-slate-300 font-light">
-              Professional financial models for Indian equities.<br/>
-              <span className="text-indigo-400 font-medium">Built by AI. Trusted by analysts.</span>
-            </p>
+            <span className="text-xl font-bold text-white tracking-tight">Mosaic</span>
+            <span className="text-xs text-slate-500 ml-2 hidden sm:inline">EQUITY RESEARCH</span>
           </div>
+          
+          <div className="flex items-center gap-2">
+            <Link
+              to="/admin"
+              className="px-3 py-1.5 text-sm text-slate-400 hover:text-white transition-colors"
+            >
+              Admin
+            </Link>
+            <Link
+              to="/cache"
+              className="px-3 py-1.5 text-sm text-slate-400 hover:text-white transition-colors"
+            >
+              Cache
+            </Link>
+            <button
+              onClick={() => navigate("/jobs")}
+              className="px-4 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-colors"
+            >
+              All Jobs
+            </button>
+          </div>
+        </div>
+      </nav>
 
-          {/* Ticker Input */}
-          <div className="max-w-2xl mx-auto">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="relative">
+      {/* Hero Section */}
+      <section className="pt-32 pb-16 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-400 text-sm mb-8">
+            <Zap className="w-3.5 h-3.5" />
+            <span>AI-Powered Financial Modeling</span>
+          </div>
+          
+          {/* Headline */}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+            Professional Financial Models<br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+              Built in Minutes
+            </span>
+          </h1>
+          
+          <p className="text-lg text-slate-400 max-w-2xl mx-auto mb-10">
+            Enter any NSE/BSE ticker. Our AI agent autonomously scrapes data, analyzes financials, 
+            generates valuations, and produces an investment-grade Excel model.
+          </p>
+
+          {/* Search Input */}
+          <form onSubmit={handleSubmit} className="max-w-xl mx-auto">
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all opacity-0 group-hover:opacity-100"></div>
+              <div className="relative flex items-center bg-[#111827] border border-slate-700/50 rounded-xl overflow-hidden">
+                <div className="pl-5">
+                  <Search className="w-5 h-5 text-slate-500" />
+                </div>
                 <input
                   type="text"
                   value={ticker}
                   onChange={(e) => setTicker(e.target.value.toUpperCase())}
-                  placeholder="Enter NSE/BSE Ticker (e.g., HDFCBANK)"
-                  className="ticker-input w-full h-16 bg-slate-900/50 backdrop-blur-md border-2 border-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-lg px-6 text-white placeholder:text-slate-500 transition-all outline-none"
-                  disabled={loading}
+                  placeholder="Enter ticker (e.g., HDFCBANK, RELIANCE, TCS)"
+                  className="flex-1 bg-transparent px-4 py-4 text-white text-lg placeholder-slate-500 focus:outline-none"
                   data-testid="ticker-input"
                 />
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                  {validating && (
-                    <div className="w-5 h-5 border-2 border-indigo-400/30 border-t-indigo-400 rounded-full animate-spin"></div>
+                <button
+                  type="submit"
+                  disabled={loading || isValid === false}
+                  className="m-2 px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 disabled:from-slate-600 disabled:to-slate-600 text-white font-medium rounded-lg transition-all flex items-center gap-2"
+                  data-testid="generate-button"
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <span>Analyzing</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Generate Model</span>
+                      <ArrowUpRight className="w-4 h-4" />
+                    </>
                   )}
-                  {!validating && isValid === true && ticker.length > 0 && (
-                    <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  )}
-                  {!validating && isValid === false && (
-                    <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  )}
-                  <Banknote className="w-6 h-6 text-slate-500" />
-                </div>
+                </button>
               </div>
-              
-              {error && (
-                <p className="text-red-400 text-sm" data-testid="error-message">{error}</p>
+            </div>
+            
+            {/* Validation Status */}
+            <div className="mt-3 h-5 text-sm">
+              {validating && (
+                <span className="text-slate-500">Validating ticker...</span>
               )}
-              
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-800 disabled:cursor-not-allowed text-white font-semibold px-8 py-4 rounded-lg shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_30px_rgba(99,102,241,0.5)] transition-all duration-200 disabled:shadow-none"
-                data-testid="generate-button"
-              >
-                {loading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    Creating Job...
-                  </span>
-                ) : (
-                  "Generate Model"
-                )}
-              </button>
-            </form>
-          </div>
-
-          {/* Features */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 max-w-4xl mx-auto">
-            <div className="glass-card p-6 rounded-lg hover:border-slate-600 transition-colors">
-              <FileSpreadsheet className="w-8 h-8 text-indigo-400 mb-3" />
-              <h3 className="font-semibold text-white mb-2">Complete Excel Model</h3>
-              <p className="text-sm text-slate-400">16-sheet workbook with P&L, Balance Sheet, assumptions, and valuation</p>
+              {error && (
+                <span className="text-red-400">{error}</span>
+              )}
+              {isValid && !error && ticker && (
+                <span className="text-emerald-400">✓ Valid ticker</span>
+              )}
             </div>
-            
-            <div className="glass-card p-6 rounded-lg hover:border-slate-600 transition-colors">
-              <TrendingUp className="w-8 h-8 text-indigo-400 mb-3" />
-              <h3 className="font-semibold text-white mb-2">AI-Powered Analysis</h3>
-              <p className="text-sm text-slate-400">Sector-specific reasoning using Claude AI for accurate forecasting</p>
-            </div>
-            
-            <div className="glass-card p-6 rounded-lg hover:border-slate-600 transition-colors">
-              <Banknote className="w-8 h-8 text-indigo-400 mb-3" />
-              <h3 className="font-semibold text-white mb-2">Investment Thesis</h3>
-              <p className="text-sm text-slate-400">Professional-grade research note with recommendation and target price</p>
-            </div>
-          </div>
-
-          {/* Footer */}
-          <p className="text-xs text-slate-500 mt-12">
-            Currently supports Banks sector. More sectors coming soon.
-          </p>
+          </form>
         </div>
-      </div>
+      </section>
+
+      {/* Stats Bar */}
+      <section className="border-y border-slate-800/50 bg-slate-900/30">
+        <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="text-center">
+            <div className="text-3xl font-bold text-white">10+</div>
+            <div className="text-sm text-slate-500">Excel Sheets</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-white">5Y</div>
+            <div className="text-sm text-slate-500">Forecast Horizon</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-white">6</div>
+            <div className="text-sm text-slate-500">AI Tools</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-white">&lt;5min</div>
+            <div className="text-sm text-slate-500">Model Generation</div>
+          </div>
+        </div>
+      </section>
 
       {/* Recent Jobs Section */}
-      <div className="relative z-10 px-4 pb-16">
-        <div className="max-w-4xl mx-auto">
-          <JobsList />
+      {recentJobs.length > 0 && (
+        <section className="py-16 px-6">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-white">Recent Analysis</h2>
+              <button 
+                onClick={() => navigate("/jobs")}
+                className="text-sm text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-1"
+              >
+                View All <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="space-y-2">
+              {recentJobs.map((job) => (
+                <div 
+                  key={job.id}
+                  onClick={() => job.status === 'completed' ? navigate(`/results/${job.id}`) : navigate(`/processing/${job.id}`)}
+                  className="flex items-center justify-between p-4 bg-slate-900/50 hover:bg-slate-800/50 border border-slate-800/50 rounded-xl cursor-pointer transition-all group"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center text-white font-mono font-bold">
+                      {job.ticker?.slice(0, 2)}
+                    </div>
+                    <div>
+                      <div className="font-medium text-white group-hover:text-emerald-400 transition-colors">
+                        {job.ticker}
+                      </div>
+                      <div className="text-sm text-slate-500">
+                        {new Date(job.created_at).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className={`text-sm font-medium ${getStatusColor(job.status)}`}>
+                      {job.status?.toUpperCase()}
+                    </span>
+                    <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-emerald-400 transition-colors" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Tools Section */}
+      <section className="py-16 px-6 border-t border-slate-800/50">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl font-bold text-white mb-3">Integrated Tools</h2>
+            <p className="text-slate-400">Our AI agent orchestrates these specialized tools to build your model</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {MOSAIC_TOOLS.map((tool, index) => (
+              <div 
+                key={index}
+                className="p-5 bg-slate-900/30 border border-slate-800/50 rounded-xl hover:border-emerald-500/30 transition-colors group"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-500/20 transition-colors">
+                    <tool.icon className="w-5 h-5 text-emerald-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-white mb-1">{tool.name}</h3>
+                    <p className="text-sm text-slate-500 leading-relaxed">{tool.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 px-6 border-t border-slate-800/50">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-slate-500 text-sm">
+            <BarChart3 className="w-4 h-4" />
+            <span>Mosaic Equity Research</span>
+          </div>
+          <div className="text-sm text-slate-600">
+            Built for investment professionals. Not financial advice.
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
