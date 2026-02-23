@@ -1,0 +1,40 @@
+{
+  "ticker": "ICICIAMC",
+  "key": "screener_financials",
+  "data": {
+    "success": true,
+    "ticker": "ICICIAMC",
+    "annual_pnl": {
+      "Mar 2025": {
+        "Sales +": 3758.0,
+        "Expenses +": 981.0,
+        "Operating Profit": 2777.0,
+        "OPM %": 74.0,
+        "Other Income +": 3.0,
+        "Interest": 16.0,
+        "Depreciation": 66.0,
+        "Profit before tax": 2698.0,
+        "Tax %": 24.0,
+        "Net Profit +": 2050.0,
+        "EPS in Rs": 1161.18,
+        "Dividend Payout %": -0.0
+      }
+    },
+    "annual_bs": {
+      "Mar 2025": {}
+    },
+    "ratios": {
+      "Mar 2025": {}
+    },
+    "quarterly": [
+      "Sep 2025"
+    ],
+    "years_available": [
+      "Mar 2025"
+    ],
+    "quarters_available": [
+      "Sep 2025"
+    ]
+  },
+  "cached_at": "2026-02-23T08:16:51.441982+00:00"
+}

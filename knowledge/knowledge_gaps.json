@@ -28,5 +28,11 @@
     "missing_topic": "Complete historical P&L and Balance Sheet data for HDFC Bank due to scraper limitation - need to construct based on book value, market cap, and sector benchmarks",
     "flagged_by": "HDFCBANK",
     "timestamp": "2026-02-22T14:51:51.119684+00:00"
+  },
+  {
+    "sector": "amc",
+    "missing_topic": "Complete AMC sector knowledge base needed covering: valuation benchmarks (P/E, P/B, EV/EBITDA ranges), revenue yield on AUM by product category (equity/debt/hybrid), EBITDA margin benchmarks, AUM growth rates, SIP flow dynamics, regulatory framework (SEBI expense ratio caps), competitive landscape, and key performance metrics (gross/net flows, market share, scheme performance percentiles)",
+    "flagged_by": "ICICIAMC",
+    "timestamp": "2026-02-23T08:19:40.111373+00:00"
   }
 ]

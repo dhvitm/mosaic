@@ -1,0 +1,22 @@
+{
+  "ticker": "ICICIAMC",
+  "key": "analysis_summary",
+  "data": {
+    "date": "2026-02-23",
+    "current_price": 3116.6,
+    "market_cap_cr": 154040.61,
+    "pe_ratio": 47.72,
+    "fair_value": 3250,
+    "target_price": 3400,
+    "recommendation": "HOLD",
+    "upside_percent": 9.1,
+    "sector": "Asset Management",
+    "key_metrics": {
+      "ebitda_margin_assumed": "55-60%",
+      "aum_growth": "12-15%",
+      "revenue_yield": "0.65-0.75%"
+    },
+    "investment_rationale": "High-quality franchise with structural tailwinds but fully valued at current levels"
+  },
+  "cached_at": "2026-02-23T08:19:55.290903+00:00"
+}

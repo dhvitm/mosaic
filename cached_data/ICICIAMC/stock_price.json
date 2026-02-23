@@ -1,0 +1,16 @@
+{
+  "ticker": "ICICIAMC",
+  "key": "stock_price",
+  "data": {
+    "success": true,
+    "ticker": "ICICIAMC",
+    "current_price": 3116.6,
+    "market_cap": 154040.6116352,
+    "market_cap_cr": 154040.6116352,
+    "pe_ratio": 47.720108,
+    "book_value": 79.342,
+    "source": "yahoo_finance",
+    "fetched_at": "2026-02-23T08:16:52.452004+00:00"
+  },
+  "cached_at": "2026-02-23T08:16:52.452209+00:00"
+}

@@ -1,0 +1,16 @@
+{
+  "ticker": "ICICIBANK",
+  "key": "stock_price",
+  "data": {
+    "success": true,
+    "ticker": "ICICIBANK",
+    "current_price": 1397.4,
+    "market_cap": 999943.2548352,
+    "market_cap_cr": 999943.2548352,
+    "pe_ratio": 19.087557,
+    "book_value": 487.636,
+    "source": "yahoo_finance",
+    "fetched_at": "2026-02-23T08:42:34.250229+00:00"
+  },
+  "cached_at": "2026-02-23T08:42:34.250546+00:00"
+}
