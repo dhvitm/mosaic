@@ -156,7 +156,7 @@ For UNIONBANK job completed in 3 minutes 12 seconds:
 
 ## Demo Flow
 
-1. Go to https://mosaic-agent.preview.emergentagent.com
+1. Go to https://stock-analysis-ai-1.preview.emergentagent.com
 2. Enter "HDFCBANK" or "UNIONBANK"
 3. Watch real-time progress (WebSocket activity log)
 4. View results: Recommendation, Thesis, Valuation
