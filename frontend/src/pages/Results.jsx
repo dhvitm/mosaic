@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Download, TrendingUp, TrendingDown, Minus, ScrollText, SlidersHorizontal, Grid3X3, Loader2, Brain, ChevronDown, ChevronUp } from "lucide-react";
+import { 
+  Download, TrendingUp, TrendingDown, Minus, ScrollText, 
+  SlidersHorizontal, Grid3X3, Loader2, ChevronDown, ChevronUp,
+  BarChart3, ArrowLeft, ExternalLink
+} from "lucide-react";
 import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -13,7 +17,6 @@ export default function Results() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
-  const [retrying, setRetrying] = useState(false);
   const [error, setError] = useState("");
   const [showReasoning, setShowReasoning] = useState(false);
 
@@ -49,41 +52,30 @@ export default function Results() {
       
       setDownloading(false);
     } catch (err) {
-      setError("Failed to download Excel file");
+      console.error("Download failed:", err);
       setDownloading(false);
-    }
-  };
-
-  const handleRetry = async () => {
-    setRetrying(true);
-    try {
-      const response = await axios.post(`${API}/generate/retry/${jobId}`);
-      const newJobId = response.data.new_job_id;
-      
-      // Navigate to the new job's processing page
-      navigate(`/processing/${newJobId}`);
-    } catch (err) {
-      setError("Failed to retry job");
-      setRetrying(false);
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-indigo-400 animate-spin" />
+      <div className="min-h-screen bg-[#0a0e17] flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 text-emerald-400 animate-spin mx-auto mb-4" />
+          <p className="text-slate-400">Loading results...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
-        <div className="max-w-md w-full glass-card p-8 rounded-lg text-center">
-          <p className="text-red-400 mb-4">{error}</p>
+      <div className="min-h-screen bg-[#0a0e17] flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-slate-900 border border-slate-800 p-8 rounded-xl text-center">
+          <p className="text-red-400 mb-6">{error}</p>
           <button
             onClick={() => navigate("/")}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg transition-colors"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg transition-colors"
           >
             Go Home
           </button>
@@ -97,300 +89,226 @@ export default function Results() {
   const metadata = result.result?.company_metadata || {};
   
   const recommendation = valuation.recommendation || "HOLD";
-  const recClass = recommendation === "BUY" ? "recommendation-buy" : 
-                   recommendation === "SELL" ? "recommendation-sell" : 
-                   "recommendation-hold";
-  const recColor = recommendation === "BUY" ? "text-green-500" : 
-                   recommendation === "SELL" ? "text-red-500" : 
-                   "text-yellow-500";
+  const recColor = recommendation === "BUY" ? "text-emerald-400" : 
+                   recommendation === "SELL" ? "text-red-400" : 
+                   "text-amber-400";
+  const recBg = recommendation === "BUY" ? "bg-emerald-500/10 border-emerald-500/30" : 
+               recommendation === "SELL" ? "bg-red-500/10 border-red-500/30" : 
+               "bg-amber-500/10 border-amber-500/30";
   const RecIcon = recommendation === "BUY" ? TrendingUp : 
                   recommendation === "SELL" ? TrendingDown : 
                   Minus;
 
-  return (
-    <div className="min-h-screen bg-slate-950 p-4 md:p-8">
-      {/* Header */}
-      <div className="max-w-7xl mx-auto mb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-1 font-mono">
-              {result.ticker}
-            </h1>
-            <p className="text-slate-400">{metadata.full_name || "Company Analysis"}</p>
-          </div>
-          <button
-            onClick={handleDownload}
-            disabled={downloading}
-            className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-800 text-white px-6 py-3 rounded-lg flex items-center gap-2 shadow-lg transition-all"
-            data-testid="download-excel-button"
-          >
-            {downloading ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Downloading...
-              </>
-            ) : (
-              <>
-                <Download className="w-5 h-5" />
-                Download Excel
-              </>
-            )}
-          </button>
-        </div>
-      </div>
+  const currentPrice = valuation.current_price || metadata.current_price || 0;
+  const targetPrice = valuation.target_price || valuation.fair_value || 0;
+  const upside = valuation.upside_percent || (targetPrice && currentPrice ? ((targetPrice - currentPrice) / currentPrice * 100) : 0);
 
-      {/* Recommendation Box */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className={`${recClass} border-2 p-8 rounded-lg`} data-testid="recommendation-card">
+  return (
+    <div className="min-h-screen bg-[#0a0e17]">
+      {/* Header */}
+      <header className="bg-[#0a0e17]/80 backdrop-blur-xl border-b border-slate-800/50 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <RecIcon className={`w-12 h-12 ${recColor}`} />
-              <div>
-                <div className={`text-sm font-medium ${recColor} uppercase tracking-wide mb-1`}>
-                  Recommendation
+              <button
+                onClick={() => navigate("/")}
+                className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5 text-slate-400" />
+              </button>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg flex items-center justify-center">
+                  <BarChart3 className="w-6 h-6 text-white" />
                 </div>
-                <div className={`text-4xl font-bold ${recColor}`}>
-                  {recommendation}
+                <div>
+                  <h1 className="text-xl font-bold text-white font-mono">{result.ticker}</h1>
+                  <p className="text-sm text-slate-500">{metadata.sector || "Company Analysis"}</p>
                 </div>
               </div>
             </div>
-            <div className="text-right">
-              <div className="text-sm text-slate-400 mb-1">Target Price</div>
-              <div className="text-3xl font-bold font-mono text-white">
-                ₹{valuation.target_price?.toFixed(0) || valuation.fair_value?.toFixed(0) || 0}
+            <button
+              onClick={handleDownload}
+              disabled={downloading}
+              className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 text-white font-medium rounded-lg transition-colors"
+              data-testid="download-excel-button"
+            >
+              {downloading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Download className="w-4 h-4" />
+              )}
+              Download Excel
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          {/* Recommendation */}
+          <div className={`col-span-1 md:col-span-2 p-6 rounded-xl border ${recBg}`}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-400 mb-1">Recommendation</p>
+                <div className={`text-4xl font-bold ${recColor} flex items-center gap-3`}>
+                  <RecIcon className="w-8 h-8" />
+                  {recommendation}
+                </div>
               </div>
-              <div className={`text-sm mt-1 font-medium ${
-                (valuation.upside_percent || 0) > 0 ? 'text-green-400' : 
-                (valuation.upside_percent || 0) < 0 ? 'text-red-400' : 'text-slate-400'
-              }`}>
-                {(valuation.upside_percent || 0) > 0 ? '↑' : (valuation.upside_percent || 0) < 0 ? '↓' : ''} {Math.abs(valuation.upside_percent || 0).toFixed(1)}% Upside
+              <div className="text-right">
+                <p className="text-sm text-slate-400 mb-1">Target Price</p>
+                <div className="text-3xl font-bold text-white font-mono">
+                  ₹{targetPrice.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                </div>
+                <div className={`text-sm font-medium ${upside >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {upside >= 0 ? '↑' : '↓'} {Math.abs(upside).toFixed(1)}% Upside
+                </div>
               </div>
             </div>
           </div>
           
-          {/* Market Price Row */}
-          <div className="mt-6 pt-6 border-t border-white/10 flex items-center justify-between">
-            <div>
-              <div className="text-sm text-slate-400 mb-1">Current Market Price</div>
-              <div className="text-2xl font-bold font-mono text-white">
-                ₹{(valuation.current_price || metadata.current_price || 0).toFixed(2)}
-              </div>
+          {/* Current Price */}
+          <div className="p-6 bg-slate-900/50 border border-slate-800/50 rounded-xl">
+            <p className="text-sm text-slate-400 mb-1">Current Price</p>
+            <div className="text-2xl font-bold text-white font-mono">
+              ₹{currentPrice.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
             </div>
-            <div className="text-right">
-              <p className="text-slate-300 max-w-md">
-                {thesis.summary || `${recommendation} with target price of ₹${valuation.target_price?.toFixed(0) || valuation.fair_value?.toFixed(0) || 0}`}
-              </p>
+          </div>
+          
+          {/* Market Cap */}
+          <div className="p-6 bg-slate-900/50 border border-slate-800/50 rounded-xl">
+            <p className="text-sm text-slate-400 mb-1">Market Cap</p>
+            <div className="text-2xl font-bold text-white font-mono">
+              ₹{((metadata.market_cap || 0) / 100000).toFixed(1)}L Cr
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Tabs */}
-      <div className="max-w-7xl mx-auto">
+        {/* Thesis Summary */}
+        {thesis.summary && (
+          <div className="mb-8 p-6 bg-slate-900/30 border border-slate-800/50 rounded-xl">
+            <p className="text-slate-300 leading-relaxed">{thesis.summary}</p>
+          </div>
+        )}
+
+        {/* Tabs */}
         <Tabs defaultValue="thesis" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-slate-900 p-1 rounded-lg mb-6">
+          <TabsList className="w-full bg-slate-900/50 border border-slate-800/50 rounded-xl p-1 mb-6">
             <TabsTrigger 
               value="thesis" 
-              className="data-[state=active]:bg-indigo-600 rounded-md transition-colors"
-              data-testid="tab-thesis"
+              className="flex-1 py-3 data-[state=active]:bg-emerald-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <ScrollText className="w-4 h-4 mr-2" />
               Thesis
             </TabsTrigger>
             <TabsTrigger 
-              value="assumptions" 
-              className="data-[state=active]:bg-indigo-600 rounded-md transition-colors"
-              data-testid="tab-assumptions"
+              value="valuation" 
+              className="flex-1 py-3 data-[state=active]:bg-emerald-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <SlidersHorizontal className="w-4 h-4 mr-2" />
-              Assumptions
-            </TabsTrigger>
-            <TabsTrigger 
-              value="valuation" 
-              className="data-[state=active]:bg-indigo-600 rounded-md transition-colors"
-              data-testid="tab-valuation"
-            >
-              <TrendingUp className="w-4 h-4 mr-2" />
               Valuation
             </TabsTrigger>
             <TabsTrigger 
               value="model" 
-              className="data-[state=active]:bg-indigo-600 rounded-md transition-colors"
-              data-testid="tab-model"
+              className="flex-1 py-3 data-[state=active]:bg-emerald-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <Grid3X3 className="w-4 h-4 mr-2" />
-              Model
+              Model Info
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="thesis">
-            <div className="glass-card p-8 rounded-lg">
-              <h2 className="text-2xl font-bold text-white mb-6">Investment Thesis</h2>
-              <div className="prose prose-invert prose-slate max-w-none space-y-6">
-                {/* Summary */}
-                {thesis.summary && (
-                  <div>
-                    <h3 className="text-lg font-semibold text-indigo-400 mb-2">Summary</h3>
-                    <p className="text-slate-300 leading-relaxed">{thesis.summary}</p>
-                  </div>
-                )}
-                
-                {/* Bull Case */}
-                {thesis.bull_case && thesis.bull_case.length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-semibold text-green-400 mb-2">Bull Case</h3>
-                    <ul className="list-disc list-inside space-y-1">
-                      {thesis.bull_case.map((point, i) => (
-                        <li key={i} className="text-slate-300">{point}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                
-                {/* Bear Case */}
-                {thesis.bear_case && thesis.bear_case.length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-semibold text-red-400 mb-2">Bear Case</h3>
-                    <ul className="list-disc list-inside space-y-1">
-                      {thesis.bear_case.map((point, i) => (
-                        <li key={i} className="text-slate-300">{point}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                
-                {/* Catalysts */}
-                {thesis.catalysts && thesis.catalysts.length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-semibold text-amber-400 mb-2">Key Catalysts</h3>
-                    <ul className="list-disc list-inside space-y-1">
-                      {thesis.catalysts.map((point, i) => (
-                        <li key={i} className="text-slate-300">{point}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                
-                {/* Fallback if no thesis data */}
-                {!thesis.summary && !thesis.bull_case && !thesis.bear_case && (
-                  <p className="text-slate-400 italic">Thesis details will appear here once analysis is complete.</p>
-                )}
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="assumptions">
-            <div className="glass-card p-8 rounded-lg">
-              <h2 className="text-2xl font-bold text-white mb-6">Key Assumptions</h2>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-slate-700">
-                      <th className="text-left py-3 text-slate-400 font-medium">Parameter</th>
-                      <th className="text-right py-3 text-slate-400 font-medium">FY26E</th>
-                      <th className="text-right py-3 text-slate-400 font-medium">FY27E</th>
-                      <th className="text-right py-3 text-slate-400 font-medium">FY28E</th>
-                    </tr>
-                  </thead>
-                  <tbody className="font-mono">
-                    <tr className="border-b border-slate-800">
-                      <td className="py-3 text-slate-300">Loan Growth (%)</td>
-                      <td className="text-right text-white">15.0</td>
-                      <td className="text-right text-white">14.5</td>
-                      <td className="text-right text-white">14.0</td>
-                    </tr>
-                    <tr className="border-b border-slate-800">
-                      <td className="py-3 text-slate-300">NIM (%)</td>
-                      <td className="text-right text-white">3.8</td>
-                      <td className="text-right text-white">3.9</td>
-                      <td className="text-right text-white">4.0</td>
-                    </tr>
-                    <tr className="border-b border-slate-800">
-                      <td className="py-3 text-slate-300">CASA Ratio (%)</td>
-                      <td className="text-right text-white">42.0</td>
-                      <td className="text-right text-white">43.0</td>
-                      <td className="text-right text-white">44.0</td>
-                    </tr>
-                    <tr className="border-b border-slate-800">
-                      <td className="py-3 text-slate-300">Credit Cost (%)</td>
-                      <td className="text-right text-white">0.8</td>
-                      <td className="text-right text-white">0.7</td>
-                      <td className="text-right text-white">0.6</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <p className="text-xs text-slate-500 mt-6">
-                * Download Excel model for complete assumptions and rationale
-              </p>
+            <div className="bg-slate-900/30 border border-slate-800/50 p-8 rounded-xl space-y-8">
+              {/* Bull Case */}
+              {thesis.bull_case && thesis.bull_case.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-emerald-400 mb-4 flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5" />
+                    Bull Case
+                  </h3>
+                  <ul className="space-y-2">
+                    {thesis.bull_case.map((point, i) => (
+                      <li key={i} className="flex items-start gap-3 text-slate-300">
+                        <span className="text-emerald-500 mt-1">•</span>
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              
+              {/* Bear Case */}
+              {thesis.bear_case && thesis.bear_case.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-red-400 mb-4 flex items-center gap-2">
+                    <TrendingDown className="w-5 h-5" />
+                    Bear Case
+                  </h3>
+                  <ul className="space-y-2">
+                    {thesis.bear_case.map((point, i) => (
+                      <li key={i} className="flex items-start gap-3 text-slate-300">
+                        <span className="text-red-500 mt-1">•</span>
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              
+              {/* Catalysts */}
+              {thesis.catalysts && thesis.catalysts.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold text-amber-400 mb-4">Key Catalysts</h3>
+                  <ul className="space-y-2">
+                    {thesis.catalysts.map((point, i) => (
+                      <li key={i} className="flex items-start gap-3 text-slate-300">
+                        <span className="text-amber-500 mt-1">•</span>
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              
+              {/* Fallback */}
+              {!thesis.summary && !thesis.bull_case && (
+                <p className="text-slate-500 text-center py-8">Thesis details will appear here once analysis is complete.</p>
+              )}
             </div>
           </TabsContent>
 
           <TabsContent value="valuation">
-            <div className="glass-card p-8 rounded-lg">
-              <h2 className="text-2xl font-bold text-white mb-6">Valuation Summary</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                {/* Current Price Card */}
-                <div className="border border-slate-700 rounded-lg p-6 text-center">
-                  <div className="text-sm text-slate-400 mb-2">Current Market Price</div>
-                  <div className="text-3xl font-bold font-mono text-white">
-                    ₹{(valuation.current_price || metadata.current_price || 0).toFixed(2)}
-                  </div>
-                </div>
-                
-                {/* Target Price Card */}
-                <div className="border border-indigo-600 rounded-lg p-6 text-center bg-indigo-600/10">
-                  <div className="text-sm text-indigo-300 mb-2">Target Price</div>
-                  <div className="text-3xl font-bold font-mono text-indigo-400">
-                    ₹{(valuation.target_price || valuation.fair_value || 0).toFixed(0)}
-                  </div>
-                </div>
-                
-                {/* Upside Card */}
-                <div className={`border rounded-lg p-6 text-center ${
-                  (valuation.upside_percent || 0) > 0 
-                    ? 'border-green-600 bg-green-600/10' 
-                    : (valuation.upside_percent || 0) < 0 
-                    ? 'border-red-600 bg-red-600/10' 
-                    : 'border-slate-700'
-                }`}>
-                  <div className="text-sm text-slate-400 mb-2">Upside / Downside</div>
-                  <div className={`text-3xl font-bold font-mono ${
-                    (valuation.upside_percent || 0) > 0 
-                      ? 'text-green-400' 
-                      : (valuation.upside_percent || 0) < 0 
-                      ? 'text-red-400' 
-                      : 'text-white'
-                  }`}>
-                    {(valuation.upside_percent || 0) > 0 ? '+' : ''}{(valuation.upside_percent || 0).toFixed(1)}%
-                  </div>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="border border-slate-700 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-white mb-4">Residual Income Valuation</h3>
-                  <div className="space-y-3 font-mono">
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">Cost of Equity</span>
-                      <span className="text-white">{valuation.cost_of_equity || 13.0}%</span>
+            <div className="bg-slate-900/30 border border-slate-800/50 p-8 rounded-xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Valuation Metrics */}
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-4">Valuation Metrics</h3>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center py-3 border-b border-slate-800">
+                      <span className="text-slate-400">Methodology</span>
+                      <span className="text-white font-medium">{valuation.methodology || "Residual Income"}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-400">Terminal Growth</span>
-                      <span className="text-white">{valuation.terminal_growth || 3.0}%</span>
+                    <div className="flex justify-between items-center py-3 border-b border-slate-800">
+                      <span className="text-slate-400">Current P/B</span>
+                      <span className="text-white font-mono">{valuation.current_pb?.toFixed(2) || "-"}x</span>
                     </div>
-                    <div className="flex justify-between border-t border-slate-700 pt-3 mt-3">
-                      <span className="text-white font-semibold">Fair Value</span>
-                      <span className="text-indigo-400 font-semibold">₹{(valuation.fair_value || valuation.target_price || 0).toFixed(0)}</span>
+                    <div className="flex justify-between items-center py-3 border-b border-slate-800">
+                      <span className="text-slate-400">Fair P/B</span>
+                      <span className="text-white font-mono">{valuation.fair_pb?.toFixed(2) || "-"}x</span>
+                    </div>
+                    <div className="flex justify-between items-center py-3 border-b border-slate-800">
+                      <span className="text-slate-400">Book Value</span>
+                      <span className="text-white font-mono">₹{valuation.book_value?.toFixed(2) || "-"}</span>
                     </div>
                   </div>
                 </div>
                 
-                <div className="border border-slate-700 rounded-lg p-6">
+                {/* Key Rationale */}
+                <div>
                   <h3 className="text-lg font-semibold text-white mb-4">Valuation Rationale</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">
-                    {valuation.rationale || 
-                      "Residual Income Valuation (RIV) is the primary methodology for banks as they cannot produce free cash flow in the traditional sense. The model values the bank based on excess returns (ROE above cost of equity) over forecast period."}
+                  <p className="text-slate-300 leading-relaxed">
+                    {valuation.rationale || "The valuation is based on a Residual Income model appropriate for banking stocks, considering the bank's ROE trajectory, cost of equity, and sustainable growth rates."}
                   </p>
                 </div>
               </div>
@@ -398,116 +316,115 @@ export default function Results() {
           </TabsContent>
 
           <TabsContent value="model">
-            <div className="glass-card p-8 rounded-lg">
-              <h2 className="text-2xl font-bold text-white mb-6">Model Preview</h2>
-              <p className="text-slate-400 mb-6">
-                The complete financial model includes 16 sheets with linked formulas. Download the Excel file to view the full model.
-              </p>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-slate-700">
-                      <th className="text-left py-3 text-slate-400 font-medium">Sheet</th>
-                      <th className="text-left py-3 text-slate-400 font-medium">Description</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-slate-300">
-                    <tr className="border-b border-slate-800">
-                      <td className="py-3 font-mono">Cover</td>
-                      <td>Summary & Recommendation</td>
-                    </tr>
-                    <tr className="border-b border-slate-800">
-                      <td className="py-3 font-mono">P&L</td>
-                      <td>Profit & Loss Statement (FY21-FY30)</td>
-                    </tr>
-                    <tr className="border-b border-slate-800">
-                      <td className="py-3 font-mono">Balance Sheet</td>
-                      <td>Assets & Liabilities (FY21-FY30)</td>
-                    </tr>
-                    <tr className="border-b border-slate-800">
-                      <td className="py-3 font-mono">Assumptions</td>
-                      <td>Forecast Drivers & Rationale</td>
-                    </tr>
-                    <tr className="border-b border-slate-800">
-                      <td className="py-3 font-mono">Valuation</td>
-                      <td>RIV, Peer Comps, DDM</td>
-                    </tr>
-                    <tr className="border-b border-slate-800">
-                      <td className="py-3 font-mono">Thesis</td>
-                      <td>Investment Note & Analysis</td>
-                    </tr>
-                  </tbody>
-                </table>
+            <div className="bg-slate-900/30 border border-slate-800/50 p-8 rounded-xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-4">Model Contents</h3>
+                  <ul className="space-y-2 text-slate-300">
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                      Cover Sheet with recommendation
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                      P&L Statement (Historical + 5Y Forecast)
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                      Balance Sheet
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                      ROE Decomposition Tree
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                      Quarterly Results
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                      Key Ratios
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                      Valuation (RIV/DCF)
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                      Investment Thesis
+                    </li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-4">Data Sources</h3>
+                  <ul className="space-y-2 text-slate-300">
+                    <li className="flex items-center gap-2">
+                      <ExternalLink className="w-4 h-4 text-slate-500" />
+                      Screener.in (Financials)
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <ExternalLink className="w-4 h-4 text-slate-500" />
+                      Yahoo Finance (Market Data)
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <ExternalLink className="w-4 h-4 text-slate-500" />
+                      BSE/NSE (Investor Documents)
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <ExternalLink className="w-4 h-4 text-slate-500" />
+                      Claude AI (Analysis)
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="mt-8 pt-6 border-t border-slate-800">
+                <button
+                  onClick={handleDownload}
+                  disabled={downloading}
+                  className="w-full flex items-center justify-center gap-2 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-xl transition-colors"
+                >
+                  {downloading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Download className="w-5 h-5" />
+                  )}
+                  Download Complete Model (.xlsx)
+                </button>
               </div>
             </div>
           </TabsContent>
         </Tabs>
-      </div>
 
-      {/* AI Reasoning Panel - Collapsible */}
-      {result?.reasoning && (
-        <div className="max-w-7xl mx-auto mt-8">
-          <button
-            onClick={() => setShowReasoning(!showReasoning)}
-            className="w-full glass-card p-4 rounded-lg flex items-center justify-between hover:bg-slate-800/50 transition-colors"
-            data-testid="reasoning-toggle"
-          >
-            <div className="flex items-center gap-3">
-              <Brain className="w-5 h-5 text-purple-400" />
-              <span className="text-white font-medium">AI Reasoning & Analysis</span>
-              <span className="text-xs text-slate-500 px-2 py-1 bg-slate-800 rounded">
-                {result.tool_calls?.length || 0} tool calls
-              </span>
-            </div>
-            {showReasoning ? (
-              <ChevronUp className="w-5 h-5 text-slate-400" />
-            ) : (
-              <ChevronDown className="w-5 h-5 text-slate-400" />
-            )}
-          </button>
-          
-          {showReasoning && (
-            <div className="glass-card mt-2 p-6 rounded-lg" data-testid="reasoning-panel">
-              <h3 className="text-lg font-semibold text-white mb-4">Agent Reasoning</h3>
-              <div className="prose prose-invert prose-sm max-w-none">
-                <pre className="whitespace-pre-wrap text-sm text-slate-300 bg-slate-900 p-4 rounded-lg overflow-x-auto font-mono leading-relaxed">
-                  {result.reasoning}
+        {/* AI Reasoning (Collapsible) */}
+        {result.result?.reasoning && (
+          <div className="mt-8">
+            <button
+              onClick={() => setShowReasoning(!showReasoning)}
+              className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
+            >
+              {showReasoning ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              <span className="text-sm">AI Reasoning Log</span>
+            </button>
+            
+            {showReasoning && (
+              <div className="mt-4 p-6 bg-slate-900/30 border border-slate-800/50 rounded-xl">
+                <pre className="text-sm text-slate-400 whitespace-pre-wrap font-mono leading-relaxed">
+                  {result.result.reasoning}
                 </pre>
               </div>
-              
-              {result.tool_calls && result.tool_calls.length > 0 && (
-                <div className="mt-6">
-                  <h4 className="text-md font-semibold text-white mb-3">Tool Calls Log</h4>
-                  <div className="space-y-2 max-h-64 overflow-y-auto">
-                    {result.tool_calls.map((call, idx) => (
-                      <div 
-                        key={idx} 
-                        className={`text-xs p-2 rounded ${
-                          call.result_success ? 'bg-green-900/20 border border-green-800' : 'bg-red-900/20 border border-red-800'
-                        }`}
-                      >
-                        <span className="text-slate-400">#{idx + 1}</span>
-                        <span className="ml-2 text-white font-mono">{call.tool}</span>
-                        <span className={`ml-2 ${call.result_success ? 'text-green-400' : 'text-red-400'}`}>
-                          {call.result_success ? '✓' : '✗'}
-                        </span>
-                        <span className="ml-2 text-slate-500">{call.duration_seconds}s</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        )}
+      </div>
 
       {/* Footer */}
-      <div className="max-w-7xl mx-auto mt-8 text-center">
-        <p className="text-xs text-slate-500">
+      <footer className="py-6 px-6 border-t border-slate-800/50 mt-8">
+        <div className="max-w-7xl mx-auto text-center text-sm text-slate-600">
           This model is generated using public data and AI reasoning. It is not investment advice. Verify all assumptions before use.
-        </p>
-      </div>
+        </div>
+      </footer>
     </div>
   );
 }
