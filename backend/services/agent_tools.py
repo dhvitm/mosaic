@@ -741,10 +741,14 @@ class ToolExecutor:
             
             # Get stock price - try multiple sources
             stock_price = collected.get("stock_price", {})
-            if not stock_price:
+            logger.info(f"stock_price from collected: {bool(stock_price)}, has current_price: {stock_price.get('current_price') if stock_price else 'N/A'}")
+            
+            if not stock_price or not stock_price.get("current_price"):
                 cache_result = self._cache_read(ticker, "stock_price")
+                logger.info(f"stock_price cache result: cached={cache_result.get('cached')}")
                 if cache_result.get("cached"):
                     stock_price = cache_result.get("data", {})
+                    logger.info(f"stock_price from cache: current_price={stock_price.get('current_price')}")
             
             # Also check if valuation has current_price (AI agent may have stored it there)
             valuation_data = collected.get("valuation", {})
