@@ -109,7 +109,6 @@ Note: Empty sheets (like Assumptions) are now automatically skipped to produce c
 
 ### P1 - High Priority
 - [ ] Fix empty "Assumptions" sheet in Excel (data format mismatch - agent stores free-form text, Excel expects numeric arrays)
-- [ ] Improve market_cap fetching (sometimes returns None from Yahoo Finance)
 
 ### P2 - Medium Priority  
 - [ ] Export thesis to PDF
