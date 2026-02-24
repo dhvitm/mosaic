@@ -739,12 +739,23 @@ class ToolExecutor:
                     financials = cache_result.get("data", {})
                     logger.info(f"Financials from cache: {list(financials.keys()) if financials else []}")
             
-            # Get stock price
+            # Get stock price - try multiple sources
             stock_price = collected.get("stock_price", {})
             if not stock_price:
                 cache_result = self._cache_read(ticker, "stock_price")
                 if cache_result.get("cached"):
                     stock_price = cache_result.get("data", {})
+            
+            # Also check if valuation has current_price (AI agent may have stored it there)
+            valuation_data = collected.get("valuation", {})
+            if valuation_data.get("current_price") and not stock_price.get("current_price"):
+                stock_price["current_price"] = valuation_data.get("current_price")
+            if valuation_data.get("market_cap") and not stock_price.get("market_cap"):
+                stock_price["market_cap"] = valuation_data.get("market_cap")
+            if valuation_data.get("book_value") and not stock_price.get("book_value"):
+                stock_price["book_value"] = valuation_data.get("book_value")
+            if valuation_data.get("current_pe") and not stock_price.get("pe_ratio"):
+                stock_price["pe_ratio"] = valuation_data.get("current_pe")
             
             # Get peer data
             peers = collected.get("peers", {})
