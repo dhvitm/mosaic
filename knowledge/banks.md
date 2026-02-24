@@ -505,6 +505,8 @@ P/E is secondary. DDM is used as a cross-check for high-dividend banks.
 - Quarter-end window dressing common for CD and CASA ratios
 
 ## Observed Data (Auto-updated by Mosaic)
+- HDFCBANK FY26: HDFC Bank valuation benchmark: Fair P/B of 2.86x for normalized ROE of 17.5%, Cost of Equity 12%, Terminal Growth 3%. Premium valuation justified by best-in-class asset quality and liability franchise (source: RIV Model Analysis Feb 2026, added: 2026-02-24)
+- HDFCBANK FY26: HDFC Bank FY25: Post-merger with HDFC Ltd (July 2023) - Total Assets Rs 27+ lakh cr, Deposits Rs 24.2 lakh cr, GNPA 1.33%, NNPA 0.42%, ROE 13.3% (merger-impacted), NIM compressed to 3.0-3.2% range due to mortgage book integration (source: Annual Report FY25 and Screener Financials, added: 2026-02-24)
 - SBIN FY26: SBI FY25: India's largest PSU bank trading at 1.9x P/B (13.2x P/E) with book value ₹641/share. Achieved ROE 17-18%, NIM 3.0-3.2%, CASA ratio 43-45%, GNPA <2.5%, Credit Cost 0.6-0.75%. Market cap ₹11.2 lakh crore. RIV fair value 1.35x P/B suggesting overvaluation. Best-in-class PSU bank but premium stretched. (source: Annual Report FY25 and Analysis Feb 22, 2026, added: 2026-02-24)
 - ICICIBANK FY26: ICICI Bank Trading Metrics (Feb 2026): P/BV 2.87x, P/E 19.1x, Book Value ₹487.64, Market Cap ₹10 lakh crores. Valuation in line with quality private bank benchmarks of 2.5-3.5x P/BV (source: Yahoo Finance Feb 2026, added: 2026-02-23)
 - ICICIBANK FY26: ICICI Bank FY25: Net Profit ₹46,081 Cr (30%+ CAGR over FY22-25), ROE ~17-18%, Strong loan growth trajectory, Best-in-class digital franchise with improving operating leverage (source: Screener Financials FY25 and Annual Report FY24, added: 2026-02-23)
