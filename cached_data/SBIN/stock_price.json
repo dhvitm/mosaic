@@ -1,0 +1,16 @@
+{
+  "ticker": "SBIN",
+  "key": "stock_price",
+  "data": {
+    "success": true,
+    "ticker": "SBIN",
+    "current_price": 1223.3,
+    "market_cap": 1129181.5051264,
+    "market_cap_cr": 1129181.5051264,
+    "pe_ratio": 13.319905,
+    "book_value": 641.361,
+    "source": "yahoo_finance",
+    "fetched_at": "2026-02-24T15:36:09.834859+00:00"
+  },
+  "cached_at": "2026-02-24T15:36:09.835043+00:00"
+}
