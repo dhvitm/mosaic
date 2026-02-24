@@ -88,6 +88,25 @@ export default function Results() {
   const thesis = result.result?.thesis || {};
   const metadata = result.result?.company_metadata || {};
   
+  // Helper function to convert thesis points to array (handles both string and array formats)
+  const parseThesisPoints = (points) => {
+    if (!points) return [];
+    if (Array.isArray(points)) return points;
+    if (typeof points === 'string') {
+      // Split by numbered points (e.g., "1. xxx 2. xxx") or newlines
+      const parsed = points
+        .split(/(?=\d+\.\s)/)
+        .map(p => p.replace(/^\d+\.\s*/, '').trim())
+        .filter(p => p.length > 0);
+      return parsed.length > 0 ? parsed : [points];
+    }
+    return [];
+  };
+  
+  const bullCase = parseThesisPoints(thesis.bull_case);
+  const bearCase = parseThesisPoints(thesis.bear_case);
+  const catalysts = parseThesisPoints(thesis.catalysts);
+  
   const recommendation = valuation.recommendation || "HOLD";
   const recColor = recommendation === "BUY" ? "text-emerald-400" : 
                    recommendation === "SELL" ? "text-red-400" : 
