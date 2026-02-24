@@ -192,8 +192,13 @@ class ScraperService:
                 if info.get('trailingPE'):
                     result['pe_ratio'] = info.get('trailingPE')
                 
-                logger.info(f"Got price for {ticker} from Yahoo Finance: Rs.{result['current_price']}")
-                return result
+                logger.info(f"Got price for {ticker} from Yahoo Finance: Rs.{result['current_price']}, market_cap={result['market_cap']}")
+                
+                # If market_cap is missing, try to get it from Screener.in
+                if not result['market_cap']:
+                    logger.info(f"Market cap missing from Yahoo Finance, will try Screener.in")
+                else:
+                    return result
         except Exception as e:
             logger.warning(f"Yahoo Finance failed for {ticker}: {str(e)}")
         
