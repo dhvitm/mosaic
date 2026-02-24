@@ -421,8 +421,15 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
             # Get the collected analysis data from tool executor
             collected = self.tool_executor._collected_data
             
-            # Get stock price for current price
+            # Get stock price for current price - try collected first, then cache
             stock_price = collected.get("stock_price", {})
+            if not stock_price or not stock_price.get("current_price"):
+                # Try to read from cache
+                cache_result = self.tool_executor._cache_read(ticker, "stock_price")
+                if cache_result.get("cached"):
+                    stock_price = cache_result.get("data", {})
+                    logger.info(f"Agent result: stock_price from cache: current_price={stock_price.get('current_price')}")
+            
             financials = collected.get("financials", {})
             
             return {
