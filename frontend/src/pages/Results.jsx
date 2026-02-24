@@ -240,14 +240,14 @@ export default function Results() {
           <TabsContent value="thesis">
             <div className="bg-slate-900/30 border border-slate-800/50 p-8 rounded-xl space-y-8">
               {/* Bull Case */}
-              {thesis.bull_case && thesis.bull_case.length > 0 && (
+              {bullCase.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold text-emerald-400 mb-4 flex items-center gap-2">
                     <TrendingUp className="w-5 h-5" />
                     Bull Case
                   </h3>
                   <ul className="space-y-2">
-                    {thesis.bull_case.map((point, i) => (
+                    {bullCase.map((point, i) => (
                       <li key={i} className="flex items-start gap-3 text-slate-300">
                         <span className="text-emerald-500 mt-1">•</span>
                         {point}
@@ -258,14 +258,14 @@ export default function Results() {
               )}
               
               {/* Bear Case */}
-              {thesis.bear_case && thesis.bear_case.length > 0 && (
+              {bearCase.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold text-red-400 mb-4 flex items-center gap-2">
                     <TrendingDown className="w-5 h-5" />
                     Bear Case
                   </h3>
                   <ul className="space-y-2">
-                    {thesis.bear_case.map((point, i) => (
+                    {bearCase.map((point, i) => (
                       <li key={i} className="flex items-start gap-3 text-slate-300">
                         <span className="text-red-500 mt-1">•</span>
                         {point}
@@ -276,11 +276,11 @@ export default function Results() {
               )}
               
               {/* Catalysts */}
-              {thesis.catalysts && thesis.catalysts.length > 0 && (
+              {catalysts.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold text-amber-400 mb-4">Key Catalysts</h3>
                   <ul className="space-y-2">
-                    {thesis.catalysts.map((point, i) => (
+                    {catalysts.map((point, i) => (
                       <li key={i} className="flex items-start gap-3 text-slate-300">
                         <span className="text-amber-500 mt-1">•</span>
                         {point}
@@ -291,7 +291,7 @@ export default function Results() {
               )}
               
               {/* Fallback */}
-              {!thesis.summary && !thesis.bull_case && (
+              {!thesis.summary && bullCase.length === 0 && bearCase.length === 0 && (
                 <p className="text-slate-500 text-center py-8">Thesis details will appear here once analysis is complete.</p>
               )}
             </div>
