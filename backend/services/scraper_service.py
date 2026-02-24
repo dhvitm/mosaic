@@ -202,13 +202,13 @@ class ScraperService:
         except Exception as e:
             logger.warning(f"Yahoo Finance failed for {ticker}: {str(e)}")
         
-        # Fallback to Screener.in scraping
+        # Fallback to Screener.in scraping (or supplement Yahoo Finance data)
         try:
             await self.initialize()
             url = f"https://www.screener.in/company/{ticker}/consolidated/"
             
             page = await self.context.new_page()
-            logger.info(f"Fetching current price for {ticker} from Screener.in (fallback)")
+            logger.info(f"Fetching data for {ticker} from Screener.in")
             
             try:
                 response = await page.goto(url, wait_until='networkidle', timeout=20000)
@@ -222,18 +222,19 @@ class ScraperService:
                 content = await page.content()
                 soup = BeautifulSoup(content, 'html.parser')
                 
-                # Get current price - usually the first big number
-                price_elem = soup.find('span', class_='number')
-                if price_elem:
-                    try:
-                        result['current_price'] = float(price_elem.text.strip().replace(',', ''))
-                        from datetime import datetime, timezone
-                        result['price_fetched_at'] = datetime.now(timezone.utc).isoformat()
-                        result['source'] = 'screener_in'
-                    except:
-                        pass
+                # Get current price - only if we don't have it from Yahoo Finance
+                if not result['current_price']:
+                    price_elem = soup.find('span', class_='number')
+                    if price_elem:
+                        try:
+                            result['current_price'] = float(price_elem.text.strip().replace(',', ''))
+                            from datetime import datetime, timezone
+                            result['price_fetched_at'] = datetime.now(timezone.utc).isoformat()
+                            result['source'] = 'screener_in'
+                        except:
+                            pass
                 
-                # Extract other key metrics
+                # Extract other key metrics from Screener.in
                 ratio_sections = soup.find_all('li', class_='flex flex-space-between')
                 for section in ratio_sections:
                     name_elem = section.find('span', class_='name')
@@ -242,17 +243,19 @@ class ScraperService:
                         name = name_elem.text.strip()
                         value = value_elem.text.strip()
                         
-                        if 'Market Cap' in name:
+                        # Always get market_cap from Screener if we don't have it
+                        if 'Market Cap' in name and not result['market_cap']:
                             try:
                                 result['market_cap'] = float(value.replace(',', '').replace('Cr.', '').strip())
+                                logger.info(f"Got market_cap for {ticker} from Screener.in: {result['market_cap']} Cr")
                             except:
                                 pass
-                        elif 'Stock P/E' in name:
+                        elif 'Stock P/E' in name and not result['pe_ratio']:
                             try:
                                 result['pe_ratio'] = float(value)
                             except:
                                 pass
-                        elif 'Book Value' in name:
+                        elif 'Book Value' in name and not result['book_value']:
                             try:
                                 result['book_value'] = float(value.replace(',', ''))
                             except:
