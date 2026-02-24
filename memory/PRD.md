@@ -52,6 +52,9 @@ Mosaic is a professional-grade financial model generator for Indian stock market
   - Modified `pipeline_manager.py` to pull current_price from multiple sources
   - Modified `agent_tools.py` to use valuation data as fallback for stock price
 - [x] Fixed empty Excel sheets - now skips sheets with no data
+- [x] Fixed market_cap sometimes showing as 0
+  - Modified `scraper_service.py` to fetch market_cap from Screener.in if Yahoo Finance doesn't return it
+  - Now combines best data from both Yahoo Finance (real-time price) and Screener.in (reliable market_cap)
 
 #### Agentic Architecture (Feb 2025)
 - [x] Fixed Claude tool-use API integration via LiteLLM + Emergent gateway
