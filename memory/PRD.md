@@ -24,9 +24,9 @@ Mosaic is a professional-grade financial model generator for Indian stock market
 - **WebSocket Manager:** Real-time progress updates
 
 ### Frontend (React)
-- **Landing Page:** Ticker input
-- **Processing Page:** Live activity log via WebSockets (shows agent tool calls in agentic mode)
-- **Results Page:** Thesis display with Excel download + AI Reasoning panel
+- **Landing Page:** Professional dark theme, ticker input with validation, tools showcase
+- **Processing Page:** Live activity log via WebSockets, prominent tool call display
+- **Results Page:** Thesis display (Bull/Bear Case, Catalysts), valuation metrics, Excel download
 - **Jobs Page:** Dashboard for all jobs
 - **Admin Page:** CRUD for sector knowledge files
 - **Cache Viewer:** View cached data per ticker
@@ -36,7 +36,22 @@ Mosaic is a professional-grade financial model generator for Indian stock market
 
 ## What's Been Implemented
 
-### Completed Features (Dec 2025)
+### Completed Features (Feb 2025)
+
+#### UI/UX Overhaul (Feb 24, 2025)
+- [x] Redesigned Landing page with professional dark theme (#0a0e17)
+- [x] Added "Integrated Tools" section showcasing 6 AI tools
+- [x] Stats bar (10+ Excel Sheets, 5Y Forecast, 6 AI Tools, <5min)
+- [x] Redesigned Processing page with prominent tool calls and sidebar
+- [x] Redesigned Results page with Bull/Bear Case, Catalysts display
+- [x] Fixed thesis tab to show actual content (not placeholder)
+
+#### Bug Fixes (Feb 24, 2025)
+- [x] Fixed current_price showing as 0 on Results page
+  - Modified `mosaic_agent.py` to read stock_price from cache if not in collected data
+  - Modified `pipeline_manager.py` to pull current_price from multiple sources
+  - Modified `agent_tools.py` to use valuation data as fallback for stock price
+- [x] Fixed empty Excel sheets - now skips sheets with no data
 
 #### Agentic Architecture (Feb 2025)
 - [x] Fixed Claude tool-use API integration via LiteLLM + Emergent gateway
@@ -59,17 +74,18 @@ Mosaic is a professional-grade financial model generator for Indian stock market
 - [x] Current market price fetching via yfinance
 - [x] PDF extraction from investor presentations, annual reports, concall transcripts
 
-### Excel Model Structure (10 Sheets)
+### Excel Model Structure (8+ Sheets)
 1. **Cover** - Company summary and recommendation
-2. **Assumptions** - Editable forecast drivers (yellow cells)
-3. **P&L** - Historical + 5-year projections
-4. **Balance Sheet** - Historical + 5-year projections
-5. **ROE Tree** - DuPont analysis
-6. **Quarterly** - Last 12 quarters of results
-7. **Key Ratios** - Historical financial ratios
-8. **Valuation** - RIV model
-9. **Peer Comparison** - Sector peer metrics
-10. **Thesis** - Full investment note
+2. **P&L** - Historical + 5-year projections with formulas
+3. **Balance Sheet** - Historical + 5-year projections
+4. **ROE Tree** - DuPont analysis (NPM × Asset Turnover × Equity Multiplier)
+5. **Quarterly** - Last 12 quarters of results
+6. **Key Ratios** - Historical financial ratios
+7. **Valuation** - RIV model with editable assumptions
+8. **Thesis** - Full investment note
+9. **Peer Comparison** - Sector peer metrics (created if data available)
+
+Note: Empty sheets (like Assumptions) are now automatically skipped to produce cleaner output.
 
 ## API Endpoints
 - `POST /api/generate/` - Create new job
@@ -89,20 +105,21 @@ Mosaic is a professional-grade financial model generator for Indian stock market
 ## Remaining Tasks (Prioritized Backlog)
 
 ### P1 - High Priority
-- [ ] End-to-end testing of agentic pipeline (blocked by LLM gateway latency)
-- [ ] Verify knowledge base update/flag tools work correctly
-- [ ] Test Excel generation from agentic mode
+- [ ] Fix empty "Assumptions" sheet in Excel (data format mismatch - agent stores free-form text, Excel expects numeric arrays)
+- [ ] Improve market_cap fetching (sometimes returns None from Yahoo Finance)
 
 ### P2 - Medium Priority  
 - [ ] Export thesis to PDF
 - [ ] Historical model comparison
 - [ ] More sector knowledge files (Cement, IT, Pharma)
+- [ ] Refactor `pipeline_manager.py` to remove legacy sequential pipeline code
 
 ### P3 - Low Priority
 - [ ] User authentication
 - [ ] Multi-ticker batch processing
 - [ ] Custom assumption overrides in UI
 - [ ] Frontend refactoring with custom hooks
+- [ ] Improve WebSocket reliability (race conditions on ProcessingPage)
 
 ## Tech Stack
 - **Frontend:** React, Tailwind CSS, Shadcn UI, socket.io-client
@@ -121,6 +138,11 @@ Mosaic is a professional-grade financial model generator for Indian stock market
 - `backend/services/scraper_service.py` - Web scraping + price fetching
 - `backend/services/claude_service.py` - AI integration (sequential mode)
 - `backend/services/cache_service.py` - Step data caching
+
+## Frontend Pages
+- `frontend/src/pages/Landing.jsx` - Redesigned landing page
+- `frontend/src/pages/Processing.jsx` - Redesigned processing page with tool display
+- `frontend/src/pages/Results.jsx` - Redesigned results page with thesis tabs
 
 ## Environment Variables
 - `MOSAIC_AGENTIC_MODE=true` - Enable agentic mode (default: true)
