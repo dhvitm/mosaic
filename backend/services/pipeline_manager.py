@@ -96,6 +96,20 @@ class PipelineManager:
             thesis = result.get("thesis", {})
             company_info = result.get("company_info", {})
             
+            # Get current_price and market_cap - check multiple sources
+            current_price = (
+                result.get("current_price") or 
+                valuation.get("current_price") or 
+                company_info.get("current_price") or 
+                0
+            )
+            market_cap = (
+                result.get("market_cap") or 
+                valuation.get("market_cap") or 
+                company_info.get("market_cap") or 
+                0
+            )
+            
             # Build result data for storage
             result_data = {
                 "company_metadata": {
@@ -103,8 +117,8 @@ class PipelineManager:
                     "sector": company_info.get("sector", ""),
                     "sub_sector": company_info.get("sub_sector", ""),
                     "business_description": company_info.get("business_description", ""),
-                    "current_price": result.get("current_price", 0),
-                    "market_cap": result.get("market_cap", 0)
+                    "current_price": current_price,
+                    "market_cap": market_cap
                 },
                 "valuation": valuation,
                 "thesis": thesis,
