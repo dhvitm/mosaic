@@ -411,6 +411,17 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
                         }
                         self._tool_calls_log.append(tool_log)
                         
+                        # Log tool execution to LLM logger
+                        if self._llm_logger:
+                            self._llm_logger.log_tool_execution(
+                                loop_number=loop_count,
+                                tool_name=tool_name,
+                                tool_id=tool_id,
+                                arguments=tool_input,
+                                result=result,
+                                duration_ms=tool_duration * 1000
+                            )
+                        
                         # Broadcast result
                         status = "✓" if result.get("success", False) else "✗"
                         await ws_manager.send_activity(
