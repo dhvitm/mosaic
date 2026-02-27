@@ -430,3 +430,63 @@ async def abort_job(job_id: str):
     except Exception as e:
         logger.error(f"Error aborting job {job_id}: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+
+# ============================================================================
+# LLM Logs Endpoints
+# ============================================================================
+
+from services.llm_logger import get_logs_for_ticker, get_log_for_job, list_all_logs
+
+@router.get("/logs/")
+async def get_all_llm_logs():
+    """Get list of all LLM log files (metadata only)."""
+    try:
+        logs = list_all_logs()
+        return {
+            "count": len(logs),
+            "logs": logs
+        }
+    except Exception as e:
+        logger.error(f"Error fetching LLM logs: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/logs/ticker/{ticker}")
+async def get_llm_logs_for_ticker(ticker: str):
+    """Get all LLM logs for a specific ticker."""
+    try:
+        ticker = ticker.upper()
+        logs = get_logs_for_ticker(ticker)
+        
+        if not logs:
+            raise HTTPException(status_code=404, detail=f"No logs found for ticker {ticker}")
+        
+        return {
+            "ticker": ticker,
+            "log_count": len(logs),
+            "logs": logs
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching LLM logs for {ticker}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/logs/job/{job_id}")
+async def get_llm_log_for_job(job_id: str):
+    """Get LLM log for a specific job."""
+    try:
+        log = get_log_for_job(job_id)
+        
+        if not log:
+            raise HTTPException(status_code=404, detail=f"No log found for job {job_id}")
+        
+        return log
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching LLM log for job {job_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
