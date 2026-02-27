@@ -488,9 +488,20 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
                 "market_cap": stock_price.get("market_cap", 0)
             }
             
+            # Log successful completion
+            if self._llm_logger:
+                self._llm_logger.log_completion(success=True, final_result=result)
+            
+            return result
+            
         except Exception as e:
             logger.error(f"Agent loop failed: {str(e)}")
             await ws_manager.send_activity(job_id, "error", f"Agent error: {str(e)[:200]}")
+            
+            # Log failed completion
+            if self._llm_logger:
+                self._llm_logger.log_error(loop_count, str(e), "Agent loop failed")
+                self._llm_logger.log_completion(success=False)
             
             return {
                 "success": False,
