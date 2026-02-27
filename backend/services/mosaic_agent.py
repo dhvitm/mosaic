@@ -29,6 +29,7 @@ from services.agent_tools import (
     get_cache_summary
 )
 from services.websocket_manager import ws_manager
+from services.llm_logger import LLMLogger
 
 logger = logging.getLogger(__name__)
 
