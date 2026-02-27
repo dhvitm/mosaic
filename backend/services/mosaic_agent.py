@@ -470,7 +470,7 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
             
             financials = collected.get("financials", {})
             
-            return {
+            result = {
                 "success": True,
                 "ticker": ticker,
                 "excel_path": excel_path,
