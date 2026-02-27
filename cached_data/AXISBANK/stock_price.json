@@ -1,0 +1,16 @@
+{
+  "ticker": "AXISBANK",
+  "key": "stock_price",
+  "data": {
+    "success": true,
+    "ticker": "AXISBANK",
+    "current_price": 1386.8,
+    "market_cap": 430792.8743936,
+    "market_cap_cr": 430792.8743936,
+    "pe_ratio": 16.452723,
+    "book_value": 666.704,
+    "source": "yahoo_finance",
+    "fetched_at": "2026-02-27T05:26:15.400636+00:00"
+  },
+  "cached_at": "2026-02-27T05:26:15.400847+00:00"
+}

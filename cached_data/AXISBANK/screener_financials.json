@@ -1,0 +1,192 @@
+{
+  "ticker": "AXISBANK",
+  "key": "screener_financials",
+  "data": {
+    "success": true,
+    "ticker": "AXISBANK",
+    "annual_pnl": {
+      "Mar 2022": {
+        "Revenue +": 64397.0,
+        "Interest": 34627.0,
+        "Expenses +": 32621.0,
+        "Financing Profit": -2851.0,
+        "Financing Margin %": -4.0,
+        "Other Income +": 13577.0,
+        "Depreciation": 976.0,
+        "Profit before tax": 9750.0,
+        "Tax %": 26.0,
+        "Net Profit +": 7252.0,
+        "EPS in Rs": 23.49,
+        "Dividend Payout %": 0.0
+      },
+      "Mar 2023": {
+        "Revenue +": 68846.0,
+        "Interest": 34923.0,
+        "Expenses +": 31216.0,
+        "Financing Profit": 2707.0,
+        "Financing Margin %": 4.0,
+        "Other Income +": 17268.0,
+        "Depreciation": 1046.0,
+        "Profit before tax": 18929.0,
+        "Tax %": 25.0,
+        "Net Profit +": 14207.0,
+        "EPS in Rs": 45.99,
+        "Dividend Payout %": 2.0
+      },
+      "Mar 2024": {
+        "Revenue +": 87448.0,
+        "Interest": 43389.0,
+        "Expenses +": 30641.0,
+        "Financing Profit": 13418.0,
+        "Financing Margin %": 15.0,
+        "Other Income +": 18349.0,
+        "Depreciation": 13146.0,
+        "Profit before tax": 18621.0,
+        "Tax %": 42.0,
+        "Net Profit +": 10919.0,
+        "EPS in Rs": 35.16,
+        "Dividend Payout %": 3.0
+      },
+      "Mar 2025": {
+        "Revenue +": 112759.0,
+        "Interest": 61391.0,
+        "Expenses +": 40036.0,
+        "Financing Profit": 11333.0,
+        "Financing Margin %": 10.0,
+        "Other Income +": 25230.0,
+        "Depreciation": 1385.0,
+        "Profit before tax": 35178.0,
+        "Tax %": 25.0,
+        "Net Profit +": 26492.0,
+        "EPS in Rs": 85.49,
+        "Dividend Payout %": 1.0
+      },
+      "TTM": {
+        "Revenue +": 127374.0,
+        "Interest": 71036.0,
+        "Expenses +": 46395.0,
+        "Financing Profit": 9943.0,
+        "Financing Margin %": 8.0,
+        "Other Income +": 28543.0,
+        "Depreciation": 1763.0,
+        "Profit before tax": 36722.0,
+        "Tax %": 23.0,
+        "Net Profit +": 28191.0,
+        "EPS in Rs": 90.58,
+        "Dividend Payout %": 1.0
+      }
+    },
+    "annual_bs": {
+      "Mar 2022": {
+        "Equity Capital": 613.0,
+        "Reserves": 102981.0,
+        "Deposits": 698303.0,
+        "Borrowing": 152249.0,
+        "Other Liabilities +": 46859.0,
+        "Total Liabilities": 1001005.0,
+        "Fixed Assets +": 4501.0,
+        "CWIP": 118.0,
+        "Investments": 225336.0,
+        "Other Assets +": 771050.0,
+        "Total Assets": 1001005.0
+      },
+      "Mar 2023": {
+        "Equity Capital": 614.0,
+        "Reserves": 117647.0,
+        "Deposits": 821165.0,
+        "Borrowing": 199778.0,
+        "Other Liabilities +": 56576.0,
+        "Total Liabilities": 1195779.0,
+        "Fixed Assets +": 4753.0,
+        "CWIP": 215.0,
+        "Investments": 274608.0,
+        "Other Assets +": 916203.0,
+        "Total Assets": 1195779.0
+      },
+      "Mar 2024": {
+        "Equity Capital": 615.0,
+        "Reserves": 129166.0,
+        "Deposits": 945825.0,
+        "Borrowing": 206214.0,
+        "Other Liabilities +": 62598.0,
+        "Total Liabilities": 1344418.0,
+        "Fixed Assets +": 5000.0,
+        "CWIP": 142.0,
+        "Investments": 288095.0,
+        "Other Assets +": 1051181.0,
+        "Total Assets": 1344418.0
+      },
+      "Mar 2025": {
+        "Equity Capital": 617.0,
+        "Reserves": 156406.0,
+        "Deposits": 1067102.0,
+        "Borrowing": 228200.0,
+        "Other Liabilities +": 65913.0,
+        "Total Liabilities": 1518239.0,
+        "Fixed Assets +": 5860.0,
+        "CWIP": 267.0,
+        "Investments": 332354.0,
+        "Other Assets +": 1179758.0,
+        "Total Assets": 1518239.0
+      },
+      "Sep 2025": {
+        "Equity Capital": 619.0,
+        "Reserves": 186616.0,
+        "Deposits": 1170921.0,
+        "Borrowing": 220687.0,
+        "Other Liabilities +": 78119.0,
+        "Total Liabilities": 1656963.0,
+        "Fixed Assets +": 6661.0,
+        "CWIP": 121.0,
+        "Investments": 396685.0,
+        "Other Assets +": 1253496.0,
+        "Total Assets": 1656963.0
+      }
+    },
+    "ratios": {
+      "Mar 2021": {
+        "ROE %": 2.0
+      },
+      "Mar 2022": {
+        "ROE %": 8.0
+      },
+      "Mar 2023": {
+        "ROE %": 13.0
+      },
+      "Mar 2024": {
+        "ROE %": 9.0
+      },
+      "Mar 2025": {
+        "ROE %": 18.0
+      }
+    },
+    "quarterly": [
+      "Mar 2024",
+      "Jun 2024",
+      "Sep 2024",
+      "Dec 2024",
+      "Mar 2025",
+      "Jun 2025",
+      "Sep 2025",
+      "Dec 2025"
+    ],
+    "years_available": [
+      "Mar 2022",
+      "Mar 2023",
+      "Mar 2024",
+      "Mar 2025",
+      "TTM"
+    ],
+    "quarters_available": [
+      "Mar 2024",
+      "Jun 2024",
+      "Sep 2024",
+      "Dec 2024",
+      "Mar 2025",
+      "Jun 2025",
+      "Sep 2025",
+      "Dec 2025"
+    ]
+  },
+  "cached_at": "2026-02-27T05:26:13.725769+00:00"
+}
