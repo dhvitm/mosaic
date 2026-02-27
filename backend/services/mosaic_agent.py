@@ -260,6 +260,9 @@ class MosaicAgent:
         
         start_time = time.time()
         
+        # Initialize LLM logger for this job
+        self._llm_logger = LLMLogger(job_id, ticker)
+        
         # Build context primer
         cache_summary = get_cache_summary(ticker)
         today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
