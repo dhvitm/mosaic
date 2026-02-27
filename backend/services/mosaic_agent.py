@@ -93,6 +93,7 @@ class MosaicAgent:
         self._current_ticker = None
         self._tool_calls_log = []
         self._collected_data = {}  # Store full data for Excel generation
+        self._llm_logger = None  # Will be initialized per job
     
     def _summarize_tool_result(self, tool_name: str, result: Dict) -> str:
         """Summarize tool result to reduce context size"""
