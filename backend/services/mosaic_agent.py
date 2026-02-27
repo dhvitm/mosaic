@@ -303,9 +303,21 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
                 # Call LLM with tools via LiteLLM
                 try:
                     logger.info(f"Agent loop {loop_count}: calling LLM with {len(messages)} messages")
+                    
+                    # Log the LLM call
+                    if self._llm_logger:
+                        self._llm_logger.log_llm_call(
+                            loop_number=loop_count,
+                            messages=messages,
+                            model=FAST_MODEL,
+                            tools=MOSAIC_TOOLS_OPENAI_FORMAT
+                        )
+                    
                     response = self._call_llm_with_tools(messages, MOSAIC_TOOLS_OPENAI_FORMAT)
                 except Exception as e:
                     logger.error(f"LLM API error: {str(e)}")
+                    if self._llm_logger:
+                        self._llm_logger.log_error(loop_count, str(e), "LLM API call failed")
                     await ws_manager.send_activity(job_id, "error", f"LLM API error: {str(e)[:100]}")
                     raise
                 
@@ -315,6 +327,16 @@ Note: Tool results are summarized. Full data is stored internally for write_exce
                 finish_reason = choice.finish_reason
                 
                 logger.info(f"Agent loop {loop_count}: finish_reason={finish_reason}")
+                
+                # Log the LLM response
+                if self._llm_logger:
+                    self._llm_logger.log_llm_response(
+                        loop_number=loop_count,
+                        response={"usage": getattr(response, 'usage', None)},
+                        finish_reason=finish_reason,
+                        tool_calls=assistant_message.tool_calls if hasattr(assistant_message, 'tool_calls') else None,
+                        response_text=assistant_message.content
+                    )
                 
                 # Check if we're done (no tool calls)
                 if finish_reason == "stop" or not assistant_message.tool_calls:
